@@ -33,3 +33,7 @@ To install a new python package use `pipenv install requests` from the docker sh
 To run development api service run `uvicorn_server` from the docker shell
 
 To test the service go to `http://0.0.0.0:9010/`
+
+## Database Server
+-  `cd database-server`
+- Start docker shell `sh ./docker-shell.sh`
