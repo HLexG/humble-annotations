@@ -4,6 +4,8 @@ from starlette.requests import Request
 from starlette.responses import JSONResponse
 from starlette.staticfiles import StaticFiles
 
+from api.routers import datasets
+
 
 prefix = "/v1"
 
@@ -56,4 +58,4 @@ async def get_index():
     }
 
 # Additional routers here
-#app.include_router(data.router, prefix=prefix)
+app.include_router(datasets.router, prefix=prefix)
