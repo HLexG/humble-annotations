@@ -37,3 +37,6 @@ To test the service go to `http://0.0.0.0:9010/`
 ## Database Server
 -  `cd database-server`
 - Start docker shell `sh ./docker-shell.sh`
+
+
+DB Migrations tool link: https://github.com/amacneil/dbmate
