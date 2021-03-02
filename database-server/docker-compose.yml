@@ -8,7 +8,7 @@ services:
         volumes:
             - ./db:/db
         environment: 
-            DATABASE_URL: "postgres://hlexg:annotate@postgres/hlexgdb"
+            DATABASE_URL: "postgres://hlexg:annotate@postgres/hlexgdb?sslmode=disable"
     postgres:
         image: postgres
         volumes:
