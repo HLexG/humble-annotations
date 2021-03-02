@@ -11,6 +11,7 @@ pandas = "*"
 uvicorn = "*"
 fastapi = "*"
 aiofiles = "*"
+databases = {extras = ["postgresql"], version = "*"}
 
 [requires]
 python_version = "3.8"
