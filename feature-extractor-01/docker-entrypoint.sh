@@ -3,7 +3,7 @@
 echo "Container is running!!!"
 
 uvicorn_server() {
-    uvicorn api.service:app --host 0.0.0.0 --port 9010 --log-level debug --reload --reload-dir extractor/ "$@"
+    uvicorn extractor.service:app --host 0.0.0.0 --port 9010 --log-level debug --reload --reload-dir extractor/ "$@"
 }
 
 uvicorn_server_production() {
