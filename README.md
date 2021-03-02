@@ -14,4 +14,10 @@ If you already have a preferred text editor, skip this step.
 ### Clone the github repository
 - Clone [this repository](https://github.com/HLexG/humble-annotations)
 
+## API Service
+-  `cd api-service`
+- Start docker shell `sh ./docker-shell.sh`
 
+To install a new python package use `pipenv install requests` from the docker shell
+
+To run development api service run `uvicorn_server` from the docker shell
