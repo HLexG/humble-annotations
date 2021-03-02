@@ -52,7 +52,7 @@ async def shutdown():
 )
 async def get_index():
     return {
-        "message": "Welcome to the API Service"
+        "message": "Welcome to the Feature Extractor Service"
     }
 
 # Additional routers here
