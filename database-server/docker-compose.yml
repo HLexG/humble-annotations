@@ -6,7 +6,7 @@ services:
         depends_on:
             - postgres
         volumes:
-            - .:/app
+            - ./db:/db
         environment: 
             DATABASE_URL: "postgres://hlexg:annotate@postgres/hlexgdb"
     postgres:
