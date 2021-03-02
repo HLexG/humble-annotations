@@ -2,7 +2,7 @@
 
 set -e
 
-# Read the settings file
+# Load the environment file
 source ./env.dev
 
 docker build -t $IMAGE_NAME -f Dockerfile .
