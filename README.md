@@ -22,6 +22,8 @@ To install a new python package use `pipenv install requests` from the docker sh
 
 To run development api service run `uvicorn_server` from the docker shell
 
+To test the service go to `http://0.0.0.0:9000/`
+
 ## Feature Extractor 01
 -  `cd feature-extractor-01`
 - Start docker shell `sh ./docker-shell.sh`
@@ -29,3 +31,5 @@ To run development api service run `uvicorn_server` from the docker shell
 To install a new python package use `pipenv install requests` from the docker shell
 
 To run development api service run `uvicorn_server` from the docker shell
+
+To test the service go to `http://0.0.0.0:9010/`
