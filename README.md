@@ -21,3 +21,11 @@ If you already have a preferred text editor, skip this step.
 To install a new python package use `pipenv install requests` from the docker shell
 
 To run development api service run `uvicorn_server` from the docker shell
+
+## Feature Extractor 01
+-  `cd feature-extractor-01`
+- Start docker shell `sh ./docker-shell.sh`
+
+To install a new python package use `pipenv install requests` from the docker shell
+
+To run development api service run `uvicorn_server` from the docker shell
