@@ -1,0 +1,25 @@
+version: "3.8"
+services:
+    dbmate:
+        image: amacneil/dbmate
+        entrypoint: /bin/sh
+        depends_on:
+            - postgres
+        volumes:
+            - .:/app
+        environment: 
+            DATABASE_URL: "postgres://hlexg:annotate@postgres/hlexgdb"
+    postgres:
+        image: postgres
+        volumes:
+            - ./docker-volumes/postgres:/var/lib/postgresql/data
+        ports:
+            - 5432:5432
+        environment:
+            POSTGRES_USER: hlexg
+            POSTGRES_PASSWORD: annotate
+            POSTGRES_DB: hlexgdb
+networks:
+    default:
+        external:
+            name: hlexg
