@@ -25,7 +25,7 @@ async def datasets_index():
     description="Get all information about a specific dataset.",
     response_description="The dataset"
 )
-async def datasets_detail(
+async def datasets_fetch(
         id: int = Path(..., description="The dataset id")
 ):
     result = await datasets.get(id)
