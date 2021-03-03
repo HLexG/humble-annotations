@@ -9,4 +9,4 @@ source ./env.dev
 docker network inspect hlexg >/dev/null 2>&1 || docker network create hlexg
 
 # Run Postgres DB and DBMate
-docker-compose run --rm --service-ports --name database-server dbmate
+docker-compose run --rm --service-ports --name database-client dbmate
