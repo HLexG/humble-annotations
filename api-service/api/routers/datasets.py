@@ -17,3 +17,17 @@ router = APIRouter()
 async def datasets_index():
     
     return await datasets.browse()
+
+@router.get(
+    "/datasets/{id}",
+    tags=["Datasets"],
+    summary="Get information about a dataset",
+    description="Get all information about a specific dataset.",
+    response_description="The dataset"
+)
+async def datasets_detail(
+        id: int = Path(..., description="The dataset id")
+):
+    result = await datasets.get(id)
+
+    return result
