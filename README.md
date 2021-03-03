@@ -38,5 +38,16 @@ To test the service go to `http://0.0.0.0:9010/`
 -  `cd database-server`
 - Start docker shell `sh ./docker-shell.sh`
 
+To ensure your local database is up to date, run `dbmate up`
 
 DB Migrations tool link: https://github.com/amacneil/dbmate
+
+## Annotations Frontend
+-  `cd annotations-frontend`
+- Start docker shell `sh ./docker-shell.sh`
+
+#### First time to install node_modules
+yarn install
+
+To start the development server, run `yarn start`
+
