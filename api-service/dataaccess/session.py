@@ -9,13 +9,13 @@ except KeyError:
 
 database = Database(database_url)
 
-async def setup():
+async def connect():
     """
     This function initializes the database session for the current process.
     """
     await database.connect()
 
-async def teardown():
+async def disconnect():
     """
     This function closes the database session for the current process.
     """
