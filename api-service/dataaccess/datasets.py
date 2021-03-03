@@ -2,6 +2,7 @@ import os
 from typing import Any, Dict, List
 
 from dataaccess.session import database
+from dataaccess.errors import RecordNotFoundError
 
 async def browse(
     *,
@@ -9,11 +10,11 @@ async def browse(
     page_size: int = 20
 ) -> List[Dict[str, Any]]:
     """
-    Retrieve a list of datasets based on filters
+    Retrieve a list of rows based on filters
     """
-    print(os.environ["DATABASE_URL"])
+    
     query = """
-        select * from datasets
+        select id,dataset_name from datasets
     """
 
     values = []
@@ -22,6 +23,28 @@ async def browse(
     result = await database.fetch_all(query)
 
     return [prep_data(row) for row in result]
+
+async def get(id: int) -> Dict[str, Any]:
+    """
+    Retrieve one row based by its id. Return object is a dict. 
+    Raises if the record was not found.
+    """
+
+    query = """
+        select id,dataset_name from datasets where id = :id
+    """
+
+    values = {
+        "id": id
+    }
+
+    print("query:",query, "values:", values)
+    result = await database.fetch_one(query, values)
+
+    if result is None:
+        raise RecordNotFoundError(f"Could not find row with id '{id}'")
+
+    return prep_data(result)
 
 def prep_data(result) -> Dict[str, Any]:
     if result is None:
