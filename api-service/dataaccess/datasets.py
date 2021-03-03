@@ -1,4 +1,6 @@
+import os
 from typing import Any, Dict, List
+
 from dataaccess.session import database
 
 async def browse(
@@ -9,14 +11,15 @@ async def browse(
     """
     Retrieve a list of datasets based on filters
     """
-
+    print(os.environ["DATABASE_URL"])
     query = """
         select * from datasets
     """
 
     values = []
 
-    result = await database.fetch_all(query, values=values)
+    print("query",query)
+    result = await database.fetch_all(query)
 
     return [prep_data(row) for row in result]
 
