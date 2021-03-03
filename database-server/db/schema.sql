@@ -390,4 +390,5 @@ ALTER TABLE ONLY public.mentions
 --
 
 INSERT INTO public.schema_migrations (version) VALUES
-    ('20210302204457');
+    ('20210302204457'),
+    ('20210303133158');
