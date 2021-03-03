@@ -1,6 +1,7 @@
 import React, {useEffect, useRef, useState} from 'react';
 import { withStyles } from '@material-ui/core';
 
+import Annotator from '../Annotator';
 import styles from './styles';
 
 const EditAnnotations = ( props ) => {
@@ -15,7 +16,7 @@ const EditAnnotations = ( props ) => {
     return (
         <div className={classes.root}>
             <main className={classes.main}>
-                Edit Annotations Content...
+            <Annotator></Annotator>
             </main>
         </div>
     );

@@ -135,9 +135,9 @@ const Header = props => {
                                 <ListItemIcon><Icon>home</Icon></ListItemIcon>
                                 <ListItemText primary='Home' />
                             </ListItem>
-                            <ListItem button key='notebook' component={Link} to="/notebook">
+                            <ListItem button key='annotations' component={Link} to="/annotations">
                                 <ListItemIcon><Icon>dashboard</Icon></ListItemIcon>
-                                <ListItemText primary='Notebook' />
+                                <ListItemText primary='Annotations' />
                             </ListItem>
                         </List>
                         <Divider />
