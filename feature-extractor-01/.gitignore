@@ -132,3 +132,4 @@ dmypy.json
 .DS_Store
 env.local
 .idea
+spanbert_model.pth
