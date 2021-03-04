@@ -15,7 +15,7 @@ router = APIRouter()
 # Load pretrained model
 # any other pre model step
 
-#model = ...
+model = spacy.load("en_core_web_sm")
 
 @router.post(
     "/find_mentions",
