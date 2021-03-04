@@ -4,15 +4,41 @@ import Grid from '@material-ui/core/Grid';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
+import Divider from '@material-ui/core/Divider';
 
 import DataServices from "../../services/DataServices";
 import styles from './styles';
+import {handleAnnotationItemsClick} from './handlers';
 
 const Home = ( props ) => {
     const {classes} = props;
     const { history } = props;
 
     console.log("================================== Home ======================================");
+
+    // Component States
+    const [dataset , setDataset] = useState(null);
+    const [documents , setDocuments] = useState(null);
+    const loadDocuments = () => {
+        DataServices.GetDatasets()
+            .then(function (response) {
+                setDataset(response.data[0]);
+                // Load the documents
+                return DataServices.GetDocumentsForAnnotation(response.data[0]["id"])
+            })
+            .then(function (response) {
+                setDocuments(response.data);
+            })
+    }
+
+    // Setup Component
+    useEffect(() => {
+        loadDocuments();
+      }, []);
+    
 
     return (
         <div className={classes.root}>
@@ -68,9 +94,13 @@ const Home = ( props ) => {
                                 <Typography gutterBottom variant="h5" component="h2">
                                     Annotations Tasks
                                 </Typography>
-                                <Typography variant="body2" color="textSecondary" component="p">
-                                    Some metrics here....
-                                </Typography>
+                                <List component="nav">
+                                {documents && documents.map((doc, index) => 
+                                    <ListItem key={index} button onClick={(e) => handleAnnotationItemsClick(doc.id,history)}>
+                                        <ListItemText primary={doc.document_name} />
+                                    </ListItem>  
+                                )}
+                                </List>
                             </CardContent>
                         </Card>
                     </Grid>
