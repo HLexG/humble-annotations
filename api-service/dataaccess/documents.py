@@ -1,5 +1,8 @@
 import os
+import requests
 from typing import Any, Dict, List
+from nltk.tokenize import sent_tokenize
+from nltk.tokenize import word_tokenize
 
 from dataaccess.session import database
 from dataaccess.errors import RecordNotFoundError
@@ -49,7 +52,33 @@ async def get(id: int) -> Dict[str, Any]:
     if result is None:
         raise RecordNotFoundError(f"Could not find row with id '{id}'")
 
-    return prep_data(result)
+    result = prep_data(result)
+
+    # Get the document
+    link = "https://storage.googleapis.com/hlexg/dataset01/doc1.txt?1=3"
+    doc_file = requests.get(result["filepath"])
+    document = doc_file.text
+
+    # Generate sentences
+    sentences = sent_tokenize(document)
+
+    # Generate tokens
+    tokens = []
+    for s_idx,s in enumerate(sentences):
+        words = word_tokenize(s)
+        for w_idx,w in enumerate(words):
+            token = {
+                "text": w,
+                "token_id": w_idx,
+                "sentence_id": s_idx,
+                "document_id": result["dataset_id"]
+            }
+            tokens.append(token)
+    
+    result["text"] = document
+    result["tokens"] = tokens
+
+    return result
 
 def prep_data(result) -> Dict[str, Any]:
     if result is None:
