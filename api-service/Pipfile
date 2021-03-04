@@ -12,6 +12,7 @@ uvicorn = "*"
 fastapi = "*"
 aiofiles = "*"
 databases = {extras = ["postgresql"], version = "*"}
+nltk = "*"
 
 [requires]
 python_version = "3.8"
