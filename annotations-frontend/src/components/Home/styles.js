@@ -16,7 +16,9 @@ const styles = theme => ({
         zIndex: theme.zIndex.drawer + 1,
         minHeight: "100vh"
     },
-    
+    card: {
+        marginBottom: "25px",
+    }
 });
 
 export default styles;
