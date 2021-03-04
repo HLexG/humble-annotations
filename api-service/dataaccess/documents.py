@@ -56,4 +56,7 @@ def prep_data(result) -> Dict[str, Any]:
         raise ValueError("Tried to prepare null result")
 
     result = dict(result)
+
+    result["document_name"] = os.path.basename(result["filepath"])
+
     return result
