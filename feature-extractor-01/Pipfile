@@ -11,6 +11,9 @@ pandas = "*"
 uvicorn = "*"
 fastapi = "*"
 aiofiles = "*"
+torch = "==1.6"
+transformers = "==3.0"
+scipy = "==1.4.1"
 
 [requires]
 python_version = "3.8"
