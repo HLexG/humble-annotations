@@ -37,11 +37,10 @@ async def find_mentions(
 
     # Find mentions
     model_output = model.perform_coreference(input['text'])
-    output = model_output["clusters"][0][0][1]
 
     # Format output mentions /clusters
     
 
     return {
-        "response": {'test':'testing','output':output}
+        "response": {'test':'testing','output':model_output["clusters"]}
     }
