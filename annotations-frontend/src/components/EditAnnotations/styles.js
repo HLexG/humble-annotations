@@ -19,6 +19,7 @@ const styles = theme => ({
         background: "#ffffff",
         padding:0,
         height: 40,
+        border: "1px solid #ddd",
     },
     toolbartitle:{
         fontSize: "12px",
