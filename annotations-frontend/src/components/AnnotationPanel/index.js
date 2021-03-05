@@ -12,7 +12,7 @@ const AnnotationPanel = ( props ) => {
     // Component States
 
     return (
-        <div className={classes.root}>
+        <div className={classes.toolspanel}>
             
             AnnotationPanel...
         </div>
