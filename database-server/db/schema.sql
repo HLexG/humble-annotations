@@ -20,6 +20,7 @@ SET default_table_access_method = heap;
 CREATE TABLE public.clusters (
     id bigint NOT NULL,
     dataset_id bigint NOT NULL,
+    document_id bigint NOT NULL,
     cluster_name text NOT NULL,
     created_at bigint DEFAULT (date_part('epoch'::text, clock_timestamp()) * (1000)::double precision) NOT NULL,
     created_by bigint,
@@ -290,6 +291,14 @@ ALTER TABLE ONLY public.clusters
 
 ALTER TABLE ONLY public.clusters
     ADD CONSTRAINT clusters_dataset_id_fkey FOREIGN KEY (dataset_id) REFERENCES public.datasets(id) ON DELETE CASCADE;
+
+
+--
+-- Name: clusters clusters_document_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.clusters
+    ADD CONSTRAINT clusters_document_id_fkey FOREIGN KEY (document_id) REFERENCES public.documents(id) ON DELETE CASCADE;
 
 
 --
