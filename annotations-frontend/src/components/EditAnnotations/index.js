@@ -52,7 +52,7 @@ const EditAnnotations = ( props ) => {
                         <Icon className={classes.toolbaricon}>settings</Icon>
                     </Box>
                 </Box>
-                <Grid container spacing={2}>
+                <Grid container spacing={0}>
                     <Grid item sm={10}>
                         <Annotation></Annotation>
                     </Grid>
