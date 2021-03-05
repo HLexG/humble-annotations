@@ -12,7 +12,7 @@ const Annotation = ( props ) => {
     // Component States
 
     return (
-        <div className={classes.root}>
+        <div className={classes.content}>
             Annotation....
             
         </div>
