@@ -3,6 +3,49 @@ import requests
 import zipfile
 import tarfile
 
+from nltk.tokenize import sent_tokenize
+from nltk.tokenize import word_tokenize
+
+
+def process_clusters(doc, clusters):
+    """
+    Function to transform clusters given by SpanBERT into our database format
+    :param doc: Document in text format
+    :param clusters: output['clusters] from SpanBERT
+    :return: Dictionary of mentions
+    """
+
+    # Tokenize words and sentences with NLTK
+    sentences = sent_tokenize(doc)
+
+    # Create dictionary to map from SpanBERT model tokens to NLTK tokens
+    tokenmap = {}
+    token_idx = 0
+    for s_idx,s in enumerate(sentences):
+      words = word_tokenize(s)
+      for w_idx,w in enumerate(words):
+        tokenmap[token_idx] = {"token_id":w_idx,"sentence_id":s_idx}
+        token_idx += 1
+
+    mentions = []
+    # Process SpanBERT clusters into dictionaries with our database format
+    for c_idx,cluster in enumerate(clusters):
+      # Mentions
+      for mention in cluster:
+        mentions.append({
+            "cluster_id": c_idx,
+            "start_token_id": tokenmap[mention[0][0]]["token_id"],
+            "end_token_id": tokenmap[mention[0][1]-1]["token_id"],
+            "sentence_id": tokenmap[mention[0][0]]["sentence_id"]
+        })
+
+    # Return dictionary
+    annotations = {
+                  "mentions": mentions
+    }
+
+    return annotations
+
 
 def download_file(packet_url, base_path="", extract=False, headers=None):
     if base_path != "":

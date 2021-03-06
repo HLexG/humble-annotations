@@ -1,15 +1,19 @@
-import os
-import io
+#import os
+#import io
 #from pathlib import Path
-import pandas as pd
-from glob import glob
+#import pandas as pd
+#from glob import glob
 from fastapi import APIRouter, Path, Query
-from starlette.responses import FileResponse
-from urllib.parse import urlparse
+#from starlette.responses import FileResponse
+#from urllib.parse import urlparse
+
+from extractor.routers.utils import process_clusters
+from extractor.routers.patterns import pattern_np, pattern_prn
 
 import spacy
 from spacy.matcher import Matcher
 from spacy.util import filter_spans
+
 
 router = APIRouter()
 
@@ -19,23 +23,6 @@ router = APIRouter()
 
 model = spacy.load("en_core_web_sm")
 
-# Spacy patterns
-
-# Noun phrase pattern from recipes/coref.py in Prodigy
-pattern_np = [
-            {"POS": "DET", "TAG": {"NOT_IN": ["PRP$"]}, "OP": "?"},
-            {"POS": "ADJ", "OP": "*"},
-            # Proper nouns but no entities, otherwise this custom pattern
-            # would overwrite them
-            {
-                "POS": {"IN": ["PROPN", "NOUN"]},
-                "OP": "+",
-                "ENT_TYPE": {"NOT_IN": ["PERSON", "ORG"]},
-            },
-        ]
-
-# Pronouns
-pattern_prn = [{'POS':'PRON'}]
 
 @router.post(
     "/find_mentions",
@@ -57,18 +44,22 @@ async def find_mentions(
     print("find_mentions")
     print("input", input)
 
+    # Run text through Spacy pipeline
     doc = model(input['text'])
+
     # Initialize matcher
     matcher = Matcher(model.vocab)
 
     spans = []
+
     # Condition for when we have different patterns to match
-    if input['pattern'] == 'coref':
+    # Coref pattern
+    #if input['pattern'] == 'coref':
+    if True:
 
         matcher.add("NP", [pattern_np]) # Add noun phrases pattern
         matcher.add('PRN', [pattern_prn]) # Add pronoun pattern
-
-        matches = matcher(doc)
+        matches = matcher(doc) # Match tokens with pattern defined above
 
         # Add noun phrases to spans list
         for match_id, start, end in matches:
@@ -83,9 +74,10 @@ async def find_mentions(
             spans.append(span)
 
         # Filter by longest span
-        spans = [(sp.text, sp.start, sp.end) for sp in filter_spans(spans)]
+        spans = filter_spans(spans)
 
+        annotations = process_clusters(doc, spans)
 
     return {
-        "response": {'test':'testing','output':spans}
+        "response": {'annotations':annotations}
     }
