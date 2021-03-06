@@ -78,6 +78,12 @@ async def get(id: int) -> Dict[str, Any]:
     result["text"] = document
     result["tokens"] = tokens
 
+    # Get any existing annotations for the document
+    result["annotations"] = {
+        "mentions":[],
+        "clusters":[]
+    }
+
     return result
 
 def prep_data(result) -> Dict[str, Any]:
