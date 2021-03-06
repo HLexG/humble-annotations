@@ -18,6 +18,7 @@ SET default_table_access_method = heap;
 --
 
 CREATE TABLE public.clusters (
+    db_id bigint NOT NULL,
     id bigint NOT NULL,
     dataset_id bigint NOT NULL,
     document_id bigint NOT NULL,
@@ -30,10 +31,10 @@ CREATE TABLE public.clusters (
 
 
 --
--- Name: clusters_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: clusters_db_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.clusters_id_seq
+CREATE SEQUENCE public.clusters_db_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -42,10 +43,10 @@ CREATE SEQUENCE public.clusters_id_seq
 
 
 --
--- Name: clusters_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+-- Name: clusters_db_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.clusters_id_seq OWNED BY public.clusters.id;
+ALTER SEQUENCE public.clusters_db_id_seq OWNED BY public.clusters.db_id;
 
 
 --
@@ -121,6 +122,7 @@ ALTER SEQUENCE public.documents_id_seq OWNED BY public.documents.id;
 --
 
 CREATE TABLE public.mentions (
+    db_id bigint NOT NULL,
     id bigint NOT NULL,
     dataset_id bigint NOT NULL,
     document_id bigint NOT NULL,
@@ -136,10 +138,10 @@ CREATE TABLE public.mentions (
 
 
 --
--- Name: mentions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: mentions_db_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.mentions_id_seq
+CREATE SEQUENCE public.mentions_db_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -148,10 +150,10 @@ CREATE SEQUENCE public.mentions_id_seq
 
 
 --
--- Name: mentions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+-- Name: mentions_db_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.mentions_id_seq OWNED BY public.mentions.id;
+ALTER SEQUENCE public.mentions_db_id_seq OWNED BY public.mentions.db_id;
 
 
 --
@@ -195,10 +197,17 @@ ALTER SEQUENCE public.users_id_seq OWNED BY public.users.id;
 
 
 --
+-- Name: clusters db_id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.clusters ALTER COLUMN db_id SET DEFAULT nextval('public.clusters_db_id_seq'::regclass);
+
+
+--
 -- Name: clusters id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.clusters ALTER COLUMN id SET DEFAULT nextval('public.clusters_id_seq'::regclass);
+ALTER TABLE ONLY public.clusters ALTER COLUMN id SET DEFAULT currval('public.clusters_db_id_seq'::regclass);
 
 
 --
@@ -216,10 +225,17 @@ ALTER TABLE ONLY public.documents ALTER COLUMN id SET DEFAULT nextval('public.do
 
 
 --
+-- Name: mentions db_id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.mentions ALTER COLUMN db_id SET DEFAULT nextval('public.mentions_db_id_seq'::regclass);
+
+
+--
 -- Name: mentions id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.mentions ALTER COLUMN id SET DEFAULT nextval('public.mentions_id_seq'::regclass);
+ALTER TABLE ONLY public.mentions ALTER COLUMN id SET DEFAULT currval('public.mentions_db_id_seq'::regclass);
 
 
 --
@@ -234,7 +250,7 @@ ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.users_
 --
 
 ALTER TABLE ONLY public.clusters
-    ADD CONSTRAINT clusters_pkey PRIMARY KEY (id);
+    ADD CONSTRAINT clusters_pkey PRIMARY KEY (db_id);
 
 
 --
@@ -258,7 +274,7 @@ ALTER TABLE ONLY public.documents
 --
 
 ALTER TABLE ONLY public.mentions
-    ADD CONSTRAINT mentions_pkey PRIMARY KEY (id);
+    ADD CONSTRAINT mentions_pkey PRIMARY KEY (db_id);
 
 
 --
@@ -275,6 +291,62 @@ ALTER TABLE ONLY public.schema_migrations
 
 ALTER TABLE ONLY public.users
     ADD CONSTRAINT users_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: clusters_document_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX clusters_document_id ON public.clusters USING btree (document_id);
+
+
+--
+-- Name: clusters_document_id_and_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX clusters_document_id_and_id ON public.clusters USING btree (document_id, id);
+
+
+--
+-- Name: clusters_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX clusters_id ON public.clusters USING btree (id);
+
+
+--
+-- Name: mentions_cluster_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX mentions_cluster_id ON public.mentions USING btree (cluster_id);
+
+
+--
+-- Name: mentions_document_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX mentions_document_id ON public.mentions USING btree (document_id);
+
+
+--
+-- Name: mentions_document_id_and_cluster_id_and_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX mentions_document_id_and_cluster_id_and_id ON public.mentions USING btree (document_id, cluster_id, id);
+
+
+--
+-- Name: mentions_document_id_and_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX mentions_document_id_and_id ON public.mentions USING btree (document_id, id);
+
+
+--
+-- Name: mentions_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX mentions_id ON public.mentions USING btree (id);
 
 
 --
@@ -350,14 +422,6 @@ ALTER TABLE ONLY public.documents
 
 
 --
--- Name: mentions mentions_cluster_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.mentions
-    ADD CONSTRAINT mentions_cluster_id_fkey FOREIGN KEY (cluster_id) REFERENCES public.clusters(id) ON DELETE CASCADE;
-
-
---
 -- Name: mentions mentions_created_by_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -371,6 +435,14 @@ ALTER TABLE ONLY public.mentions
 
 ALTER TABLE ONLY public.mentions
     ADD CONSTRAINT mentions_dataset_id_fkey FOREIGN KEY (dataset_id) REFERENCES public.datasets(id) ON DELETE CASCADE;
+
+
+--
+-- Name: mentions mentions_document_id_cluster_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.mentions
+    ADD CONSTRAINT mentions_document_id_cluster_id_fkey FOREIGN KEY (document_id, cluster_id) REFERENCES public.clusters(document_id, id) ON DELETE CASCADE;
 
 
 --
