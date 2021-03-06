@@ -16,7 +16,6 @@ def process_clusters(doc, clusters):
     """
 
     # Tokenize words and sentences with NLTK
-    all_words = word_tokenize(doc)
     sentences = sent_tokenize(doc)
 
     # Create dictionary to map from SpanBERT model tokens to NLTK tokens
