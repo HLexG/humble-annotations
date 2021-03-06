@@ -8,6 +8,7 @@ import Annotation from '../Annotation';
 import AnnotationPanel from '../AnnotationPanel';
 import DataServices from "../../services/DataServices";
 import styles from './styles';
+import {buildAnnotationTree} from './utils';
 
 const EditAnnotations = ( props ) => {
     const {classes} = props;
@@ -24,6 +25,12 @@ const EditAnnotations = ( props ) => {
                 setDocument(response.data);
             })
     }
+    const [annotationTree, setAnnotationTree] = useState(null);
+    const loadAnnotationTree = () => {
+        if(document){
+            setAnnotationTree(buildAnnotationTree(document["tokens"],document["annotations"]));
+        }
+    }
 
     // Setup Component
     useEffect(() => {
@@ -36,6 +43,9 @@ const EditAnnotations = ( props ) => {
             loadDocument(id);
         }
       }, [id]);
+    useEffect(() => {
+        loadAnnotationTree();
+      }, [document]);
 
     return (
         <div className={classes.root}>
@@ -43,7 +53,9 @@ const EditAnnotations = ( props ) => {
                 <Box display="flex" p={1} className={classes.toolbar}>
                     <Box p={1} flexGrow={1}>
                         <span className={classes.toolbartitle}>Document: </span>
-                        <span className={classes.toolbartext}>{document.document_name}</span>
+                        {document && (
+                            <span className={classes.toolbartext}>{document.document_name}</span>
+                        )}
                     </Box>
                     <Box p={1}>
                         <span className={classes.toolbartitle}>Sentences:</span>
@@ -54,7 +66,7 @@ const EditAnnotations = ( props ) => {
                 </Box>
                 <Grid container spacing={0}>
                     <Grid item sm={10}>
-                        <Annotation></Annotation>
+                        <Annotation data={annotationTree}></Annotation>
                     </Grid>
                     <Grid item sm={2}>
                         <AnnotationPanel></AnnotationPanel>
