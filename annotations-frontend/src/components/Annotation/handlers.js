@@ -2,6 +2,14 @@ const findNextId = (list) => {
     return Math.max(...list.map(o => o.id), 0)+1;
 }
 
+export const handleKeyDown = (event, state) => {
+    console.log('Key pressed', event.keyCode,state);
+    if(event.keyCode === 27){
+        // Esc
+        state["setSelectedToken"](null);
+    }
+  };
+
 export const handleTokenClick = (event, token, isDouble, state) => {
 
     window.getSelection().removeAllRanges();
