@@ -8,7 +8,7 @@ import Annotation from '../Annotation';
 import AnnotationPanel from '../AnnotationPanel';
 import DataServices from "../../services/DataServices";
 import styles from './styles';
-import {buildAnnotationTree} from './functions';
+
 
 const EditAnnotations = ( props ) => {
     const {classes} = props;
@@ -25,12 +25,8 @@ const EditAnnotations = ( props ) => {
                 setDocument(response.data);
             })
     }
-    const [annotationTree, setAnnotationTree] = useState(null);
-    const loadAnnotationTree = () => {
-        if(document){
-            setAnnotationTree(buildAnnotationTree(document["tokens"],document["annotations"]));
-        }
-    }
+    const [tokens , setTokens] = useState([]);
+    const [annotations , setAnnotations] = useState(null);
 
     // Setup Component
     useEffect(() => {
@@ -44,7 +40,10 @@ const EditAnnotations = ( props ) => {
         }
       }, [id]);
     useEffect(() => {
-        loadAnnotationTree();
+        if(document){
+            setTokens(document["tokens"]);
+            setAnnotations(document["annotations"]);
+        }
       }, [document]);
 
     return (
@@ -66,8 +65,8 @@ const EditAnnotations = ( props ) => {
                 </Box>
                 <Grid container spacing={0}>
                     <Grid item sm={10}>
-                        {annotationTree && (
-                            <Annotation annotationTree={annotationTree}></Annotation>
+                        {tokens && annotations && (
+                            <Annotation tokens={tokens} annotations={annotations}></Annotation>
                         )}
                     </Grid>
                     <Grid item sm={2}>
