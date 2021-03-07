@@ -8,7 +8,7 @@ import Annotation from '../Annotation';
 import AnnotationPanel from '../AnnotationPanel';
 import DataServices from "../../services/DataServices";
 import styles from './styles';
-import {buildAnnotationTree} from './utils';
+import {buildAnnotationTree} from './functions';
 
 const EditAnnotations = ( props ) => {
     const {classes} = props;
@@ -66,7 +66,9 @@ const EditAnnotations = ( props ) => {
                 </Box>
                 <Grid container spacing={0}>
                     <Grid item sm={10}>
-                        <Annotation data={annotationTree}></Annotation>
+                        {annotationTree && (
+                            <Annotation annotationTree={annotationTree}></Annotation>
+                        )}
                     </Grid>
                     <Grid item sm={2}>
                         <AnnotationPanel></AnnotationPanel>
