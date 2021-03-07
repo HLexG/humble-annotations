@@ -20,6 +20,31 @@ const styles = theme => ({
             padding: "10px 10px 10px 0px",
         },
     },
+    token:{
+        cursor: "pointer",
+        display: "inline-block",
+        margin: "0 2px",
+    },
+    tokenselected:{
+        textDecoration: "underline",
+    },
+    mentionhead:{
+        borderColor: "rgb(212, 212, 212)",
+        backgroundColor: "rgb(212, 212, 212)",
+        padding: "12px 12px 12px 0px",
+        cursor: "pointer",
+    },
+    mentionheadtext:{
+        fontSize: "15px",
+        verticalAlign: "top",
+        paddingLeft: "2px",
+    },
+    mention:{
+        borderColor: "rgb(212, 212, 212)",
+        backgroundColor: "rgba(0, 0, 0, 0)",
+        border: "solid 2px #ddd",
+        padding: "0px",
+    },
 });
 
 export default styles;
