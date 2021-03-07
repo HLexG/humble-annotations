@@ -3,7 +3,7 @@ import { withStyles } from '@material-ui/core';
 
 import styles from './styles';
 import {buildAnnotationTree} from './functions';
-import {handleTokenClick,handleMentionClick,
+import {handleKeyDown, handleTokenClick,handleMentionClick,
     handleMentionDragStart, handleMentionDragOver, handleMentionDrop} from './handlers';
 
 const Annotation = ( props ) => {
@@ -49,6 +49,14 @@ const Annotation = ( props ) => {
         // Set state from props
         setTokens(props.tokens);
         setAnnotations(props.annotations);
+
+        // Keydown event listener
+        window.addEventListener('keydown', (event) => handleKeyDown(event,state));
+
+        // Cleanup Component
+        return () => {
+            window.removeEventListener('keydown', handleKeyDown);
+        };
       }, []);
     useEffect(() => {
         // Build annotation tree
