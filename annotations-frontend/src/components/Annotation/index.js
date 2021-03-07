@@ -2,6 +2,7 @@ import React, {useEffect, useRef, useState} from 'react';
 import { withStyles } from '@material-ui/core';
 
 import styles from './styles';
+import {buildAnnotationTree} from './functions';
 import {handleTokenClick,handleMentionClick,
     handleMentionDragStart, handleMentionDragOver, handleMentionDrop} from './handlers';
 
@@ -12,32 +13,47 @@ const Annotation = ( props ) => {
     console.log("================================== Annotation ======================================");
 
     // Component States
+    const [tokens , setTokens] = useState([]);
+    const [annotations , setAnnotations] = useState(null);
     const [annotationTree, setAnnotationTree] = useState(null);
+    const loadAnnotationTree = () => {
+        if(tokens && annotations){
+            setAnnotationTree(buildAnnotationTree(tokens,annotations));
+        }else{
+            setAnnotationTree(null);
+        }
+    }
     const [selectedToken, setSelectedToken] = useState(null);
+    const [selectedMention, setSelectedMention] = useState(null);
+    const [draggedMention, setDraggedMention] = useState(null);
+    const [refresh , setRefresh] = useState(0);
 
     // State holder for reference in handlers
     let state = {
-        // "tokens": tokens,
-        // "setTokens": setTokens,
-        // "annotations": annotations,
-        // "setAnnotations": setAnnotations,
-        // "selectedToken":selectedToken,
-        // "setSelectedToken":setSelectedToken,
-        // "selectedMention":selectedMention,
-        // "setSelectedMention":setSelectedMention,
-        // "draggedMention":draggedMention,
-        // "setDraggedMention":setDraggedMention,
-        // "refresh":refresh,
-        // "setRefresh":setRefresh
+        "tokens": tokens,
+        "setTokens": setTokens,
+        "annotations": annotations,
+        "setAnnotations": setAnnotations,
+        "selectedToken":selectedToken,
+        "setSelectedToken":setSelectedToken,
+        "selectedMention":selectedMention,
+        "setSelectedMention":setSelectedMention,
+        "draggedMention":draggedMention,
+        "setDraggedMention":setDraggedMention,
+        "refresh":refresh,
+        "setRefresh":setRefresh
     }
 
     // Setup Component
     useEffect(() => {
-        //console.log(props.annotationTree);
         // Set state from props
-        setAnnotationTree(props.annotationTree);
-
+        setTokens(props.tokens);
+        setAnnotations(props.annotations);
       }, []);
+    useEffect(() => {
+        // Build annotation tree
+        loadAnnotationTree()
+      }, [tokens, annotations, refresh]);
 
     // Component functions
     const isTokenSelected = (token) => {
