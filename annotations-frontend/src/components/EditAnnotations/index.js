@@ -2,12 +2,23 @@ import React, {useEffect, useRef, useState} from 'react';
 import { withStyles } from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
+import Button from '@material-ui/core/Button';
 import Icon from '@material-ui/core/Icon';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Radio from '@material-ui/core/Radio';
+import RadioGroup from '@material-ui/core/RadioGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import FormControl from '@material-ui/core/FormControl';
+import FormLabel from '@material-ui/core/FormLabel';
 
 import Annotation from '../Annotation';
 import AnnotationPanel from '../AnnotationPanel';
 import DataServices from "../../services/DataServices";
 import styles from './styles';
+import {handleApplyFeatureExtraction} from './handlers';
 
 
 const EditAnnotations = ( props ) => {
@@ -27,6 +38,20 @@ const EditAnnotations = ( props ) => {
     }
     const [tokens , setTokens] = useState([]);
     const [annotations , setAnnotations] = useState(null);
+    const [openFeatureExtractorDialog , setOpenFeatureExtractorDialog] = useState(false);
+    const [featureExtractor , setFeatureExtractor] = useState(null);
+
+    // State holder for reference in handlers
+    let state = {
+        "document": document,
+        "tokens": tokens,
+        "annotations": annotations,
+        "setAnnotations": setAnnotations,
+        "featureExtractor":featureExtractor,
+        "setFeatureExtractor":setFeatureExtractor,
+        "openFeatureExtractorDialog":openFeatureExtractorDialog,
+        "setOpenFeatureExtractorDialog":setOpenFeatureExtractorDialog
+    }
 
     // Setup Component
     useEffect(() => {
@@ -50,7 +75,7 @@ const EditAnnotations = ( props ) => {
         <div className={classes.root}>
             <main className={classes.main}>
                 <Box display="flex" p={1} className={classes.toolbar}>
-                    <Box p={1} flexGrow={1}>
+                    <Box p={1}>
                         <span className={classes.toolbartitle}>Document: </span>
                         {document && (
                             <span className={classes.toolbartext}>{document.document_name}</span>
@@ -58,9 +83,29 @@ const EditAnnotations = ( props ) => {
                     </Box>
                     <Box p={1}>
                         <span className={classes.toolbartitle}>Sentences:</span>
+                        <select className={classes.toolbarselect} value="0" onChange={() => {}}>
+                            <option value="0">0</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
+                        <select className={classes.toolbarselect} value="5" onChange={() => {}}>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                        </select>
                     </Box>
-                    <Box p={1}>
-                        <Icon className={classes.toolbaricon}>settings</Icon>
+                    <Box p={1} flexGrow={1}>
+
+                    </Box>
+                    <Box p={1} onClick={()=>{setOpenFeatureExtractorDialog(!openFeatureExtractorDialog)}} className={classes.pointer}>
+                        <Icon className={classes.toolbaricon}>grading</Icon>
+                    </Box>
+                    <Box p={1} className={classes.pointer}>
+                        <Icon className={classes.toolbaricon}>save</Icon>
                     </Box>
                 </Box>
                 <Grid container spacing={0}>
@@ -74,6 +119,28 @@ const EditAnnotations = ( props ) => {
                     </Grid>
                 </Grid>
             </main>
+            <Dialog open={openFeatureExtractorDialog} onClose={()=>{setOpenFeatureExtractorDialog(false)}}>
+                <DialogTitle>Apply Feature Extractor(s)</DialogTitle>
+                <DialogContent>
+                    <form>
+                    <FormControl component="fieldset">
+                        <FormLabel component="legend">Mentions:</FormLabel>
+                        <RadioGroup aria-label="mentiondetection" name="mentiondetection" onChange={(event) => {setFeatureExtractor(event.target.value)}}>
+                            <FormControlLabel value="feature-extractor-01" control={<Radio />} label="SpanBERT" />
+                            <FormControlLabel value="feature-extractor-02" control={<Radio />} label="SpaCy" />
+                        </RadioGroup>
+                    </FormControl>
+                    </form>
+                </DialogContent>
+                <DialogActions>
+                    <Button variant="contained" onClick={()=>{handleApplyFeatureExtraction(state)}} color="primary">
+                        Apply
+                    </Button>
+                    <Button variant="contained" onClick={()=>{setOpenFeatureExtractorDialog(false)}}>
+                        Cancel
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </div>
     );
 };
