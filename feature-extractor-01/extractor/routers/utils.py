@@ -32,12 +32,13 @@ def process_clusters(doc, clusters):
     for c_idx,cluster in enumerate(clusters):
       # Mentions
       for mention in cluster:
-        mentions.append({
-            "cluster_id": c_idx,
-            "start_token_id": tokenmap[mention[0][0]]["token_id"],
-            "end_token_id": tokenmap[mention[0][1]-1]["token_id"],
-            "sentence_id": tokenmap[mention[0][0]]["sentence_id"]
-        })
+        if (mention[0][0] in tokenmap) and ((mention[0][1]-1) in tokenmap):
+            mentions.append({
+                "cluster_id": c_idx,
+                "start_token_id": tokenmap[mention[0][0]]["token_id"],
+                "end_token_id": tokenmap[mention[0][1]-1]["token_id"],
+                "sentence_id": tokenmap[mention[0][0]]["sentence_id"]
+            })
 
     # Return dictionary
     annotations = {
