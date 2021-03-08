@@ -9,12 +9,14 @@ import {handleKeyDown, handleTokenClick,handleMentionClick,
 const Annotation = ( props ) => {
     const {classes} = props;
     const { history } = props;
+    let { tokens } = props;
+    let { annotations } = props;
 
     console.log("================================== Annotation ======================================");
 
     // Component States
-    const [tokens , setTokens] = useState([]);
-    const [annotations , setAnnotations] = useState(null);
+    // const [tokens , setTokens] = useState([]);
+    // const [annotations , setAnnotations] = useState(null);
     const [annotationTree, setAnnotationTree] = useState(null);
     const loadAnnotationTree = () => {
         if(tokens && annotations){
@@ -31,9 +33,9 @@ const Annotation = ( props ) => {
     // State holder for reference in handlers
     let state = {
         "tokens": tokens,
-        "setTokens": setTokens,
+        // "setTokens": setTokens,
         "annotations": annotations,
-        "setAnnotations": setAnnotations,
+        // "setAnnotations": setAnnotations,
         "selectedToken":selectedToken,
         "setSelectedToken":setSelectedToken,
         "selectedMention":selectedMention,
@@ -47,8 +49,8 @@ const Annotation = ( props ) => {
     // Setup Component
     useEffect(() => {
         // Set state from props
-        setTokens(props.tokens);
-        setAnnotations(props.annotations);
+        // setTokens(props.tokens);
+        // setAnnotations(props.annotations);
 
         // Keydown event listener
         window.addEventListener('keydown', (event) => handleKeyDown(event,state));
@@ -61,7 +63,7 @@ const Annotation = ( props ) => {
     useEffect(() => {
         // Build annotation tree
         loadAnnotationTree()
-      }, [tokens, annotations, refresh]);
+      }, [refresh, props.annotations]);
 
     // Component functions
     const isTokenSelected = (token) => {

@@ -3,7 +3,7 @@ const styles = theme => ({
         color: "#444",
         fontSize: "20px",
         fontFamily: "Lato, Trebuchet MS, Roboto, Helvetica, Arial, sans-serif",
-        lineHeight: "2.0em",
+        lineHeight: "2.4em",
         background: "#fff",
         borderLeft: "1px solid #ddd",
         borderRight: "1px solid #ddd",
