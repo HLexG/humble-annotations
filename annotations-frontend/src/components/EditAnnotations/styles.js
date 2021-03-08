@@ -34,6 +34,15 @@ const styles = theme => ({
     toolbaricon:{
         color: "#444",
     },
+    toolbarbutton:{
+        margin: "0px",
+    },
+    toolbarselect:{
+        marginLeft:"5px",
+    },
+    pointer: {
+        cursor: "pointer",
+    }
 });
 
 export default styles;
