@@ -41,7 +41,7 @@ export const handleTokenClick = (event, token, isDouble, state) => {
             annotations["clusters"].push(cluster);
             
             // Update state
-            state["setAnnotations"](annotations);
+            //state["setAnnotations"](annotations);
             state["setRefresh"](state["refresh"]+1);
             //console.log(state["annotations"]);
         }
