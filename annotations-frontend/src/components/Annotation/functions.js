@@ -19,7 +19,7 @@ export const buildAnnotationTree = (tokens, annotations) => {
             // Check if the token has Mentions
             let mention_starts = annotations["mentions"].filter(m => m.sentence_id === token.sentence_id && m.start_token_id === token.token_id);
             mention_starts.sort((a, b) => a.end_token_id - b.end_token_id);
-            //console.log(mention_starts);
+            //console.log("mention_starts:",mention_starts);
             mention_starts.forEach((m, m_idx) => {
                 let mention = {
                     "id": t_idx,
@@ -41,6 +41,7 @@ export const buildAnnotationTree = (tokens, annotations) => {
 
             let mention_ends = annotations["mentions"].filter(m => m.sentence_id === token.sentence_id && m.end_token_id === token.token_id);
             mention_ends.sort((a, b) => a.start_t_id - b.start_token_id);
+            //console.log("mention_ends:",mention_ends);
             mention_ends.forEach((m, m_idx) => {
                 currentNode.pop();
             });
