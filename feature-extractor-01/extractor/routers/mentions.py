@@ -39,6 +39,4 @@ async def find_mentions(
     annotations = process_clusters(input['text'], model_output['clusters'])
     
 
-    return {
-        "response": {'annotations':annotations}
-    }
+    return annotations
