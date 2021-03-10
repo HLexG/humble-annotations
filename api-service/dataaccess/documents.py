@@ -18,7 +18,7 @@ async def browse(
     """
     
     query = """
-        select id,dataset_id,filepath 
+        select id,dataset_id,document_name,filepath 
         from documents
         where dataset_id = :dataset_id
     """
@@ -39,7 +39,7 @@ async def get(id: int) -> Dict[str, Any]:
     """
 
     query = """
-        select id,dataset_id,filepath from documents where id = :id
+        select id,dataset_id,document_name,filepath from documents where id = :id
     """
 
     values = {
@@ -55,7 +55,6 @@ async def get(id: int) -> Dict[str, Any]:
     result = prep_data(result)
 
     # Get the document
-    link = "https://storage.googleapis.com/hlexg/dataset01/doc1.txt?1=3"
     doc_file = requests.get(result["filepath"])
     document = doc_file.text
 
@@ -92,6 +91,7 @@ def prep_data(result) -> Dict[str, Any]:
 
     result = dict(result)
 
-    result["document_name"] = os.path.basename(result["filepath"])
+    if result["document_name"] == '':
+        result["document_name"] = os.path.basename(result["filepath"])
 
     return result
