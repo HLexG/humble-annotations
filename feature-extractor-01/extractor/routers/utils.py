@@ -5,46 +5,50 @@ import tarfile
 
 from nltk.tokenize import sent_tokenize
 from nltk.tokenize import word_tokenize
+from transformers import BertTokenizer
+import spacy_alignments
 
-
-def process_clusters(doc, clusters):
+def process_clusters(doc, output):
     """
     Function to transform clusters given by SpanBERT into our database format
     :param doc: Document in text format
-    :param clusters: output['clusters] from SpanBERT
+    :param output: output from SpanBERT
     :return: Dictionary of mentions
     """
-
+    # Load BERT tokenizer
+    bert_tokenizer = BertTokenizer.from_pretrained('bert-base-cased')
+    # Convert BERT tokens to tokens matching cluster output
+    bert_tokens = bert_tokenizer.convert_tokens_to_string(output['doc_tokens']).split(' ')
+    # Tokenize doc with NLTK
+    nltk_tokens = word_tokenize(doc)
+    # Align tokens from both models
+    a2b, b2a = spacy_alignments.get_alignments(bert_tokens, nltk_tokens)
     # Tokenize words and sentences with NLTK
     sentences = sent_tokenize(doc)
 
-    # Create dictionary to map from SpanBERT model tokens to NLTK tokens
+    # Map NLTK raw text tokens to tokens by sentence
     tokenmap = {}
     token_idx = 0
-    for s_idx,s in enumerate(sentences):
-      words = word_tokenize(s)
-      for w_idx,w in enumerate(words):
-        tokenmap[token_idx] = {"token_id":w_idx,"sentence_id":s_idx}
-        token_idx += 1
+    for s_idx, s in enumerate(sentences):
+        words = word_tokenize(s)
+        for w_idx, w in enumerate(words):
+            tokenmap[token_idx] = {"token_id": w_idx, "sentence_id": s_idx}
+            token_idx += 1
+
+    # Process SpanBERT clusters into dictionaries with our database format
 
     mentions = []
-    # Process SpanBERT clusters into dictionaries with our database format
-    for c_idx,cluster in enumerate(clusters):
-      # Mentions
-      for mention in cluster:
-        if (mention[0][0] in tokenmap) and ((mention[0][1]-1) in tokenmap):
+    for c_idx, cluster in enumerate(output['clusters']):
+        for mention in cluster:
             mentions.append({
                 "cluster_id": c_idx,
-                "start_token_id": tokenmap[mention[0][0]]["token_id"],
-                "end_token_id": tokenmap[mention[0][1]-1]["token_id"],
-                "sentence_id": tokenmap[mention[0][0]]["sentence_id"]
+                "start_token_id": tokenmap[a2b[mention[0][0]][0]]["token_id"],
+                "end_token_id": tokenmap[a2b[mention[0][1]][0] - 1]["token_id"],
+                "sentence_id": tokenmap[a2b[mention[0][0]][0]]["sentence_id"]
             })
 
     # Return dictionary
-    annotations = {
-                  "mentions": mentions
-    }
-
+    annotations = {"mentions": mentions}
     return annotations
 
 
