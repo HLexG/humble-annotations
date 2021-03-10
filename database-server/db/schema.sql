@@ -90,6 +90,7 @@ ALTER SEQUENCE public.datasets_id_seq OWNED BY public.datasets.id;
 CREATE TABLE public.documents (
     id bigint NOT NULL,
     dataset_id bigint NOT NULL,
+    document_name text NOT NULL,
     filepath text NOT NULL,
     created_at bigint DEFAULT (date_part('epoch'::text, clock_timestamp()) * (1000)::double precision) NOT NULL,
     created_by bigint,

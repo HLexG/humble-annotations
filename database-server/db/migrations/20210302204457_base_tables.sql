@@ -17,6 +17,7 @@ CREATE TABLE datasets (
 CREATE TABLE documents (
     id BIGSERIAL PRIMARY KEY,
     dataset_id BIGINT NOT NULL REFERENCES datasets ON DELETE CASCADE,
+    document_name TEXT NOT NULL,
     filepath TEXT NOT NULL,
     created_at BIGINT NOT NULL DEFAULT EXTRACT(EPOCH FROM clock_timestamp()) * 1000,
     created_by BIGINT REFERENCES users ON DELETE SET NULL,
