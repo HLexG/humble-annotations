@@ -36,7 +36,7 @@ async def find_mentions(
     model_output = model.perform_coreference(input['text'])
 
     # Format output mentions /clusters
-    annotations = process_clusters(input['text'], model_output['clusters'])
+    annotations = process_clusters(input['text'], model_output)
     
 
     return {
