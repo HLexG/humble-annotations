@@ -90,7 +90,7 @@ export const handleMentionDrop = (event, mention, state) => {
         dest_mention["cluster_id"] = state["draggedMention"]["cluster_id"];
 
         // Update state
-        state["setAnnotations"](annotations);
+        //state["setAnnotations"](annotations);
         state["setDraggedMention"](null);
         state["setRefresh"](state["refresh"]+1);
         console.log(state["annotations"]);
