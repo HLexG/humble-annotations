@@ -15,6 +15,7 @@ nltk = "*"
 torch = "==1.6"
 transformers = "==3.0"
 scipy = "==1.4.1"
+spacy-alignments = "*"
 
 [requires]
 python_version = "3.8"
