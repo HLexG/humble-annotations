@@ -12,7 +12,8 @@ async def browse(
         *,
         dataset_id: int,
         page_number: int = 0,
-        page_size: int = 20
+        page_size: int = 20,
+        text_query: str = None,
 ) -> List[Dict[str, Any]]:
     """
     Retrieve a list of rows based on filters
@@ -27,6 +28,14 @@ async def browse(
     values = {
         "dataset_id": dataset_id
     }
+
+    if text_query is not None:
+
+        query = query + """
+            and entity_name like :text_query
+        """
+
+        values['text_query'] = text_query
 
     print("query", query)
     result = await database.fetch_all(query, values)
@@ -92,11 +101,13 @@ async def create(*,
         ) RETURNING *;
     """, values=values)
 
+    print(result)
+
     result = prep_data(result)
     return result
 
 
-async def delete_all_for_document(dataset_id: int) -> None:
+async def delete_all(dataset_id: int) -> None:
     """
     Deletes existing records
     """
