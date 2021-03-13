@@ -93,13 +93,16 @@ async def create(*,
     field_list = ", ".join(values.keys())
     param_list = ", ".join(":" + key for key in values.keys())
 
-    result = await database.fetch_one(f"""
+    query = f"""
         INSERT INTO entitylink (
             {field_list}
         ) VALUES (
             {param_list}
         ) RETURNING *;
-    """, values=values)
+    """
+    print(query, values)
+
+    result = await database.fetch_one(query, values=values)
 
     print(result)
 
