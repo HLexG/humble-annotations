@@ -119,6 +119,44 @@ ALTER SEQUENCE public.documents_id_seq OWNED BY public.documents.id;
 
 
 --
+-- Name: entitylink; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.entitylink (
+    db_id bigint NOT NULL,
+    id text NOT NULL,
+    alt_id text DEFAULT '-1'::text,
+    dataset_id bigint NOT NULL,
+    entity_name text NOT NULL,
+    description text NOT NULL,
+    url text,
+    created_at bigint DEFAULT (date_part('epoch'::text, clock_timestamp()) * (1000)::double precision) NOT NULL,
+    created_by bigint,
+    updated_at bigint,
+    updated_by bigint
+);
+
+
+--
+-- Name: entitylink_db_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.entitylink_db_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: entitylink_db_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.entitylink_db_id_seq OWNED BY public.entitylink.db_id;
+
+
+--
 -- Name: mentions; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -226,6 +264,13 @@ ALTER TABLE ONLY public.documents ALTER COLUMN id SET DEFAULT nextval('public.do
 
 
 --
+-- Name: entitylink db_id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.entitylink ALTER COLUMN db_id SET DEFAULT nextval('public.entitylink_db_id_seq'::regclass);
+
+
+--
 -- Name: mentions db_id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -271,6 +316,14 @@ ALTER TABLE ONLY public.documents
 
 
 --
+-- Name: entitylink entitylink_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.entitylink
+    ADD CONSTRAINT entitylink_pkey PRIMARY KEY (db_id);
+
+
+--
 -- Name: mentions mentions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -313,6 +366,34 @@ CREATE UNIQUE INDEX clusters_document_id_and_id ON public.clusters USING btree (
 --
 
 CREATE INDEX clusters_id ON public.clusters USING btree (id);
+
+
+--
+-- Name: entitylink_alt_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX entitylink_alt_id ON public.entitylink USING btree (alt_id);
+
+
+--
+-- Name: entitylink_entity_name_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX entitylink_entity_name_id ON public.entitylink USING btree (entity_name);
+
+
+--
+-- Name: entitylink_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX entitylink_id ON public.entitylink USING btree (id);
+
+
+--
+-- Name: entitylink_id_alt_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX entitylink_id_alt_id ON public.entitylink USING btree (id, alt_id);
 
 
 --
@@ -423,6 +504,30 @@ ALTER TABLE ONLY public.documents
 
 
 --
+-- Name: entitylink entitylink_created_by_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.entitylink
+    ADD CONSTRAINT entitylink_created_by_fkey FOREIGN KEY (created_by) REFERENCES public.users(id) ON DELETE SET NULL;
+
+
+--
+-- Name: entitylink entitylink_dataset_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.entitylink
+    ADD CONSTRAINT entitylink_dataset_id_fkey FOREIGN KEY (dataset_id) REFERENCES public.datasets(id) ON DELETE CASCADE;
+
+
+--
+-- Name: entitylink entitylink_updated_by_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.entitylink
+    ADD CONSTRAINT entitylink_updated_by_fkey FOREIGN KEY (updated_by) REFERENCES public.users(id) ON DELETE SET NULL;
+
+
+--
 -- Name: mentions mentions_created_by_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -473,4 +578,5 @@ ALTER TABLE ONLY public.mentions
 
 INSERT INTO public.schema_migrations (version) VALUES
     ('20210302204457'),
-    ('20210303133158');
+    ('20210303133158'),
+    ('20210313140512');
