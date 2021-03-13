@@ -1,3 +1,4 @@
+import asyncio
 import threading
 from queue import Queue
 
@@ -50,19 +51,24 @@ async def load_entity_links(dataset_id):
     # Load csv file with entity linking database
     df = pd.read_csv('data/entities.csv')
 
+    tasks = []
+
     # Delete all rows from entitylinks
     entitylink.delete_all(dataset_id)
+    print("Delete complete...")
 
     # Create entitylinks
+    
     for row in df.iterrows():
         print(row)
-        x = await entitylink.create(alt_id=row[1]['wiki_id'],
+        tasks.append(entitylink.create(alt_id=str(row[1]['wiki_id']),
                                     dataset_id=dataset_id,
                                     entity_name=row[1]['name'],
                                     description=row[1]['description'],
                                     url=row[1]['url'],
-                                    id=row[1]['qid'])
+                                    id=row[1]['qid']))
 
+    await asyncio.wait(tasks)
 
 
 
