@@ -11,8 +11,6 @@ from dataaccess.errors import RecordNotFoundError
 async def browse(
         *,
         dataset_id: int,
-        page_number: int = 0,
-        page_size: int = 20,
         text_query: str = None,
 ) -> List[Dict[str, Any]]:
     """
@@ -20,9 +18,9 @@ async def browse(
     """
 
     query = """
-        select id,alt_id,dataset_id,entity_name,description,url 
-        from entitylink
-        where dataset_id = :dataset_id
+        SELECT id,alt_id,dataset_id,entity_name,description,url 
+        FROM entitylink
+        WHERE dataset_id = :dataset_id
     """
 
     values = {
@@ -31,11 +29,14 @@ async def browse(
 
     if text_query is not None:
 
-        query = query + """
-            and entity_name like :text_query
-        """
+        text_query = '%' + text_query + '%'
+        query += """ 
+                  AND LOWER(entity_name) LIKE LOWER(:text_query) 
+                 ORDER BY LENGTH(entity_name)
+                 LIMIT 5
+                 """
 
-        values['text_query'] = text_query
+        values["text_query"] = text_query
 
     print("query", query)
     result = await database.fetch_all(query, values)
@@ -46,7 +47,7 @@ async def browse(
 async def get(id: int) -> Dict[str, Any]:
     """
     Retrieve one row based by its id. Return object is a dict.
-    Raises if the record was not found.
+    Raises  if the record was not found.
     """
 
     query = """
