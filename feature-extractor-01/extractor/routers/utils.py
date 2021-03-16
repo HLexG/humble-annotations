@@ -8,6 +8,7 @@ from nltk.tokenize import word_tokenize
 from transformers import BertTokenizer
 import spacy_alignments
 
+
 def process_clusters(doc, output):
     """
     Function to transform clusters given by SpanBERT into our database format
@@ -18,7 +19,11 @@ def process_clusters(doc, output):
     # Load BERT tokenizer
     bert_tokenizer = BertTokenizer.from_pretrained('bert-base-cased')
     # Convert BERT tokens to tokens matching cluster output
-    bert_tokens = bert_tokenizer.convert_tokens_to_string(output['doc_tokens']).split(' ')
+    # Sentences are chunks of 382 tokens
+    bert_tokens = []
+    for sent in output['tokenized_doc']['sentences']:
+      bert_tokens += bert_tokenizer.convert_tokens_to_string(sent).split(' ')
+    #bert_tokens = bert_tokenizer.convert_tokens_to_string(output['tokenized_doc']['sentences'][0]).split(' ')
     # Tokenize doc with NLTK
     nltk_tokens = word_tokenize(doc)
     # Align tokens from both models
@@ -40,10 +45,11 @@ def process_clusters(doc, output):
     mentions = []
     for c_idx, cluster in enumerate(output['clusters']):
         for mention in cluster:
+
             mentions.append({
                 "cluster_id": c_idx,
                 "start_token_id": tokenmap[a2b[mention[0][0]][0]]["token_id"],
-                "end_token_id": tokenmap[a2b[mention[0][1]][0] - 1]["token_id"],
+                "end_token_id": tokenmap[a2b[mention[0][1]+1][0] - 1]["token_id"],
                 "sentence_id": tokenmap[a2b[mention[0][0]][0]]["sentence_id"]
             })
 
