@@ -1,0 +1,17 @@
+---
+- name: "Build docker images and push them to GCR"
+  hosts: localhost
+  gather_facts: false
+  tasks:
+  - name: Build api-service container image
+    community.general.docker_image:
+      build:
+        path: /api-service
+      name: gcr.io/{{ gcp_project }}/hlexg:humble-annotations-api-service
+      source: build
+  - name: Push api-service image to GCR
+    community.general.docker_image:
+      name: gcr.io/{{ gcp_project }}/hlexg:humble-annotations-api-service
+      repository: gcr.io/{{ gcp_project }}/hlexg:humble-annotations-api-service
+      push: yes
+      source: local
