@@ -1,0 +1,3 @@
+all:
+    vars:
+      gcp_project: "hlexg-308913"
