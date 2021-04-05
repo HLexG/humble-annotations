@@ -1,3 +1,4 @@
 all:
     vars:
       gcp_project: "hlexg-308913"
+      zone: "us-central1-a"
