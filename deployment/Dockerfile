@@ -26,7 +26,7 @@ RUN set -ex; \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* && \
     pip install --no-cache-dir --upgrade pip && \
-    pip install openshift ansible docker && \
+    pip install openshift ansible docker apache-libcloud && \
     useradd -ms /bin/bash app -d /home/app -u 1000 -p "$(openssl passwd -1 passw0rd)" && \
     usermod -aG docker app && \
     mkdir -p /app && \
