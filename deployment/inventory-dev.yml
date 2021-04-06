@@ -1,0 +1,12 @@
+all:
+    vars:
+      gcp_service_account_file: "../../secrets/hlexg-ansible.json"
+      gcp_service_account_email: "ansible@hlexg-308913.iam.gserviceaccount.com"
+      gcp_project: "hlexg-308913"
+      gcp_region: "us-central1"
+      gcp_zone: "us-central1-a"
+      persistent_disk_name: "dev01-disk"
+      persistent_disk_size: 100
+      machine_instance_name: "dev01"
+      machine_type: "n2-standard-2"
+      machine_disk_size: 30
