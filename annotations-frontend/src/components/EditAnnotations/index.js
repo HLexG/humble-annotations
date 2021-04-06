@@ -115,7 +115,7 @@ const EditAnnotations = ( props ) => {
                         )}
                     </Grid>
                     <Grid item sm={2}>
-                        <AnnotationPanel></AnnotationPanel>
+                        <AnnotationPanel tokens={tokens} annotations={annotations}></AnnotationPanel>
                     </Grid>
                 </Grid>
             </main>
