@@ -1,6 +1,0 @@
-- name: Create Compute Instance
-  hosts: localhost
-  environment:
-    GCP_AUTH_KIND: "serviceaccount"
-    GCP_SERVICE_ACCOUNT_FILE: "../../secrets/gcp.json"
-    GCP_SCOPES: "https://www.googleapis.com/auth/compute"
