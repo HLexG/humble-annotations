@@ -34,3 +34,7 @@ export const handleApplyFeatureExtraction = (state) => {
 
     state["setOpenFeatureExtractorDialog"](false);
   };
+
+
+export const handleApplyMentionRefresh = (state) => {
+};

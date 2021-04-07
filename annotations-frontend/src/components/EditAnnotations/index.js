@@ -18,7 +18,7 @@ import Annotation from '../Annotation';
 import AnnotationPanel from '../AnnotationPanel';
 import DataServices from "../../services/DataServices";
 import styles from './styles';
-import {handleApplyFeatureExtraction} from './handlers';
+import {handleApplyFeatureExtraction, handleApplyMentionRefresh} from './handlers';
 
 
 const EditAnnotations = ( props ) => {
@@ -97,6 +97,9 @@ const EditAnnotations = ( props ) => {
                             <option value="4">4</option>
                             <option value="5">5</option>
                         </select>
+                    </Box>
+                    <Box p={1} onClick={()=>{setOpenFeatureExtractorDialog(!openFeatureExtractorDialog)}} className={classes.pointer}>
+                        <div style={{fontSize:25}}>🤭</div>
                     </Box>
                     <Box p={1} flexGrow={1}>
 
