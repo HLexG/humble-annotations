@@ -4,7 +4,7 @@ import { withStyles } from '@material-ui/core';
 import styles from './styles';
 import {buildAnnotationTree} from './functions';
 import {handleKeyDown, handleTokenClick,handleMentionClick,
-    handleMentionDragStart, handleMentionDragOver, handleMentionDrop} from './handlers';
+    handleMentionDragStart, handleMentionDragOver, handleMentionDrop, setBg} from './handlers';
 
 const Annotation = ( props ) => {
     const {classes} = props;
@@ -111,7 +111,7 @@ const Annotation = ( props ) => {
                                 onDragOver={(event)=>handleMentionDragOver(event)}
                                 onDrop={(event)=>handleMentionDrop(event,i.obj,state)}
                             >
-                                <mark className={classes.mentionhead}><a className={classes.mentionheadtext}>{ i.obj.text }</a></mark>
+                                <mark className={classes.mentionhead} backgroundColor ={setBg}><a className={classes.mentionheadtext}>{ i.obj.text }</a></mark>
                                 { i.nodes && renderAnnotationItems(i.nodes) }
                             </span>
                         )

@@ -2,6 +2,12 @@ const findNextId = (list) => {
     return Math.max(...list.map(o => o.id), 0)+1;
 }
 
+
+export const setBg = () => {
+  return "#"+ Math.floor(Math.random()*16777215).toString(16);
+}
+
+
 export const handleKeyDown = (event, state) => {
     console.log('Key pressed', event.keyCode,state);
     if(event.keyCode === 27){
@@ -63,6 +69,7 @@ export const handleMentionClick = (event, mention, state) => {
     event.stopPropagation();
     // Select the mention
     state["setSelectedMention"](mention);
+    mention["backgroundColor"] = setBg;
 };
 export const handleMentionDragStart = (event, mention, state) => {
     console.log("handleMentionDragStart...",mention);
@@ -88,6 +95,7 @@ export const handleMentionDrop = (event, mention, state) => {
         // Destination mention
         let dest_mention = annotations["mentions"].find(m => m.id === mention.id);
         dest_mention["cluster_id"] = state["draggedMention"]["cluster_id"];
+        dest_mention["background_color"] = state["draggedMention"]["background_color"]
 
         // Update state
         //state["setAnnotations"](annotations);
