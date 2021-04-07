@@ -30,7 +30,7 @@ const styles = theme => ({
     },
     mentionhead:{
         borderColor: "rgb(212, 212, 212)",
-        backgroundColor: "rgb(212, 212, 212)",
+        backgroundColor: "#" +Math.floor(Math.random()*16777215).toString(16),
         padding: "12px 12px 12px 0px",
         cursor: "pointer",
     },
