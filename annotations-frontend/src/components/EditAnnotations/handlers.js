@@ -1,4 +1,6 @@
 import DataServices from "../../services/DataServices";
+import {useState} from 'react';
+
 
 export const handleApplyFeatureExtraction = (state) => {
 
@@ -37,4 +39,9 @@ export const handleApplyFeatureExtraction = (state) => {
 
 
 export const handleApplyMentionRefresh = (state) => {
+    if(state["annotations"] && state["setAnnotations"]) {
+
+        let annotations = useState(null);
+
+    }
 };

@@ -25,6 +25,7 @@ const EditAnnotations = ( props ) => {
     const {classes} = props;
     const { history } = props;
 
+
     console.log("================================== EditAnnotations ======================================");
 
     // Component States
@@ -41,6 +42,17 @@ const EditAnnotations = ( props ) => {
     const [openFeatureExtractorDialog , setOpenFeatureExtractorDialog] = useState(false);
     const [featureExtractor , setFeatureExtractor] = useState(null);
 
+    /*annoClose = this.annoClose.bind(this);
+
+    function annoClose(e) {
+        e.stopPropagation();
+        this.setState({
+            annotations: null
+        });
+      }*/
+
+
+
     // State holder for reference in handlers
     let state = {
         "document": document,
@@ -52,7 +64,7 @@ const EditAnnotations = ( props ) => {
         "openFeatureExtractorDialog":openFeatureExtractorDialog,
         "setOpenFeatureExtractorDialog":setOpenFeatureExtractorDialog
     }
-
+    
     // Setup Component
     useEffect(() => {
         if(props.match.params.id){
@@ -98,9 +110,10 @@ const EditAnnotations = ( props ) => {
                             <option value="5">5</option>
                         </select>
                     </Box>
-                    <Box p={1} onClick={()=>{setOpenFeatureExtractorDialog(!openFeatureExtractorDialog)}} className={classes.pointer}>
+                    <Box p={1} variant="contained" onClick={()=>{handleApplyMentionRefresh(state)}} color="primary">
                         <div style={{fontSize:25}}>🤭</div>
-                    </Box>
+                        </Box>  
+                    
                     <Box p={1} flexGrow={1}>
 
                     </Box>
@@ -143,7 +156,10 @@ const EditAnnotations = ( props ) => {
                         Cancel
                     </Button>
                 </DialogActions>
-            </Dialog>
+            </Dialog>            
+            
+
+
         </div>
     );
 };
