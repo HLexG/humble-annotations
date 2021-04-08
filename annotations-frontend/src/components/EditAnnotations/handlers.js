@@ -37,11 +37,16 @@ export const handleApplyFeatureExtraction = (state) => {
     state["setOpenFeatureExtractorDialog"](false);
   };
 
+/*export function ClearAnnotations() {
+    const [annotations , setAnnotations] = useState(null);
+}
 
-export const handleApplyMentionRefresh = (state) => {
-    if(state["annotations"] && state["setAnnotations"]) {
+handleApplyMentionRefresh = (state) => {
+    if(state["annotations"] != useState(null) && state["setAnnotations"] != useState(null)) {
 
         let annotations = useState(null);
 
     }
 };
+
+export default handleApplyMentionRefresh;*/
