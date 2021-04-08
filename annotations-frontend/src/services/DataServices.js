@@ -22,6 +22,14 @@ const DataServices = {
     FeatureExtractor01FindMentions: async function(text){
         return await axios.post(BASE_FEATURE_EXTRACTOR01_URL+"/find_mentions",{'text':text});
     },
+    SaveMentions: async function [mentiondata]{
+        console.log(mentiondata);
+        return await axios.post(BASE_API_URL+"/mentions", {mentiondata});
+    }, 
+    SaveClusters: async function [clusterdata]{
+        console.log(clusterdata)
+        return await axios.post(BASE_API_URL+"/mentions", {clusterdata});
+    }
 }
 
 export default DataServices;
