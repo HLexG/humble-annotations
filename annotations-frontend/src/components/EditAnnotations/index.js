@@ -18,12 +18,14 @@ import Annotation from '../Annotation';
 import AnnotationPanel from '../AnnotationPanel';
 import DataServices from "../../services/DataServices";
 import styles from './styles';
-import {handleApplyFeatureExtraction, handleApplyMentionRefresh} from './handlers';
+import {handleApplyFeatureExtraction, ClearAnnotations} from './handlers';
+
 
 
 const EditAnnotations = ( props ) => {
     const {classes} = props;
     const { history } = props;
+    
 
 
     console.log("================================== EditAnnotations ======================================");
@@ -110,7 +112,7 @@ const EditAnnotations = ( props ) => {
                             <option value="5">5</option>
                         </select>
                     </Box>
-                    <Box p={1} variant="contained" onClick={()=>{handleApplyMentionRefresh(state)}} color="primary">
+                    <Box p={1} variant="contained" onClick={()=>{loadDocument(id);setTokens(document["tokens"]); setAnnotations(document["annotations"]);}} color="primary">
                         <div style={{fontSize:25}}>🤭</div>
                         </Box>  
                     
