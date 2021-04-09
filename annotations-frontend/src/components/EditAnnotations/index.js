@@ -29,6 +29,7 @@ const EditAnnotations = ( props ) => {
 
 
     console.log("================================== EditAnnotations ======================================");
+    
 
     // Component States
     const [id , setId] = useState(null);
@@ -122,7 +123,7 @@ const EditAnnotations = ( props ) => {
                     <Box p={1} onClick={()=>{setOpenFeatureExtractorDialog(!openFeatureExtractorDialog)}} className={classes.pointer}>
                         <Icon className={classes.toolbaricon}>grading</Icon>
                     </Box>
-                    <Box p={1} className={classes.pointer}>
+                    <Box p={1} className={classes.pointer} onClick={()=>{console.log('annotations sent:');console.log(annotations["mentions"]); DataServices.SaveMentions(annotations);}}>
                         <Icon className={classes.toolbaricon}>save</Icon>
                     </Box>
                 </Box>
@@ -164,6 +165,7 @@ const EditAnnotations = ( props ) => {
 
         </div>
     );
+    console.log(annotations);
 };
 
 export default withStyles( styles )( EditAnnotations );
