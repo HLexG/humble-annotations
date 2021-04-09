@@ -7,13 +7,38 @@ from nltk.tokenize import word_tokenize
 from dataaccess.session import database
 from dataaccess.errors import RecordNotFoundError
 
+async def browse(
+    *,
+    dataset_id: int
+) -> List[Dict[str, Any]]:
+    """
+    Retrieve a list of rows based on filters
+    """
+    
+    query = """
+        select id,dataset_id,document_id
+        from mentions
+        where dataset_id = :dataset_id
+    """
+
+    values = {
+        "dataset_id": dataset_id
+    }
+
+    print("query",query)
+    result = await database.fetch_all(query, values)
+
+    return [prep_data(row) for row in result]
+
+
+
 async def create(*,
                  dataset_id: int,
                  document_id: int,
                  sentence_id: int,
                  start_token_id: int,
                  end_token_id: int,
-                 cluster_id: int,
+                 cluster_id: int = None,
                  id: int = None) -> Dict[str, Any]:
     """
     Create a new row. Returns the created record as a dict.
@@ -32,6 +57,9 @@ async def create(*,
     # if the id was passed
     if id is not None:
         values["id"] = id
+
+    if cluster_id is not None:
+        values["id"] = cluster_id
 
     # Generate the field and values list
     field_list = ", ".join(values.keys())

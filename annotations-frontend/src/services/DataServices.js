@@ -22,11 +22,28 @@ const DataServices = {
     FeatureExtractor01FindMentions: async function(text){
         return await axios.post(BASE_FEATURE_EXTRACTOR01_URL+"/find_mentions",{'text':text});
     },
-    SaveMentions: async function [mentiondata]{
-        console.log(mentiondata);
-        return await axios.post(BASE_API_URL+"/mentions", {mentiondata});
-    }, 
-    SaveClusters: async function [clusterdata]{
+    SaveMentions: async function (annotations){
+        //console.log(mentiondata);
+        console.log('helloo');
+        console.log(annotations['mentions']);
+        /*
+                                            'cluster_id': annotations['mentions'][0]['cluster_id'],
+                                            'document_id': annotations['mentions'][0]['document_id'],
+                                            'end_token_id': annotations['mentions'][0]['end_token_id'],
+                                            'id': annotations['mentions'][0]['id'],
+                                            'sentence_id': annotations['mentions'][0]['sentence_id'],
+                                            'start_token_id': annotations['mentions'][0]['start_token_id']
+                                        */
+        return await axios.post(BASE_API_URL+"/mentions", {'dataset_id': 1, 'document_id':1,'sentence_id': annotations['mentions'][0]['sentence_id'],
+                                        'start_token_id': annotations['mentions'][0]['start_token_id'],
+                                        'end_token_id': annotations['mentions'][0]['end_token_id'],
+                                        'cluster_id': annotations['mentions'][0]['cluster_id']}).then((response) => {
+                                                                console.log(response);
+                                                                    }, (error) => {
+                                                                console.log(error);
+                                                                });
+                                                        }, 
+    SaveClusters: async function (clusterdata){
         console.log(clusterdata)
         return await axios.post(BASE_API_URL+"/mentions", {clusterdata});
     }
