@@ -33,7 +33,6 @@ async def browse(
 
 
 async def create(*,
-                 dataset_id: int,
                  document_id: int,
                  cluster_name: str) -> Dict[str, Any]:
     """
@@ -42,14 +41,12 @@ async def create(*,
 
     # Set the values
     values = {
-        "dataset_id": dataset_id,
+        "dataset_id": 1,
         "document_id": document_id,
         "cluster_name": cluster_name
     }
 
     # if the id was passed
-    if id is not None:
-        values["id"] = id
 
 
     # Generate the field and values list
@@ -70,8 +67,7 @@ async def create(*,
 async def update(id: int,
                  dataset_id: int,
                  document_id: int,
-                 sentence_id: int = None,
-                 cluster_name: int = None) -> Dict[str, Any]:
+                 cluster_name: str = None) -> Dict[str, Any]:
     """
     Updates an existing row. Keyword arguments left at None will not be
     changed in the database. Returns the updated record as a dict. Raises if
@@ -86,17 +82,7 @@ async def update(id: int,
 
     changes: Dict[str, Any] = {
     }
-
-    if start_token_id is not None:
-        changes["start_token_id"] = start_token_id
-    
-    if start_token_id is not None:
-        changes["start_token_id"] = start_token_id
-
-    if end_token_id is not None:
-        changes["end_token_id"] = end_token_id
-
-
+               
     change_list = ", ".join(key + " = :" + key for key in changes.keys())
     change_list += ", updated_at = EXTRACT(EPOCH FROM clock_timestamp()) * 1000"
 

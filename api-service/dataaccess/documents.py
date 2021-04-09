@@ -70,7 +70,7 @@ async def get(id: int) -> Dict[str, Any]:
                 "text": w,
                 "token_id": w_idx,
                 "sentence_id": s_idx,
-                "document_id": result["dataset_id"]
+                "document_id": result["id"]
             }
             tokens.append(token)
     
