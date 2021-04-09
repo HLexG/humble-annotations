@@ -34,7 +34,7 @@ async def browse(
 
 async def create(*,
                  dataset_id: int,
-                 document_id,
+                 document_id: int,
                  sentence_id: int,
                  start_token_id: int,
                  end_token_id: int,
