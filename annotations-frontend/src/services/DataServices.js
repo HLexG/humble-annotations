@@ -34,7 +34,7 @@ const DataServices = {
                                             'sentence_id': annotations['mentions'][0]['sentence_id'],
                                             'start_token_id': annotations['mentions'][0]['start_token_id']
                                         */
-        return await axios.post(BASE_API_URL+"/mentions", {'dataset_id': 1, 'document_id':id,'sentence_id': annotations['mentions'][0]['sentence_id'],
+        return await axios.post(BASE_API_URL+"/mentions", {'dataset_id': 1, 'document_id':annotations['mentions'][0]['document_id'],'sentence_id': annotations['mentions'][0]['sentence_id'],
                                         'start_token_id': annotations['mentions'][0]['start_token_id'],
                                         'end_token_id': annotations['mentions'][0]['end_token_id'],
                                         'cluster_id': 2}).then((response) => {
@@ -45,7 +45,7 @@ const DataServices = {
                                                         }, 
     SaveClusters: async function (annotations){
         
-        return await axios.post(BASE_API_URL+"/clusters", {'dataset_id': 1, 'document_id':parseInt(annotations['mentions'][0]['document_id'],10),'cluster_name':'M1'});
+        return await axios.post(BASE_API_URL+"/clusters", {'document_id':parseInt(annotations['mentions'][0]['document_id'],10),'cluster_name':'M1'});
     }
 }
 

@@ -41,7 +41,7 @@ async def create(*,
 
     # Set the values
     values = {
-        "dataset_id": 1,
+        #"dataset_id": 1,
         "document_id": document_id,
         "cluster_name": cluster_name
     }
