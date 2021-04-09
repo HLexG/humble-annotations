@@ -33,6 +33,7 @@ async def browse(
 
 
 async def create(*,
+                id: int,
                 dataset_id: int,
                 document_id: int,
                 cluster_name: str) -> Dict[str, Any]:
@@ -42,14 +43,15 @@ async def create(*,
 
     # Set the values
     values = {
+        "id": id,
         "dataset_id": dataset_id,
         "document_id": document_id,
         "cluster_name": cluster_name
     }
 
     # if the id was passed
-    #if id is not None:
-    #    values["id"] = id
+    if id is not None:
+        values["id"] = id
 
     # Generate the field and values list
     field_list = ", ".join(values.keys())
