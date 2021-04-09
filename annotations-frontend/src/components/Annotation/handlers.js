@@ -13,7 +13,11 @@ export const handleKeyDown = (event, state) => {
     if(event.keyCode === 27){
         // Esc
         state["setSelectedToken"](null);
-    }
+    } /*else if (event.keyCode === 8 && typeof annotations != 'undefined'){
+        // Delete
+        annotations["mentions"].pop()
+
+    }*/
   };
 
 export const handleTokenClick = (event, token, isDouble, state) => {
@@ -69,7 +73,10 @@ export const handleMentionClick = (event, mention, state) => {
     event.stopPropagation();
     // Select the mention
     state["setSelectedMention"](mention);
-    mention["backgroundColor"] = setBg;
+    /*mention["backgroundColor"] = "red";
+    console.log(state["setSelectedMention"])
+    annotations["mentions"] = annotations["mentions"].filter(item => item.id != setSelectedMention.id);*/
+
 };
 export const handleMentionDragStart = (event, mention, state) => {
     console.log("handleMentionDragStart...",mention);
