@@ -98,14 +98,14 @@ const EditAnnotations = ( props ) => {
                     </Box>
                     <Box p={1}>
                         <span className={classes.toolbartitle}>Sentences:</span>
-                        <select className={classes.toolbarselect} value="0" onChange={() => {}}>
+                        <select className={classes.toolbarselect} onChange={() => {}}>
                             <option value="0">0</option>
                             <option value="1">1</option>
                             <option value="2">2</option>
                             <option value="3">3</option>
                             <option value="4">4</option>
                         </select>
-                        <select className={classes.toolbarselect} value="5" onChange={() => {}}>
+                        <select className={classes.toolbarselect} onChange={() => {}}>
                             <option value="1">1</option>
                             <option value="2">2</option>
                             <option value="3">3</option>

@@ -45,7 +45,7 @@ const DataServices = {
                                                         }, 
     SaveClusters: async function (annotations){
         
-        return await axios.post(BASE_API_URL+"/clusters", {'document_id':parseInt(annotations['mentions'][0]['document_id'],10),'cluster_name':'M1'});
+        return await axios.post(BASE_API_URL+"/clusters", {'id': annotations['clusters'][0]['id'],'document_id':parseInt(annotations['mentions'][0]['document_id'],10),'cluster_name':'M1'});
     }
 }
 
