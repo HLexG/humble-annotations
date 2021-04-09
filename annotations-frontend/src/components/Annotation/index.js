@@ -71,6 +71,7 @@ const Annotation = ( props ) => {
         var selectedStyle = {
             textDecoration: "underline"
         }
+
         if(selectedToken && (selectedToken.token_id === token.token_id) && (selectedToken.sentence_id === token.sentence_id)){
             style = selectedStyle
         }

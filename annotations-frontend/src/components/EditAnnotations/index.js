@@ -126,7 +126,7 @@ const EditAnnotations = ( props ) => {
                     <Box p={1} className={classes.pointer} onClick={()=>{console.log('annotations sent:');console.log(annotations["mentions"]); DataServices.SaveClusters(annotations);}}>
                         <Icon className={classes.toolbaricon}>save</Icon>
                     </Box>
-                    <Box p={1} className={classes.pointer} onClick={()=>{console.log('annotations sent:');console.log(annotations["mentions"]); DataServices.SaveMentions(annotations, id);}}>
+                    <Box p={1} className={classes.pointer} onClick={()=>{console.log('annotations sent:');console.log(annotations["mentions"]); DataServices.SaveMentions(annotations, id, tokens);}}>
                         <Icon className={classes.toolbaricon}>save</Icon>
                     </Box>
                 </Box>

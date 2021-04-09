@@ -12,4 +12,5 @@ router = APIRouter()
 @router.post("/clusters")
 async def clusters_new(input: dict):
     dset = 1
-    return await clusters.create(id = input['id'], dataset_id = dset, document_id=input['document_id'],cluster_name=input['cluster_name'])
+    id_num = 1234
+    return await clusters.create(dataset_id = dset, document_id=input['document_id'],cluster_name=input['cluster_name'])

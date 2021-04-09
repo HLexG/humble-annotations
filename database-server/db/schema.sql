@@ -53,6 +53,26 @@ ALTER SEQUENCE public.clusters_db_id_seq OWNED BY public.clusters.db_id;
 -- Name: datasets; Type: TABLE; Schema: public; Owner: -
 --
 
+CREATE SEQUENCE public.clusters_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: clusters_db_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.clusters_id_seq OWNED BY public.clusters.id;
+
+
+--
+-- Name: datasets; Type: TABLE; Schema: public; Owner: -
+--
+
+
 CREATE TABLE public.datasets (
     id bigint NOT NULL,
     dataset_name text NOT NULL,
