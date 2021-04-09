@@ -16,7 +16,7 @@ async def browse(
     """
     
     query = """
-        select id,dataset_id,document_id
+        select dataset_id, document_id, sentence_id, start_token_id, end_token_id
         from mentions
         where dataset_id = :dataset_id
     """
@@ -34,7 +34,7 @@ async def browse(
 
 async def create(*,
                  dataset_id: int,
-                 document_id: int,
+                 document_id,
                  sentence_id: int,
                  start_token_id: int,
                  end_token_id: int,
