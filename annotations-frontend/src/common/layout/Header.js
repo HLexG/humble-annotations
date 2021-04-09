@@ -136,17 +136,16 @@ const Header = props => {
 
                     </div>
                     <NativeSelect
-                                        value={state.user}
+                                        /*value={state.user}*/
                                         onChange={handleChange}
                                         inputProps={{
                                             name: 'u_id',
-                                            id: 'age-native-label-placeholder',
                                         }}
                                         >
                                         <option value="">None</option>
-                                        <option value={10}>Ten</option>
-                                        <option value={20}>Twenty</option>
-                                        <option value={30}>Thirty</option>
+                                        <option value={10}>Joe</option>
+                                        <option value={20}>Eduardo</option>
+                                        <option value={30}>Shivas</option>
                                         </NativeSelect>
                 </Toolbar>
             </AppBar>
