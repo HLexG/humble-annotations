@@ -26,23 +26,20 @@ const DataServices = {
         //console.log(mentiondata);
         console.log('helloo');
         console.log(annotations);
-        /*
-                                            'cluster_id': annotations['mentions'][0]['cluster_id'],
-                                            'document_id': annotations['mentions'][0]['document_id'],
-                                            'end_token_id': annotations['mentions'][0]['end_token_id'],
-                                            'id': annotations['mentions'][0]['id'],
-                                            'sentence_id': annotations['mentions'][0]['sentence_id'],
-                                            'start_token_id': annotations['mentions'][0]['start_token_id']
-                                        */
-        return await axios.post(BASE_API_URL+"/mentions", {'dataset_id': 1, 'document_id':tokens[0]['document_id'],'sentence_id': annotations['mentions'][0]['sentence_id'],
-                                        'start_token_id': annotations['mentions'][0]['start_token_id'],
-                                        'end_token_id': annotations['mentions'][0]['end_token_id'],
-                                        'cluster_id': 2}).then((response) => {
-                                                                console.log(response);
-                                                                    }, (error) => {
-                                                                console.log(error);
-                                                                });
-                                                        }, 
+        console.log();
+
+        var i;
+
+        for (i = 0; i < annotations['mentions'].length; i++) {
+            axios.post(BASE_API_URL+"/mentions", {'dataset_id': 1, 'document_id':tokens[0]['document_id'],
+                                        'sentence_id': annotations['mentions'][i]['sentence_id'],
+                                        'start_token_id': annotations['mentions'][i]['start_token_id'],
+                                        'end_token_id': annotations['mentions'][i]['end_token_id'],
+                                        'cluster_id': 27})
+
+          }
+        return console.log("done");}, 
+
     SaveClusters: async function (annotations){
         
         return await axios.post(BASE_API_URL+"/clusters", {'document_id':parseInt(annotations['mentions'][0]['document_id'],10),'cluster_name':'M1'});

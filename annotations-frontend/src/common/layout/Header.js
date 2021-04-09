@@ -5,6 +5,8 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Drawer from '@material-ui/core/Drawer';
 import { fade } from '@material-ui/core/styles/colorManipulator';
+import NativeSelect from '@material-ui/core/NativeSelect';
+
 
 import List from '@material-ui/core/List';
 import Divider from '@material-ui/core/Divider';
@@ -82,6 +84,11 @@ const styles = theme => ({
 });
 
 const Header = props => {
+
+    const [state, setState] = React.useState({
+        user: 10,
+        
+      });
     
     const { classes } = props;
 
@@ -93,6 +100,14 @@ const Header = props => {
     let toggleDrawer = (open) => () => {
         setDrawerOpen(open)
     };
+
+    const handleChange = (event) => {
+        const user = event.target.user;
+        setState({
+          ...state,
+          [user]: event.target.value,
+        });
+      };
 
     return (
         <div className={classes.root}>
@@ -120,6 +135,19 @@ const Header = props => {
                         </IconButton>
 
                     </div>
+                    <NativeSelect
+                                        value={state.user}
+                                        onChange={handleChange}
+                                        inputProps={{
+                                            name: 'u_id',
+                                            id: 'age-native-label-placeholder',
+                                        }}
+                                        >
+                                        <option value="">None</option>
+                                        <option value={10}>Ten</option>
+                                        <option value={20}>Twenty</option>
+                                        <option value={30}>Thirty</option>
+                                        </NativeSelect>
                 </Toolbar>
             </AppBar>
             <Drawer open={drawerOpen} onClose={toggleDrawer( false)}>
@@ -146,6 +174,7 @@ const Header = props => {
                                 <ListItemIcon><Icon>settings_applications</Icon></ListItemIcon>
                                 <ListItemText primary='Settings' />
                             </ListItem>
+                            
                         </List>
                     </div>
                 </div>
