@@ -123,6 +123,9 @@ const EditAnnotations = ( props ) => {
                     <Box p={1} onClick={()=>{setOpenFeatureExtractorDialog(!openFeatureExtractorDialog)}} className={classes.pointer}>
                         <Icon className={classes.toolbaricon}>grading</Icon>
                     </Box>
+                    <Box p={1} className={classes.pointer} onClick={()=>{console.log('annotations sent:');console.log(annotations["mentions"]); DataServices.SaveClusters(annotations);}}>
+                        <Icon className={classes.toolbaricon}>save</Icon>
+                    </Box>
                     <Box p={1} className={classes.pointer} onClick={()=>{console.log('annotations sent:');console.log(annotations["mentions"]); DataServices.SaveMentions(annotations);}}>
                         <Icon className={classes.toolbaricon}>save</Icon>
                     </Box>

@@ -25,7 +25,7 @@ const DataServices = {
     SaveMentions: async function (annotations){
         //console.log(mentiondata);
         console.log('helloo');
-        console.log(annotations['mentions']);
+        console.log(annotations);
         /*
                                             'cluster_id': annotations['mentions'][0]['cluster_id'],
                                             'document_id': annotations['mentions'][0]['document_id'],
@@ -37,15 +37,15 @@ const DataServices = {
         return await axios.post(BASE_API_URL+"/mentions", {'dataset_id': 1, 'document_id':1,'sentence_id': annotations['mentions'][0]['sentence_id'],
                                         'start_token_id': annotations['mentions'][0]['start_token_id'],
                                         'end_token_id': annotations['mentions'][0]['end_token_id'],
-                                        'cluster_id': annotations['mentions'][0]['cluster_id']}).then((response) => {
+                                        'cluster_id': 2}).then((response) => {
                                                                 console.log(response);
                                                                     }, (error) => {
                                                                 console.log(error);
                                                                 });
                                                         }, 
-    SaveClusters: async function (clusterdata){
-        console.log(clusterdata)
-        return await axios.post(BASE_API_URL+"/mentions", {clusterdata});
+    SaveClusters: async function (annotations){
+        
+        return await axios.post(BASE_API_URL+"/clusters", {'dataset_id': 1, 'document_id':1,'cluster_name':'M1'});
     }
 }
 

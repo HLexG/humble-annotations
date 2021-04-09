@@ -5,7 +5,7 @@ from starlette.responses import JSONResponse
 from starlette.staticfiles import StaticFiles
 
 import dataaccess.session as database_session
-from api.routers import datasets, documents, entitylink, mentions
+from api.routers import datasets, documents, entitylink, mentions, clusters
 
 
 prefix = "/v1"
@@ -63,3 +63,4 @@ app.include_router(datasets.router, prefix=prefix)
 app.include_router(documents.router, prefix=prefix)
 app.include_router(entitylink.router, prefix=prefix)
 app.include_router(mentions.router, prefix=prefix)
+app.include_router(clusters.router, prefix=prefix)
