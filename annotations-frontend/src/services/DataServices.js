@@ -35,7 +35,7 @@ const DataServices = {
                                         'sentence_id': annotations['mentions'][i]['sentence_id'],
                                         'start_token_id': annotations['mentions'][i]['start_token_id'],
                                         'end_token_id': annotations['mentions'][i]['end_token_id'],
-                                        'cluster_id': 27})
+                                        'cluster_id': annotations['mentions'][i]['cluster_id']})
 
           }
         return console.log("done");}, 
