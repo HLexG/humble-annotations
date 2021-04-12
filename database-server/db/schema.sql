@@ -587,6 +587,9 @@ ALTER TABLE ONLY public.mentions
     ADD CONSTRAINT mentions_updated_by_fkey FOREIGN KEY (updated_by) REFERENCES public.users(id) ON DELETE SET NULL;
 
 
+ALTER TABLE ONLY public.mentions
+    ADD COLUMN pos VARCHAR;
+
 --
 -- PostgreSQL database dump complete
 --
