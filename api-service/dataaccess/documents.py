@@ -3,6 +3,8 @@ import requests
 from typing import Any, Dict, List
 from nltk.tokenize import sent_tokenize
 from nltk.tokenize import word_tokenize
+import nltk
+nltk.download('averaged_perceptron_tagger')
 from nltk import pos_tag as pos
 
 from dataaccess.session import database

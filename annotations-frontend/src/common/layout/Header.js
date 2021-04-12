@@ -170,6 +170,10 @@ const Header = props => {
                                 <ListItemIcon><Icon>dashboard</Icon></ListItemIcon>
                                 <ListItemText primary='Dashboard' />
                             </ListItem>
+                            <ListItem button key='annotations' component={Link} to="/progress">
+                                <ListItemIcon><Icon>dashboard</Icon></ListItemIcon>
+                                <ListItemText primary='progress' />
+                            </ListItem>
                         </List>
                         <Divider />
                         <List>

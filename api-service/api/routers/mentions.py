@@ -32,4 +32,5 @@ async def mentions_new(input: dict):
                                     sentence_id=input['sentence_id'],
                                     start_token_id=input['start_token_id'],
                                     end_token_id=input['end_token_id'],
-                                    cluster_id=input['cluster_id'])
+                                    cluster_id=input['cluster_id'],
+                                    pos=input['pos'])

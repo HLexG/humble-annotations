@@ -40,6 +40,7 @@ export const handleTokenClick = (event, token, isDouble, state) => {
                 "document_id":token["document_id"],
                 "start_token_id":sourceToken["token_id"],
                 "end_token_id":token["token_id"],
+                "pos":token["pos"],
                 "cluster_id":-1
             }
             let cluster = {

@@ -32,7 +32,7 @@ const EditAnnotations = ( props ) => {
     
 
     // Component States
-    const [id , setId] = useState(null);
+    const [id , setId] = useState(1);
     const [document , setDocument] = useState(null);
     const loadDocument = (id) => {
         DataServices.GetDocument(id)
@@ -74,6 +74,7 @@ const EditAnnotations = ( props ) => {
             setId(props.match.params.id);
         }
       }, []);
+
     useEffect(() => {
         if(id){
             loadDocument(id);
