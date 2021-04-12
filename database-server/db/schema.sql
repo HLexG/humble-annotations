@@ -588,7 +588,10 @@ ALTER TABLE ONLY public.mentions
 
 
 ALTER TABLE ONLY public.mentions
-    ADD COLUMN pos VARCHAR;
+    ADD COLUMN pos text;
+
+ALTER TABLE ONLY public.mentions
+    ADD COLUMN text text;
 
 --
 -- PostgreSQL database dump complete

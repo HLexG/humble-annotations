@@ -18,7 +18,7 @@ async def browse(
     """
     
     query = """
-        select dataset_id, document_id, sentence_id, start_token_id, end_token_id, pos
+        select dataset_id, document_id, sentence_id, start_token_id, end_token_id, pos, text
         from mentions
         where dataset_id = :dataset_id
     """

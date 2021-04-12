@@ -45,6 +45,7 @@ const Annotation = ( props ) => {
         "refresh":refresh,
         "setRefresh":setRefresh
     }
+    const colorList = ["#C0504D","#1F497D", "#9BBB59","#F79646","#4BACC6","#8064A2","#948A54","#C0504D","#1F497D", "#9BBB59","#F79646","#4BACC6","#8064A2","#948A54","#C0504D","#1F497D", "#9BBB59","#F79646","#4BACC6","#8064A2","#948A54","#C0504D","#1F497D", "#9BBB59","#F79646","#4BACC6","#8064A2","#948A54","#C0504D","#1F497D", "#9BBB59","#F79646","#4BACC6","#8064A2","#948A54"]
 
     // Setup Component
     useEffect(() => {
@@ -63,6 +64,7 @@ const Annotation = ( props ) => {
     useEffect(() => {
         // Build annotation tree
         loadAnnotationTree()
+        /*const dynColor = colorList[this.props.annotations.cluster_id]*/
       }, [refresh, props.annotations]);
 
     // Component functions
@@ -77,6 +79,7 @@ const Annotation = ( props ) => {
         }
         return style;
     }
+    
     const renderAnnotationItems = (items) => {
         return (
             <>
@@ -114,7 +117,7 @@ const Annotation = ( props ) => {
                                 onDrop={(event)=>handleMentionDrop(event,i.obj,state)}
                                 background-color={i.backgroundColor}
                             >
-                                <mark background-color={i.backgroundColor} className={classes.mentionhead}><a className={classes.mentionheadtext}>{ i.obj.text }</a></mark>
+                                <mark style={{backgroundColor : colorList[i.obj.cluster_id]}} className={classes.mentionhead}><a className={classes.mentionheadtext}>{ i.obj.text }</a></mark>
                                 { i.nodes && renderAnnotationItems(i.nodes) }
                             </span>
                         )

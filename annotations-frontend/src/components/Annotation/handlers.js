@@ -29,8 +29,15 @@ export const handleTokenClick = (event, token, isDouble, state) => {
     let annotations = state["annotations"];
     const addMention = () => {
         let sourceToken = state["selectedToken"];
-        const colorList = ["#C0504D","#1F497D", "#9BBB59","#F79646","#4BACC6","#8064A2","#000000","#948A54"]
+const colorList = ["#C0504D","#1F497D", "#9BBB59","#F79646","#4BACC6","#8064A2","#000000","#948A54"]
         console.log(sourceToken)
+         var strPhr = '';
+         var i;
+        for (var i = sourceToken["token_id"]; i < token["token_id"]; i++) {
+            var strPhr =+ " " + [i];
+            console.log(strPhr)
+
+        }
 
         if(sourceToken["sentence_id"] === token["sentence_id"]){
             let mention = {
@@ -38,6 +45,8 @@ export const handleTokenClick = (event, token, isDouble, state) => {
                 "backgroundColor": colorList[findNextId(annotations["mentions"])],
                 "sentence_id":token["sentence_id"],
                 "document_id":token["document_id"],
+                "text":token["text"],
+                "strPhr": strPhr,
                 "start_token_id":sourceToken["token_id"],
                 "end_token_id":token["token_id"],
                 "pos":token["pos"],
