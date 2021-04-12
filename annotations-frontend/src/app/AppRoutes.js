@@ -19,6 +19,7 @@ const AppRouter = ( props ) => {
                 <Route path="/annotations/:id" exact component={EditAnnotations} />
                 <Route path="/dashboard" exact component={Dashboard} />
                 <Route path="/progress" exact component={Progress} />
+                <Route path="/progress/:id" exact component={Progress} />
                 <Route component={Error404} />
             </Switch>
         </React.Fragment>

@@ -22,6 +22,18 @@ const DataServices = {
     FeatureExtractor01FindMentions: async function(text){
         return await axios.post(BASE_FEATURE_EXTRACTOR01_URL+"/find_mentions",{'text':text});
     },
+
+    GetMentions: async function (did){
+        console.log('pulling mentions')
+        console.log(did)
+        axios.get(BASE_API_URL+'/mentions?dataset_id=1')
+          .then(function (response) {
+            console.log(response);
+            return response.data
+          })
+        
+    },
+
     SaveMentions: async function (annotations, id, tokens){
         //console.log(mentiondata);
         console.log('helloo');
@@ -35,6 +47,7 @@ const DataServices = {
                                         'sentence_id': annotations['mentions'][i]['sentence_id'],
                                         'start_token_id': annotations['mentions'][i]['start_token_id'],
                                         'end_token_id': annotations['mentions'][i]['end_token_id'],
+                                        'pos': annotations['mentions'][i]['pos'],
                                         'cluster_id': annotations['mentions'][i]['cluster_id']})
 
           }
