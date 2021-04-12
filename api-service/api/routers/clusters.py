@@ -9,6 +9,17 @@ from dataaccess import clusters
 
 router = APIRouter()
 
+@router.get(
+    "/clusters",
+    summary="Get list of mentions for a dataset", 
+    description="Get list of mentions for a dataset", 
+)
+async def clusters_browse(dataset_id: int = Query(None, description="Dataset id to filter by")):
+    
+    return await clusters.browse(dataset_id=dataset_id)
+
+
+
 @router.post("/clusters")
 async def clusters_new(input: dict):
     dset = 1
