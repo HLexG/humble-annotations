@@ -3,9 +3,9 @@ const findNextId = (list) => {
 }
 
 
-export const setBg = () => {
+/*export const setBg = () => {
   return "#"+ Math.floor(Math.random()*16777215).toString(16);
-}
+}*/
 
 
 export const handleKeyDown = (event, state) => {
@@ -29,11 +29,13 @@ export const handleTokenClick = (event, token, isDouble, state) => {
     let annotations = state["annotations"];
     const addMention = () => {
         let sourceToken = state["selectedToken"];
+        const colorList = ["#C0504D","#1F497D", "#9BBB59","#F79646","#4BACC6","#8064A2","#000000","#948A54"]
         console.log(sourceToken)
 
         if(sourceToken["sentence_id"] === token["sentence_id"]){
             let mention = {
                 "id": findNextId(annotations["mentions"]),
+                "backgroundColor": colorList[findNextId(annotations["mentions"])],
                 "sentence_id":token["sentence_id"],
                 "document_id":token["document_id"],
                 "start_token_id":sourceToken["token_id"],
@@ -42,6 +44,7 @@ export const handleTokenClick = (event, token, isDouble, state) => {
             }
             let cluster = {
                 "id":findNextId(annotations["clusters"]),
+                "backgroundColor": colorList[findNextId(annotations["clusters"])],
                 "name": "M"
             }
             mention["cluster_id"] = cluster["id"];
