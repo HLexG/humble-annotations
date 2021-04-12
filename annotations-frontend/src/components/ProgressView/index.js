@@ -45,7 +45,7 @@ const Progress = ( props ) => {
 <ul>
         {mentions.map(item => (
           <li key={item.id}>
-            {item.name} {item.price}
+            {item.pos} {item.price}
           </li>
         ))}
       </ul>
