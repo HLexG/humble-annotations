@@ -3,11 +3,31 @@ import { Button, withStyles } from '@material-ui/core';
 import axios from "axios";
 import styles from './styles';
 import DataServices from "../../services/DataServices";
+import db from './fb';
+
 //import {handlePullMentions }from "./handlers";
 
 //const axios = require('axios');
+var admin = require("firebase-admin");
+
+var serviceAccount = require("./hlexg-63f51-firebase-adminsdk-sowzl-31be6ac6ff.json");
+
+/*
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount)
+});
+var srvcURL = 'firebase-adminsdk-sowzl@hlexg-63f51.iam.gserviceaccount.com'
+
+//let query = firestore.collection('mentions').where('foo', '==', 'bar');
 
 
+const fbPull = async () =>{
+  let query = firestore.collection('mentions');
+  query.get().then(querySnapshot => {
+    querySnapshot.forEach(documentSnapshot => {
+      console.log(`Found document at ${documentSnapshot.ref.path}`);
+    });
+  });};*/
 
 const Progress = ( props ) => {
     const {classes} = props;
@@ -41,11 +61,16 @@ const Progress = ( props ) => {
     // Component States
     return (
         <div className="Dash">
+          <ul>
+        {}
+      </ul>
+
+          
 
 <ul>
         {mentions.map(item => (
           <li key={item.id}>
-            {item.pos} {item.price}
+            {item.pos} {item.text}
           </li>
         ))}
       </ul>
