@@ -16,7 +16,7 @@ const Annotation = ( props ) => {
 
     // Component States
     // const [tokens , setTokens] = useState([]);
-    // const [annotations , setAnnotations] = useState(null);
+    // const [annotations, setAnnotations] = useState([]);
     const [annotationTree, setAnnotationTree] = useState(null);
     const loadAnnotationTree = () => {
         if(tokens && annotations){
@@ -35,7 +35,7 @@ const Annotation = ( props ) => {
         "tokens": tokens,
         // "setTokens": setTokens,
         "annotations": annotations,
-        // "setAnnotations": setAnnotations,
+        //"setAnnotations": setAnnotations,
         "selectedToken":selectedToken,
         "setSelectedToken":setSelectedToken,
         "selectedMention":selectedMention,
@@ -51,10 +51,10 @@ const Annotation = ( props ) => {
     useEffect(() => {
         // Set state from props
         // setTokens(props.tokens);
-        // setAnnotations(props.annotations);
+         // setAnnotations(props.annotations);
 
         // Keydown event listener
-        window.addEventListener('keydown', (event) => handleKeyDown(event,state));
+        window.addEventListener('keydown', (event) => handleKeyDown(event, state));
 
         // Cleanup Component
         return () => {
@@ -80,6 +80,23 @@ const Annotation = ( props ) => {
         return style;
     }
     
+    const isMentionSelected = (mention) => {
+        var style = {};
+        var selectedStyle = {
+            color: "red"
+        }
+
+        if(selectedMention && (selectedMention.id === mention.id) && (selectedMention.sentence_id === mention.sentence_id)){
+            style = selectedStyle;
+            console.log(mention.id);
+            console.log(mention.sentence_id);
+            
+        }
+        return style;
+    }
+
+
+
     const renderAnnotationItems = (items) => {
         return (
             <>
@@ -115,6 +132,7 @@ const Annotation = ( props ) => {
                                 onDragStart={(event)=>handleMentionDragStart(event,i.obj,state)}
                                 onDragOver={(event)=>handleMentionDragOver(event)}
                                 onDrop={(event)=>handleMentionDrop(event,i.obj,state)}
+                                style = {isMentionSelected(i.obj)}
                                 background-color={i.backgroundColor}
                             >
                                 <mark style={{backgroundColor : colorList[i.obj.cluster_id]}} className={classes.mentionhead}><a className={classes.mentionheadtext}>{ i.obj.text }</a></mark>

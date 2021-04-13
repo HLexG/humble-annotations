@@ -7,17 +7,29 @@ const findNextId = (list) => {
   return "#"+ Math.floor(Math.random()*16777215).toString(16);
 }*/
 
+    /*mention["backgroundColor"] = "red";
+            //this.state.mention.filter(i => i.id !== mention.id);
+        //this.setState({mention});
+    console.log(state["setSelectedMention"])
+    annotations["mentions"] = annotations["mentions"].filter(item => item.id != setSelectedMention.id);*/
+
+
+export const handleMentionClick = (event, mention, state) => {
+    event.stopPropagation();
+    // Select the mention
+    state["setSelectedMention"](mention);
+};
 
 export const handleKeyDown = (event, state) => {
     console.log('Key pressed', event.keyCode,state);
     if(event.keyCode === 27){
         // Esc
         state["setSelectedToken"](null);
-    } /*else if (event.keyCode === 8 && typeof annotations != 'undefined'){
+} else if (event.keyCode === 8){
         // Delete
-        annotations["mentions"].pop()
-
-    }*/
+        let annotations = state['annotations'];
+        annotations.splice(1, 1,);
+    }
   };
 
 export const handleTokenClick = (event, token, isDouble, state) => {
@@ -50,7 +62,7 @@ const colorList = ["#C0504D","#1F497D", "#9BBB59","#F79646","#4BACC6","#8064A2",
                 "start_token_id":sourceToken["token_id"],
                 "end_token_id":token["token_id"],
                 "pos":token["pos"],
-                "cluster_id":-1
+                "cluster_id":-1 //FIX
             }
             let cluster = {
                 "id":findNextId(annotations["clusters"]),
@@ -82,15 +94,7 @@ const colorList = ["#C0504D","#1F497D", "#9BBB59","#F79646","#4BACC6","#8064A2",
 
 };
 
-export const handleMentionClick = (event, mention, state) => {
-    event.stopPropagation();
-    // Select the mention
-    state["setSelectedMention"](mention);
-    /*mention["backgroundColor"] = "red";
-    console.log(state["setSelectedMention"])
-    annotations["mentions"] = annotations["mentions"].filter(item => item.id != setSelectedMention.id);*/
 
-};
 export const handleMentionDragStart = (event, mention, state) => {
     console.log("handleMentionDragStart...",mention);
     event.stopPropagation();
