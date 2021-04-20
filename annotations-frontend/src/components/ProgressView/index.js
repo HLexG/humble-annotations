@@ -3,15 +3,15 @@ import { Button, withStyles } from '@material-ui/core';
 import axios from "axios";
 import styles from './styles';
 import DataServices from "../../services/DataServices";
-import db from './fb';
+//import db from './fb';
 
 //import {handlePullMentions }from "./handlers";
-
+/*
 //const axios = require('axios');
 var admin = require("firebase-admin");
 
 var serviceAccount = require("./hlexg-63f51-firebase-adminsdk-sowzl-31be6ac6ff.json");
-
+*/
 /*
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount)
@@ -47,17 +47,28 @@ const Progress = ( props ) => {
 
 
     // Setup Component
-
+/*
     useEffect(() => {
         handlePullMentions();
       }, []);
     
       const handlePullMentions = async () => {
+        /*
         const response = await axios.get('http://0.0.0.0:9000/v1/mentions?dataset_id=1');
         setMentions(response.data);
         console.log('ran');
-    
+        */
+/*
+        let query = db.collection('mentions');
+
+        let qOuts = await query.get();
+        
+        for(const doc of qOuts.docs){
+          console.log(doc.data());
+          setMentions(doc.data());
+        }
         };
+*/
     // Component States
     return (
         <div className="Dash">
@@ -67,13 +78,7 @@ const Progress = ( props ) => {
 
           
 
-<ul>
-        {mentions.map(item => (
-          <li key={item.id}>
-            {item.pos} {item.text}
-          </li>
-        ))}
-      </ul>
+
             
         </div>
     );
