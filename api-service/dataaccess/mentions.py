@@ -3,6 +3,8 @@ import requests
 from typing import Any, Dict, List
 from nltk.tokenize import sent_tokenize
 from nltk.tokenize import word_tokenize
+#from nltk import pos_tag
+
 
 from dataaccess.session import database
 from dataaccess.errors import RecordNotFoundError
@@ -16,7 +18,7 @@ async def browse(
     """
     
     query = """
-        select dataset_id, document_id, sentence_id, start_token_id, end_token_id
+        select dataset_id, document_id, sentence_id, start_token_id, end_token_id, pos, text
         from mentions
         where dataset_id = :dataset_id
     """
@@ -32,6 +34,13 @@ async def browse(
 
 
 
+#async def pull():
+async def retp(*,qu) -> Dict[str, Any]:
+     result = await database.fetch_all(qu, values)
+     result = prep_data(result)
+     return result
+
+
 async def create(*,
                  dataset_id: int,
                  document_id: int,
@@ -39,6 +48,7 @@ async def create(*,
                  start_token_id: int,
                  end_token_id: int,
                  cluster_id: int = None,
+                 pos: str,
                  id: int = None) -> Dict[str, Any]:
     """
     Create a new row. Returns the created record as a dict.
@@ -51,7 +61,8 @@ async def create(*,
         "sentence_id": sentence_id,
         "start_token_id": start_token_id,
         "end_token_id": end_token_id,
-        "cluster_id": cluster_id
+        "cluster_id": cluster_id, 
+        "pos":pos
     }
 
     # if the id was passed

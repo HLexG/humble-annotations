@@ -37,6 +37,9 @@ MANIFEST
 pip-log.txt
 pip-delete-this-directory.txt
 
+# Passswords, keys
+hlexg-63f51-firebase-adminsdk-sowzl-31be6ac6ff.json
+
 # Unit test / coverage reports
 htmlcov/
 .tox/
