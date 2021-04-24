@@ -5,11 +5,11 @@ ENV PATH /app/node_modules/.bin:$PATH
 ENV PUBLIC_URL /
 
 COPY package.json ./
-COPY package-lock.json ./
-RUN npm install
+COPY yarn.lock ./
+RUN yarn install
 
 COPY . ./
-RUN npm run build
+RUN yarn run build
 
 # Nginx wrapper to serve static files
 FROM nginx:stable
