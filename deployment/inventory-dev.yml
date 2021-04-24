@@ -1,12 +1,22 @@
 all:
     vars:
+      ansible_user: sa_102699106630466120621
+      ansible_ssh_private_key_file: "../../secrets/ssh-key-hlexg-ansible"
       gcp_service_account_file: "../../secrets/hlexg-ansible.json"
-      gcp_service_account_email: "ansible@hlexg-308913.iam.gserviceaccount.com"
-      gcp_project: "hlexg-308913"
+      gcp_service_account_email: "ansible@hlexg-63f51.iam.gserviceaccount.com"
+      gcp_auth_kind: "serviceaccount"
+      gcp_scopes: "https://www.googleapis.com/auth/compute"
+      gcp_project: "hlexg-63f51"
       gcp_region: "us-central1"
       gcp_zone: "us-central1-a"
-      persistent_disk_name: "dev01-disk"
-      persistent_disk_size: 100
-      machine_instance_name: "dev01"
+      docker_network_name: "appnetwork"
+      persistent_disk_name: "dev-disk"
+      persistent_disk_size: 50
+      machine_instance_name: "dev"
       machine_type: "n2-standard-2"
       machine_disk_size: 30
+
+    children:
+        appserver:
+            hosts:
+                35.224.135.167:
