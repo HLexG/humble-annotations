@@ -1,7 +1,5 @@
 #!/bin/bash
 
-set -e
-
 # Read the settings file
 source ./env.dev
 
@@ -10,6 +8,7 @@ docker run --rm --name $IMAGE_NAME -ti \
 -v /var/run/docker.sock:/var/run/docker.sock \
 --mount type=bind,source="$(pwd)",target=/app \
 --mount type=bind,source=$(pwd)/../../secrets/,target=/secrets \
+--mount type=bind,source=$HOME/.ssh,target=/home/app/.ssh \
 --mount type=bind,source=$(pwd)/../annotations-frontend,target=/annotations-frontend \
 --mount type=bind,source=$(pwd)/../api-service,target=/api-service \
 --mount type=bind,source=$(pwd)/../database-server,target=/database-server \
