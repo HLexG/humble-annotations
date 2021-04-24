@@ -32,7 +32,7 @@ const EditAnnotations = ( props ) => {
     
 
     // Component States
-    const [id , setId] = useState(null);
+    const [id , setId] = useState(1);
     const [document , setDocument] = useState(null);
     const loadDocument = (id) => {
         DataServices.GetDocument(id)
@@ -67,13 +67,23 @@ const EditAnnotations = ( props ) => {
         "openFeatureExtractorDialog":openFeatureExtractorDialog,
         "setOpenFeatureExtractorDialog":setOpenFeatureExtractorDialog
     }
-    
+
+    /*setMentionLog = (mention) => {
+        if(selectedMention && (selectedMention.id === mention.id) && (selectedMention.sentence_id === mention.sentence_id)){
+            style = selectedStyle;
+            console.log(mention.id);
+            console.log(mention.sentence_id);
+        };
+    };
+
+    */
     // Setup Component
     useEffect(() => {
         if(props.match.params.id){
             setId(props.match.params.id);
         }
       }, []);
+
     useEffect(() => {
         if(id){
             loadDocument(id);
@@ -116,6 +126,10 @@ const EditAnnotations = ( props ) => {
                     <Box p={1} variant="contained" onClick={()=>{loadDocument(id);setTokens(document["tokens"]); setAnnotations(document["annotations"]);}} color="primary">
                         <div style={{fontSize:25}}>🤭</div>
                         </Box>  
+
+                    <Box p={1} variant="contained" onClick={()=>{}} color="primary">
+                        <div style={{fontSize:25}}>X</div>
+                        </Box>      
                     
                     <Box p={1} flexGrow={1}>
 

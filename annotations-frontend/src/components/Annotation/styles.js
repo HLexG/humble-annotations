@@ -1,3 +1,4 @@
+const colorList = ["#C0504D","#1F497D", "#9BBB59","#F79646","#4BACC6","#8064A2","#000000","#948A54"]
 const styles = theme => ({
     content: {
         color: "#444",
@@ -30,7 +31,7 @@ const styles = theme => ({
     },
     mentionhead:{
         borderColor: "rgb(212, 212, 212)",
-        backgroundColor: "#" + Math.floor(Math.random()*16777215).toString(16),
+        backgroundColor: colorList[Math.floor(Math.random() * 8) + 1 ],
         padding: "12px 12px 12px 0px",
         cursor: "pointer",
     },
@@ -41,7 +42,7 @@ const styles = theme => ({
     },
     mention:{
         borderColor: "rgb(212, 212, 212)",
-        backgroundColor: "rgba(0, 0, 0, 0)",
+        /*backgroundColor: "rgba(0, 0, 0, 0)",*/
         border: "solid 2px #ddd",
         padding: "0px",
     },

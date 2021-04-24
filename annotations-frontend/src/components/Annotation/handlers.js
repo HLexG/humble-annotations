@@ -3,21 +3,33 @@ const findNextId = (list) => {
 }
 
 
-export const setBg = () => {
+/*export const setBg = () => {
   return "#"+ Math.floor(Math.random()*16777215).toString(16);
-}
+}*/
 
+    /*mention["backgroundColor"] = "red";
+            //this.state.mention.filter(i => i.id !== mention.id);
+        //this.setState({mention});
+    console.log(state["setSelectedMention"])
+    annotations["mentions"] = annotations["mentions"].filter(item => item.id != setSelectedMention.id);*/
+
+
+export const handleMentionClick = (event, mention, state) => {
+    event.stopPropagation();
+    // Select the mention
+    state["setSelectedMention"](mention);
+};
 
 export const handleKeyDown = (event, state) => {
     console.log('Key pressed', event.keyCode,state);
     if(event.keyCode === 27){
         // Esc
         state["setSelectedToken"](null);
-    } /*else if (event.keyCode === 8 && typeof annotations != 'undefined'){
+} else if (event.keyCode === 8){
         // Delete
-        annotations["mentions"].pop()
-
-    }*/
+        let annotations = state['annotations'];
+        annotations.splice(1, 1,);
+    }
   };
 
 export const handleTokenClick = (event, token, isDouble, state) => {
@@ -29,19 +41,32 @@ export const handleTokenClick = (event, token, isDouble, state) => {
     let annotations = state["annotations"];
     const addMention = () => {
         let sourceToken = state["selectedToken"];
+const colorList = ["#C0504D","#1F497D", "#9BBB59","#F79646","#4BACC6","#8064A2","#000000","#948A54"]
         console.log(sourceToken)
+         var strPhr = '';
+         var i;
+        for (var i = sourceToken["token_id"]; i < token["token_id"]; i++) {
+            var strPhr =+ " " + [i];
+            console.log(strPhr)
+
+        }
 
         if(sourceToken["sentence_id"] === token["sentence_id"]){
             let mention = {
                 "id": findNextId(annotations["mentions"]),
+                "backgroundColor": colorList[findNextId(annotations["mentions"])],
                 "sentence_id":token["sentence_id"],
                 "document_id":token["document_id"],
+                "text":token["text"],
+                "strPhr": strPhr,
                 "start_token_id":sourceToken["token_id"],
                 "end_token_id":token["token_id"],
-                "cluster_id":-1
+                "pos":token["pos"],
+                "cluster_id":-1 //FIX
             }
             let cluster = {
                 "id":findNextId(annotations["clusters"]),
+                "backgroundColor": colorList[findNextId(annotations["clusters"])],
                 "name": "M"
             }
             mention["cluster_id"] = cluster["id"];
@@ -69,15 +94,7 @@ export const handleTokenClick = (event, token, isDouble, state) => {
 
 };
 
-export const handleMentionClick = (event, mention, state) => {
-    event.stopPropagation();
-    // Select the mention
-    state["setSelectedMention"](mention);
-    /*mention["backgroundColor"] = "red";
-    console.log(state["setSelectedMention"])
-    annotations["mentions"] = annotations["mentions"].filter(item => item.id != setSelectedMention.id);*/
 
-};
 export const handleMentionDragStart = (event, mention, state) => {
     console.log("handleMentionDragStart...",mention);
     event.stopPropagation();

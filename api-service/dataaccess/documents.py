@@ -3,6 +3,9 @@ import requests
 from typing import Any, Dict, List
 from nltk.tokenize import sent_tokenize
 from nltk.tokenize import word_tokenize
+import nltk
+nltk.download('averaged_perceptron_tagger')
+from nltk import pos_tag as pos
 
 from dataaccess.session import database
 from dataaccess.errors import RecordNotFoundError
@@ -65,9 +68,11 @@ async def get(id: int) -> Dict[str, Any]:
     tokens = []
     for s_idx,s in enumerate(sentences):
         words = word_tokenize(s)
+        posList = pos(words)
         for w_idx,w in enumerate(words):
             token = {
                 "text": w,
+                "pos":posList[w_idx][1],
                 "token_id": w_idx,
                 "sentence_id": s_idx,
                 "document_id": result["id"]

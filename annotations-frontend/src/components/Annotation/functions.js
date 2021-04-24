@@ -1,4 +1,6 @@
 export const buildAnnotationTree = (tokens, annotations) => {
+    const colorList = ["#C0504D","#1F497D", "#9BBB59","#F79646","#4BACC6","#8064A2","#000000","#948A54"]
+
 
     if(tokens && tokens.length > 0){
         // Create Cluster index look up
@@ -24,6 +26,7 @@ export const buildAnnotationTree = (tokens, annotations) => {
                 let mention = {
                     "id": t_idx,
                     "type":"mention",
+                    "backgroundColor": colorList[t_idx],
                     "obj":{...m,"text":clusters[m["cluster_id"]]["name"]},
                     "nodes": []
                 }
@@ -104,4 +107,13 @@ export const buildColorPalette = (hueStep, saturationStep, lightnessStep) => {
     }
 
     return color_palette;
+}
+
+
+
+export const returnColor = (mentionCount) =>{
+    const colorList = ["#C0504D","#1F497D", "#9BBB59","#F79646","#4BACC6","#8064A2","#000000","#948A54"]
+    var outputColor = colorList[mentionCount];
+
+    return outputColor;
 }
