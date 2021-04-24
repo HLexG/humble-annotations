@@ -1,0 +1,101 @@
+- name: Configure webserver on the server instance
+  hosts: appserver
+  connection: ssh
+  become: true
+
+  tasks:
+    # Setup secrets so containers can have access to GCP resources 
+    - name: Create secrets directory
+      file:
+        path: "/srv/secrets"
+        state: "directory"
+        mode: 0755 # Change to 0700
+    - name: Copy service account key file
+      copy:
+        src: ../../secrets/hlexg-gcp-service.json
+        dest: "/srv/secrets/hlexg-gcp-service.json"
+        mode: 0644
+    - name: Authenticate gcloud using service account
+      shell: "gcloud auth activate-service-account --key-file /srv/secrets/hlexg-gcp-service.json"
+    
+    # Create common network for all containers
+    - name: Create network
+      docker_network:
+          name: "{{docker_network_name}}"
+          driver: "bridge"
+          attachable: "yes"
+
+    # Create and Setup Nginx
+    - name: Copy nginx config files
+      copy:
+        src: "./nginx"
+        dest: "/conf"
+    - name: Create config directories
+      file:
+        path: "{{ item }}"
+        state: "directory"
+      loop:
+        - "/conf/nginx/sites-local"
+        - "/conf/letsencrypt-etc"
+        - "/conf/letsencrypt-log"
+        - "/conf/letsencrypt-varlib"
+        - "/conf/letsencrypt-www"
+    - name: Create nginx container
+      docker_container:
+        name: "nginx"
+        image: "nginx:stable"
+        state: started
+        recreate: yes
+        published_ports:
+          - 80:80
+          - 443:443
+        networks:
+          - name: "{{docker_network_name}}"
+        volumes:
+          - /conf/nginx/nginx.conf:/etc/nginx/nginx.conf
+          - /conf/nginx/sites:/etc/nginx/sites
+          - /conf/nginx/sites-local:/etc/nginx/sites-local
+          - /conf/letsencrypt-www:/www/letsencrypt
+          - /conf/letsencrypt-etc:/etc/letsencrypt
+        # Reload configurations periodically
+        # Copy over the ssl-enabled config files
+        command: "/bin/sh -c 'mkdir /etc/nginx/sites-enabled; for site in /etc/nginx/sites/*; do cp $site /etc/nginx/sites-enabled; done; while :; do sleep 6h & wait ${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
+
+    - name: Create certbot container
+      docker_container:
+        name: "certbot"
+        image: "certbot/certbot"
+        state: started
+        recreate: yes
+        volumes:
+          - /conf/letsencrypt-etc:/etc/letsencrypt
+          - /conf/letsencrypt-varlib:/var/lib/letsencrypt
+          - /conf/letsencrypt-www:/www
+        # Perform auto renewal every 12 hours
+        command: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait ${!}; done;'"
+
+    - name: Request SSL certificates for domains
+      docker_container:
+        name: "certbot-requester"
+        image: "certbot/certbot"
+        mounts:
+          - source: "/conf/letsencrypt-etc"
+            target: "/etc/letsencrypt"
+            type: "bind"
+          - source: "/conf/letsencrypt-varlib"
+            target: "/var/lib/letsencrypt"
+            type: "bind"
+          - source: "/conf/letsencrypt-www"
+            target: "/www"
+            type: "bind"
+          - source: "/conf/letsencrypt-log"
+            target: "/var/log/letsencrypt"
+            type: "bind"
+          - source: "/conf/nginx/sites"
+            target: "/sites"
+            type: "bind"
+            read_only: "yes"
+        entrypoint: "/bin/sh -c 'for domain in /sites/*; do certbot certonly --webroot --register-unsafely-without-email --agree-tos --webroot-path=/www -d `basename $domain`; done'"
+
+    - name: "Restart nginx container"
+      shell: "docker container restart nginx"
