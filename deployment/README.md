@@ -80,4 +80,8 @@ ansible-playbook deploy-docker-images.yml -i inventory-dev.yml
 ```
 ansible-playbook deploy-setup-containers.yml -i inventory-dev.yml
 ```
+
+The app should be available at:
+http://dev.humblenlp.com/ 
+
  
