@@ -1,24 +1,27 @@
 version: "3.8"
 services:
-    dbmate:
+    hlexgdb-client:
         image: amacneil/dbmate
+        container_name: hlexgdb-client
         entrypoint: /bin/sh
         depends_on:
-            - postgres
+            - hlexgdb-server
         volumes:
             - ./db:/db
         environment: 
-            DATABASE_URL: "postgres://hlexg:annotate@postgres/hlexgdb?sslmode=disable"
-    postgres:
+            DATABASE_URL: "postgres://hlexg:annotate@hlexgdb-server:5433/hlexgdb?sslmode=disable"
+    hlexgdb-server:
         image: postgres
+        container_name: hlexgdb-server
         volumes:
             - ./docker-volumes/postgres:/var/lib/postgresql/data
         ports:
-            - 5432:5432
+            - 5433:5433
         environment:
             POSTGRES_USER: hlexg
             POSTGRES_PASSWORD: annotate
             POSTGRES_DB: hlexgdb
+        command: -p 5433
 networks:
     default:
         external:
