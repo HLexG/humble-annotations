@@ -1,25 +1,55 @@
 import React from "react";
-import { Route, Switch } from 'react-router-dom';
+import { Route, Switch , Redirect} from 'react-router-dom';
 import Home from "../components/Home";
-import EditAnnotations from "../components/EditAnnotations";
-import Dashboard from '../components/Dashboard';
-import Progress from '../components/ProgressView';
 import Error404 from '../components/Error/404';
+import Login from '../components/auth/Login';
+import Signup from '../components/auth/Signup';
+import Logout from '../components/auth/Logout';
+import Account from '../components/settings/Account';
+import Profile from '../components/settings/Profile';
+import { useAuthContext} from "../services/AuthService";
 
 
 const AppRouter = ( props ) => {
 
     console.log("================================== AppRouter ======================================");
 
+    function AuthenticatedRoute({ children, ...rest }) {
+        // Get Auth Context
+        const auth = useAuthContext();
+
+        return (
+          <Route
+            {...rest}
+            render={({ location }) =>
+              auth.state.isAuthenticated ? (
+                children
+              ) : (
+                <Redirect
+                  to={{
+                    pathname: "/login",
+                    state: { from: location }
+                  }}
+                />
+              )
+            }
+          />
+        );
+      }
+
     return (
         <React.Fragment>
             <Switch>
                 <Route path="/" exact component={Home} />
-                <Route path="/annotations" exact component={EditAnnotations} />
-                <Route path="/annotations/:id" exact component={EditAnnotations} />
-                <Route path="/dashboard" exact component={Dashboard} />
-                <Route path="/progress" exact component={Progress} />
-                <Route path="/progress/:id" exact component={Progress} />
+                <Route path="/signup" exact component={Signup} />
+                <Route path="/login" exact component={Login} />
+                <Route path="/logout" exact component={Logout} />
+                <AuthenticatedRoute path="/settings/account">
+                    <Account />
+                </AuthenticatedRoute>
+                <AuthenticatedRoute path="/settings/profile">
+                    <Profile />
+                </AuthenticatedRoute>
                 <Route component={Error404} />
             </Switch>
         </React.Fragment>
