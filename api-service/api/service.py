@@ -5,7 +5,8 @@ from starlette.responses import JSONResponse
 from starlette.staticfiles import StaticFiles
 
 import dataaccess.session as database_session
-from api.routers import datasets, documents, entitylink, mentions, clusters
+from api import auth
+from api.routers import users, datasets, documents, entitylink, mentions, clusters
 
 
 prefix = "/v1"
@@ -59,6 +60,8 @@ async def get_index():
     }
 
 # Additional routers here
+app.include_router(auth.router, prefix=prefix)
+app.include_router(users.router, prefix=prefix)
 app.include_router(datasets.router, prefix=prefix)
 app.include_router(documents.router, prefix=prefix)
 app.include_router(entitylink.router, prefix=prefix)
