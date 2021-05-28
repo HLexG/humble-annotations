@@ -9,6 +9,27 @@ SET xmloption = content;
 SET client_min_messages = warning;
 SET row_security = off;
 
+--
+-- Name: acl_permission_type; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.acl_permission_type AS ENUM (
+    'read',
+    'readwrite',
+    'owner'
+);
+
+
+--
+-- Name: user_account_type; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.user_account_type AS ENUM (
+    'user',
+    'admin'
+);
+
+
 SET default_tablespace = '';
 
 SET default_table_access_method = heap;
@@ -52,26 +73,6 @@ ALTER SEQUENCE public.clusters_db_id_seq OWNED BY public.clusters.db_id;
 --
 -- Name: datasets; Type: TABLE; Schema: public; Owner: -
 --
-
-CREATE SEQUENCE public.clusters_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: clusters_db_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.clusters_id_seq OWNED BY public.clusters.id;
-
-
---
--- Name: datasets; Type: TABLE; Schema: public; Owner: -
---
-
 
 CREATE TABLE public.datasets (
     id bigint NOT NULL,
@@ -230,9 +231,16 @@ CREATE TABLE public.schema_migrations (
 
 CREATE TABLE public.users (
     id bigint NOT NULL,
+    username text NOT NULL,
     email text,
-    first_name text,
-    last_name text
+    full_name text,
+    hashed_password text,
+    account_type public.user_account_type DEFAULT 'user'::public.user_account_type NOT NULL,
+    github_username text,
+    twitter_handle text,
+    research_interests text,
+    created_at bigint DEFAULT (date_part('epoch'::text, clock_timestamp()) * (1000)::double precision) NOT NULL,
+    updated_at bigint
 );
 
 
@@ -587,12 +595,6 @@ ALTER TABLE ONLY public.mentions
     ADD CONSTRAINT mentions_updated_by_fkey FOREIGN KEY (updated_by) REFERENCES public.users(id) ON DELETE SET NULL;
 
 
-ALTER TABLE ONLY public.mentions
-    ADD COLUMN pos text;
-
-ALTER TABLE ONLY public.mentions
-    ADD COLUMN text text;
-
 --
 -- PostgreSQL database dump complete
 --
@@ -603,6 +605,4 @@ ALTER TABLE ONLY public.mentions
 --
 
 INSERT INTO public.schema_migrations (version) VALUES
-    ('20210302204457'),
-    ('20210303133158'),
-    ('20210313140512');
+    ('20210525145829');
