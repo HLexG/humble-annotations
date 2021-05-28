@@ -11,7 +11,7 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Divider from '@material-ui/core/Divider';
 import styles from './styles';
-import DataServices from "../../services/DataServices";
+import DataService from "../../services/DataService";
 
 
 
@@ -28,15 +28,15 @@ const Dashboard = ( props ) => {
     const [documents , setDocuments] = useState(null);
     
     const loadDocuments = () => {
-        DataServices.GetDatasets()
-            .then(function (response) {
-                setDataset(response.data[0]);
-                // Load the documents
-                return DataServices.GetDocumentsForAnnotation(response.data[0]["id"])
-            })
-            .then(function (response) {
-                setDocuments(response.data);
-            })
+        // DataService.GetDatasets()
+        //     .then(function (response) {
+        //         setDataset(response.data[0]);
+        //         // Load the documents
+        //         return DataService.GetDocumentsForAnnotation(response.data[0]["id"])
+        //     })
+        //     .then(function (response) {
+        //         setDocuments(response.data);
+        //     })
     }
 
     // Setup Component
