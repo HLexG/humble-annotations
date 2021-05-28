@@ -1,7 +1,7 @@
 const axios = require('axios');
 
-const BASE_API_URL = process.env.REACT_APP_BASE_API_URL;;
-const BASE_FEATURE_EXTRACTOR01_URL = process.env.REACT_APP_BASE_FE01_URL;;
+const BASE_API_URL = process.env.REACT_APP_BASE_API_URL;
+const BASE_FEATURE_EXTRACTOR01_URL = process.env.REACT_APP_BASE_FE01_URL;
 
 const DataServices = {
     Init: function(){
