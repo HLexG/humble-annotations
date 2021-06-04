@@ -7,7 +7,11 @@ import Signup from '../components/auth/Signup';
 import Logout from '../components/auth/Logout';
 import Account from '../components/settings/Account';
 import Profile from '../components/settings/Profile';
+// import Annotation from "../components/Annotation";
+// import EditAnnotations from "../components/EditAnnotations";
 import { useAuthContext} from "../services/AuthService";
+import Datasets from "../components/Datasets";
+
 
 
 const AppRouter = ( props ) => {
@@ -50,6 +54,7 @@ const AppRouter = ( props ) => {
                 <AuthenticatedRoute path="/settings/profile">
                     <Profile />
                 </AuthenticatedRoute>
+                <Route path="/datasets" exact component={Datasets} />
                 <Route component={Error404} />
             </Switch>
         </React.Fragment>

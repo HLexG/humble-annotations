@@ -11,6 +11,9 @@ import Content from "../common/Content";
 import Header from "../common/Header";
 import DataService from '../services/DataService';
 import {AuthContextProvider} from '../services/AuthService';
+import SideMenu from '../common/SideMenu';
+
+
 
 const App = (props) => {
 
@@ -34,10 +37,11 @@ const App = (props) => {
           <ThemeProvider theme={Theme}>
             <AuthContextProvider>
               <Router basename="/">
-                  <Header 
+                  <Header toggleDrawer={toggleDrawer}></Header>
+                  <SideMenu 
                   toggleDrawer={toggleDrawer}
                   drawerOpen={drawerOpen}
-                  ></Header>
+                  ></SideMenu>
                   <Content drawerOpen={drawerOpen}>
                       <AppRoutes />
                   </Content>
