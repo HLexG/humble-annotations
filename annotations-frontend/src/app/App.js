@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{ useState } from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import {
   ThemeProvider,
@@ -19,6 +19,14 @@ const App = (props) => {
   // Init Data Service
   DataService.Init();
 
+  // State
+  const [drawerOpen, setDrawerOpen] = useState(true);
+
+  const toggleDrawer = (open) => () => {
+      setDrawerOpen(open)
+      console.log("drawer toggled!");
+  };
+
   // Build App
   let view = (
       <React.Fragment>
@@ -26,8 +34,11 @@ const App = (props) => {
           <ThemeProvider theme={Theme}>
             <AuthContextProvider>
               <Router basename="/">
-                  <Header></Header>
-                  <Content>
+                  <Header 
+                  toggleDrawer={toggleDrawer}
+                  drawerOpen={drawerOpen}
+                  ></Header>
+                  <Content drawerOpen={drawerOpen}>
                       <AppRoutes />
                   </Content>
               </Router>

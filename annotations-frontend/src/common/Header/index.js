@@ -25,8 +25,8 @@ import { useAuthContext} from "../../services/AuthService";
 import styles from './styles';
 
 const Header = (props) => {
-    const { classes } = props;
-
+    const { classes, toggleDrawer, drawerOpen} = props;
+    console.log(props);
     console.log("================================== Header ======================================");
 
     // Get Auth Context
@@ -34,13 +34,9 @@ const Header = (props) => {
     console.log(auth)
 
     // State
-    const [drawerOpen, setDrawerOpen] = useState(false);
     const [settingsMenuOpen, setSettingsMenuOpen] = useState(false);
     const [settingsMenuAnchorEl, setSettingsMenuAnchorEl] = useState(null);
 
-    const toggleDrawer = (open) => () => {
-        setDrawerOpen(open)
-    };
     const openSettingsMenu = (event) => {
         setSettingsMenuAnchorEl(event.currentTarget);
     };
@@ -110,7 +106,11 @@ const Header = (props) => {
                     </div>
                 </Toolbar>
             </AppBar>
-            <Drawer open={drawerOpen} onClose={toggleDrawer( false)}>
+            <Drawer 
+              open={drawerOpen} 
+              onClose={toggleDrawer(false)}
+              BackdropProps={{ invisible: true }}
+              >
                 <div
                     tabIndex={0}
                     role="button"
