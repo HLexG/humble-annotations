@@ -1,4 +1,4 @@
-import DataServices from "../../services/DataServices";
+import DataService from '../../services/DataService';
 import {useState} from 'react';
 
 

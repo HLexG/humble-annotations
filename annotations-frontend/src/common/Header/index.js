@@ -1,18 +1,10 @@
 import React,{ useState } from 'react';
-import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
-import Drawer from '@material-ui/core/Drawer';
 import Typography from '@material-ui/core/Typography';
-import SearchIcon from '@material-ui/icons/Search';
-import InputBase from '@material-ui/core/InputBase';
 
-import List from '@material-ui/core/List';
 import Divider from '@material-ui/core/Divider';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import IconButton from '@material-ui/core/IconButton';
@@ -25,7 +17,7 @@ import { useAuthContext} from "../../services/AuthService";
 import styles from './styles';
 
 const Header = (props) => {
-    const { classes, toggleDrawer, drawerOpen} = props;
+    const { classes, toggleDrawer} = props;
     console.log(props);
     console.log("================================== Header ======================================");
 
@@ -34,7 +26,6 @@ const Header = (props) => {
     console.log(auth)
 
     // State
-    const [settingsMenuOpen, setSettingsMenuOpen] = useState(false);
     const [settingsMenuAnchorEl, setSettingsMenuAnchorEl] = useState(null);
 
     const openSettingsMenu = (event) => {
@@ -106,35 +97,6 @@ const Header = (props) => {
                     </div>
                 </Toolbar>
             </AppBar>
-            <Drawer 
-              open={drawerOpen} 
-              onClose={toggleDrawer(false)}
-              BackdropProps={{ invisible: true }}
-              >
-                <div
-                    tabIndex={0}
-                    role="button"
-                    onClick={toggleDrawer(false)}
-                    onKeyDown={toggleDrawer(false)}
-                >
-                    <div className={classes.list}>
-                        <List>
-                            <ListItem button key='home' component={Link} to="/">
-                                <ListItemIcon><Icon>home</Icon></ListItemIcon>
-                                <ListItemText primary='Home' />
-                            </ListItem>
-                        </List>
-                        <Divider />
-                        <List>
-                            <ListItem button key='menuitem12' component={Link} to="/settings/profile">
-                                <ListItemIcon><Icon>settings_applications</Icon></ListItemIcon>
-                                <ListItemText primary='Settings' />
-                            </ListItem>
-                            
-                        </List>
-                    </div>
-                </div>
-            </Drawer>
         </div>
     );
 }
