@@ -6,11 +6,16 @@ const drawerWidth = 240;
 // Code to move content with drawer:
 // https://stackoverflow.com/a/57866459/8970591
 const styles = theme => ({
-    grow: {
-        flexGrow: 1,
-    },
     root: {
-        height: "100%"
+      backgroundColor: "#efedf5",
+      paddingLeft: theme.spacing(3),
+      paddingRight: theme.spacing(3),
+      paddingBottom: theme.spacing(3),
+      paddingTop: theme.spacing(3),
+      minHeight: "100vh"
+    },
+    grow: {
+      flexGrow: 1,
     },
     menuOpen: {
       marginLeft: '0px'

@@ -1,11 +1,9 @@
+
 const styles = theme => ({
-    datasetsPanel: {
-        background: "#fff",
-        borderRight: "1px solid #ddd",
-        borderBottom: "1px solid #ddd",
-        minHeight: "90vh",
-        paddingTop: 5,
-    },
+  // Selects any children of the container, so each card/paper
+  root: {
+    flexGrow: 1,
+  }
 });
 
 export default styles;
