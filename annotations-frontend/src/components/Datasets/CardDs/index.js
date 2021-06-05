@@ -13,21 +13,20 @@ import styles from './styles';
 // https://codesandbox.io/s/material-ui-card-examples-bp96w?from-embed=&file=/CardActionsAreaExample.js:457-1003
 
 const CardDs = ( props ) => {
-    const {classes} = props;
+    const {classes, ds} = props;
 
     console.log("================================== CardDs ======================================");
 
     // Component States
     
     return (
-    <Card className={classes.root}>
+    <Card className={classes.root} key={ds.id}>
       <CardContent>
         <Typography gutterBottom variant="h5" component="h2">
-          CardActions Example
+          {ds.title}
         </Typography>
         <Typography variant="body2" color="textSecondary" component="p">
-          CardActions are just a flexbox component that wraps the children in
-          8px of padding and 8px horizontal padding between children.
+          {ds.descr}
         </Typography>
         <Divider/>
         <div className={classes.footer}>
