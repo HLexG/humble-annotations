@@ -52,14 +52,6 @@ const Header = (props) => {
                     
                     
                     <div>
-                        <IconButton color="inherit" component={Link} to="/">
-                            <Icon>list</Icon>
-                            <Typography variant="caption">&nbsp;Datasets</Typography>
-                        </IconButton>
-                        <IconButton color="inherit" component={Link} to="/">
-                            <Icon>list</Icon>
-                            <Typography variant="caption">&nbsp;Resources</Typography>
-                        </IconButton>
                         <IconButton aria-haspopup="true" color="inherit">
                             <Icon>more_vert</Icon>
                         </IconButton>
