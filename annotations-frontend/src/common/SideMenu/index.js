@@ -23,11 +23,13 @@ import styles from './styles';
 
 
 // For testing
-const currentDatasets = [
+const testCurrentDatasets = [
   {id: 1, title: 'Celeberty', descr: 'Welcome to learning React!'},
   {id: 2, title: 'Apple News', descr: 'You can install React from npm.'}
 ]
 
+// TODO: Pull out the actual basic info of all the dataset
+const currentDatasets = testCurrentDatasets;
 
 const SideMenu = (props) => {
     const { classes, toggleDrawer, drawerOpen} = props;
