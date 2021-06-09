@@ -21,12 +21,37 @@ CREATE TYPE public.acl_permission_type AS ENUM (
 
 
 --
+-- Name: annotation_status; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.annotation_status AS ENUM (
+    'save',
+    'commit'
+);
+
+
+--
+-- Name: annotation_type; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.annotation_type AS ENUM (
+    'entity_mention',
+    'entity_coreference',
+    'named_entity_recognition',
+    'entity_linking',
+    'event_mention',
+    'event_coreference'
+);
+
+
+--
 -- Name: user_account_type; Type: TYPE; Schema: public; Owner: -
 --
 
 CREATE TYPE public.user_account_type AS ENUM (
     'user',
-    'admin'
+    'admin',
+    'model'
 );
 
 
@@ -35,14 +60,48 @@ SET default_tablespace = '';
 SET default_table_access_method = heap;
 
 --
+-- Name: annotations; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.annotations (
+    id bigint NOT NULL,
+    document_id bigint NOT NULL,
+    user_id bigint,
+    type public.annotation_type NOT NULL,
+    status public.annotation_status DEFAULT 'save'::public.annotation_status NOT NULL,
+    created_at bigint DEFAULT (date_part('epoch'::text, clock_timestamp()) * (1000)::double precision) NOT NULL,
+    created_by bigint,
+    updated_at bigint,
+    updated_by bigint
+);
+
+
+--
+-- Name: annotations_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.annotations_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: annotations_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.annotations_id_seq OWNED BY public.annotations.id;
+
+
+--
 -- Name: clusters; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.clusters (
-    db_id bigint NOT NULL,
     id bigint NOT NULL,
-    dataset_id bigint NOT NULL,
-    document_id bigint NOT NULL,
+    annotation_id bigint NOT NULL,
     cluster_name text NOT NULL,
     created_at bigint DEFAULT (date_part('epoch'::text, clock_timestamp()) * (1000)::double precision) NOT NULL,
     created_by bigint,
@@ -52,10 +111,10 @@ CREATE TABLE public.clusters (
 
 
 --
--- Name: clusters_db_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: clusters_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.clusters_db_id_seq
+CREATE SEQUENCE public.clusters_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -64,10 +123,25 @@ CREATE SEQUENCE public.clusters_db_id_seq
 
 
 --
--- Name: clusters_db_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+-- Name: clusters_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.clusters_db_id_seq OWNED BY public.clusters.db_id;
+ALTER SEQUENCE public.clusters_id_seq OWNED BY public.clusters.id;
+
+
+--
+-- Name: coreferences; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.coreferences (
+    annotation_id bigint NOT NULL,
+    cluster_id bigint NOT NULL,
+    mention_id bigint NOT NULL,
+    created_at bigint DEFAULT (date_part('epoch'::text, clock_timestamp()) * (1000)::double precision) NOT NULL,
+    created_by bigint,
+    updated_at bigint,
+    updated_by bigint
+);
 
 
 --
@@ -140,17 +214,13 @@ ALTER SEQUENCE public.documents_id_seq OWNED BY public.documents.id;
 
 
 --
--- Name: entitylink; Type: TABLE; Schema: public; Owner: -
+-- Name: entity_categories; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.entitylink (
-    db_id bigint NOT NULL,
-    id text NOT NULL,
-    alt_id text DEFAULT '-1'::text,
-    dataset_id bigint NOT NULL,
-    entity_name text NOT NULL,
-    description text NOT NULL,
-    url text,
+CREATE TABLE public.entity_categories (
+    id bigint NOT NULL,
+    category_code text NOT NULL,
+    category_name text,
     created_at bigint DEFAULT (date_part('epoch'::text, clock_timestamp()) * (1000)::double precision) NOT NULL,
     created_by bigint,
     updated_at bigint,
@@ -159,10 +229,10 @@ CREATE TABLE public.entitylink (
 
 
 --
--- Name: entitylink_db_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: entity_categories_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.entitylink_db_id_seq
+CREATE SEQUENCE public.entity_categories_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -171,10 +241,25 @@ CREATE SEQUENCE public.entitylink_db_id_seq
 
 
 --
--- Name: entitylink_db_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+-- Name: entity_categories_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.entitylink_db_id_seq OWNED BY public.entitylink.db_id;
+ALTER SEQUENCE public.entity_categories_id_seq OWNED BY public.entity_categories.id;
+
+
+--
+-- Name: entity_links; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.entity_links (
+    annotation_id bigint NOT NULL,
+    cluster_id bigint NOT NULL,
+    wikidata_id bigint NOT NULL,
+    created_at bigint DEFAULT (date_part('epoch'::text, clock_timestamp()) * (1000)::double precision) NOT NULL,
+    created_by bigint,
+    updated_at bigint,
+    updated_by bigint
+);
 
 
 --
@@ -182,14 +267,10 @@ ALTER SEQUENCE public.entitylink_db_id_seq OWNED BY public.entitylink.db_id;
 --
 
 CREATE TABLE public.mentions (
-    db_id bigint NOT NULL,
     id bigint NOT NULL,
-    dataset_id bigint NOT NULL,
-    document_id bigint NOT NULL,
-    sentence_id integer NOT NULL,
+    annotation_id bigint NOT NULL,
     start_token_id integer NOT NULL,
     end_token_id integer NOT NULL,
-    cluster_id bigint NOT NULL,
     created_at bigint DEFAULT (date_part('epoch'::text, clock_timestamp()) * (1000)::double precision) NOT NULL,
     created_by bigint,
     updated_at bigint,
@@ -198,10 +279,10 @@ CREATE TABLE public.mentions (
 
 
 --
--- Name: mentions_db_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: mentions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.mentions_db_id_seq
+CREATE SEQUENCE public.mentions_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -210,10 +291,25 @@ CREATE SEQUENCE public.mentions_db_id_seq
 
 
 --
--- Name: mentions_db_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+-- Name: mentions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.mentions_db_id_seq OWNED BY public.mentions.db_id;
+ALTER SEQUENCE public.mentions_id_seq OWNED BY public.mentions.id;
+
+
+--
+-- Name: named_entities; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.named_entities (
+    annotation_id bigint NOT NULL,
+    cluster_id bigint NOT NULL,
+    entity_category_id bigint NOT NULL,
+    created_at bigint DEFAULT (date_part('epoch'::text, clock_timestamp()) * (1000)::double precision) NOT NULL,
+    created_by bigint,
+    updated_at bigint,
+    updated_by bigint
+);
 
 
 --
@@ -223,6 +319,42 @@ ALTER SEQUENCE public.mentions_db_id_seq OWNED BY public.mentions.db_id;
 CREATE TABLE public.schema_migrations (
     version character varying(255) NOT NULL
 );
+
+
+--
+-- Name: tokens; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.tokens (
+    db_id bigint NOT NULL,
+    id bigint NOT NULL,
+    document_id bigint NOT NULL,
+    "position" integer NOT NULL,
+    sentence_id integer NOT NULL,
+    created_at bigint DEFAULT (date_part('epoch'::text, clock_timestamp()) * (1000)::double precision) NOT NULL,
+    created_by bigint,
+    updated_at bigint,
+    updated_by bigint
+);
+
+
+--
+-- Name: tokens_db_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.tokens_db_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: tokens_db_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.tokens_db_id_seq OWNED BY public.tokens.db_id;
 
 
 --
@@ -264,17 +396,55 @@ ALTER SEQUENCE public.users_id_seq OWNED BY public.users.id;
 
 
 --
--- Name: clusters db_id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: wikidata; Type: TABLE; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.clusters ALTER COLUMN db_id SET DEFAULT nextval('public.clusters_db_id_seq'::regclass);
+CREATE TABLE public.wikidata (
+    db_id bigint NOT NULL,
+    id text NOT NULL,
+    alt_id text DEFAULT '-1'::text,
+    dataset_id bigint NOT NULL,
+    entity_name text NOT NULL,
+    description text NOT NULL,
+    url text,
+    created_at bigint DEFAULT (date_part('epoch'::text, clock_timestamp()) * (1000)::double precision) NOT NULL,
+    created_by bigint,
+    updated_at bigint,
+    updated_by bigint
+);
+
+
+--
+-- Name: wikidata_db_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.wikidata_db_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: wikidata_db_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.wikidata_db_id_seq OWNED BY public.wikidata.db_id;
+
+
+--
+-- Name: annotations id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.annotations ALTER COLUMN id SET DEFAULT nextval('public.annotations_id_seq'::regclass);
 
 
 --
 -- Name: clusters id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.clusters ALTER COLUMN id SET DEFAULT currval('public.clusters_db_id_seq'::regclass);
+ALTER TABLE ONLY public.clusters ALTER COLUMN id SET DEFAULT nextval('public.clusters_id_seq'::regclass);
 
 
 --
@@ -292,24 +462,31 @@ ALTER TABLE ONLY public.documents ALTER COLUMN id SET DEFAULT nextval('public.do
 
 
 --
--- Name: entitylink db_id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: entity_categories id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.entitylink ALTER COLUMN db_id SET DEFAULT nextval('public.entitylink_db_id_seq'::regclass);
-
-
---
--- Name: mentions db_id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.mentions ALTER COLUMN db_id SET DEFAULT nextval('public.mentions_db_id_seq'::regclass);
+ALTER TABLE ONLY public.entity_categories ALTER COLUMN id SET DEFAULT nextval('public.entity_categories_id_seq'::regclass);
 
 
 --
 -- Name: mentions id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.mentions ALTER COLUMN id SET DEFAULT currval('public.mentions_db_id_seq'::regclass);
+ALTER TABLE ONLY public.mentions ALTER COLUMN id SET DEFAULT nextval('public.mentions_id_seq'::regclass);
+
+
+--
+-- Name: tokens db_id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.tokens ALTER COLUMN db_id SET DEFAULT nextval('public.tokens_db_id_seq'::regclass);
+
+
+--
+-- Name: tokens id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.tokens ALTER COLUMN id SET DEFAULT currval('public.tokens_db_id_seq'::regclass);
 
 
 --
@@ -320,11 +497,26 @@ ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.users_
 
 
 --
+-- Name: wikidata db_id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.wikidata ALTER COLUMN db_id SET DEFAULT nextval('public.wikidata_db_id_seq'::regclass);
+
+
+--
+-- Name: annotations annotations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.annotations
+    ADD CONSTRAINT annotations_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: clusters clusters_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.clusters
-    ADD CONSTRAINT clusters_pkey PRIMARY KEY (db_id);
+    ADD CONSTRAINT clusters_pkey PRIMARY KEY (id);
 
 
 --
@@ -344,11 +536,11 @@ ALTER TABLE ONLY public.documents
 
 
 --
--- Name: entitylink entitylink_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: entity_categories entity_categories_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.entitylink
-    ADD CONSTRAINT entitylink_pkey PRIMARY KEY (db_id);
+ALTER TABLE ONLY public.entity_categories
+    ADD CONSTRAINT entity_categories_pkey PRIMARY KEY (id);
 
 
 --
@@ -356,7 +548,7 @@ ALTER TABLE ONLY public.entitylink
 --
 
 ALTER TABLE ONLY public.mentions
-    ADD CONSTRAINT mentions_pkey PRIMARY KEY (db_id);
+    ADD CONSTRAINT mentions_pkey PRIMARY KEY (id);
 
 
 --
@@ -368,6 +560,14 @@ ALTER TABLE ONLY public.schema_migrations
 
 
 --
+-- Name: tokens tokens_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.tokens
+    ADD CONSTRAINT tokens_pkey PRIMARY KEY (db_id);
+
+
+--
 -- Name: users users_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -376,87 +576,121 @@ ALTER TABLE ONLY public.users
 
 
 --
--- Name: clusters_document_id; Type: INDEX; Schema: public; Owner: -
+-- Name: wikidata wikidata_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-CREATE INDEX clusters_document_id ON public.clusters USING btree (document_id);
-
-
---
--- Name: clusters_document_id_and_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX clusters_document_id_and_id ON public.clusters USING btree (document_id, id);
+ALTER TABLE ONLY public.wikidata
+    ADD CONSTRAINT wikidata_pkey PRIMARY KEY (db_id);
 
 
 --
--- Name: clusters_id; Type: INDEX; Schema: public; Owner: -
+-- Name: coreferences_annotation_cluster_mention; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX clusters_id ON public.clusters USING btree (id);
-
-
---
--- Name: entitylink_alt_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX entitylink_alt_id ON public.entitylink USING btree (alt_id);
+CREATE UNIQUE INDEX coreferences_annotation_cluster_mention ON public.coreferences USING btree (annotation_id, cluster_id, mention_id);
 
 
 --
--- Name: entitylink_entity_name_id; Type: INDEX; Schema: public; Owner: -
+-- Name: entity_links_annotation_cluster_wikidata; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX entitylink_entity_name_id ON public.entitylink USING btree (entity_name);
-
-
---
--- Name: entitylink_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX entitylink_id ON public.entitylink USING btree (id);
+CREATE UNIQUE INDEX entity_links_annotation_cluster_wikidata ON public.entity_links USING btree (annotation_id, cluster_id, wikidata_id);
 
 
 --
--- Name: entitylink_id_alt_id; Type: INDEX; Schema: public; Owner: -
+-- Name: named_entities_annotation_cluster_entity_category; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX entitylink_id_alt_id ON public.entitylink USING btree (id, alt_id);
-
-
---
--- Name: mentions_cluster_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX mentions_cluster_id ON public.mentions USING btree (cluster_id);
+CREATE UNIQUE INDEX named_entities_annotation_cluster_entity_category ON public.named_entities USING btree (annotation_id, cluster_id, entity_category_id);
 
 
 --
--- Name: mentions_document_id; Type: INDEX; Schema: public; Owner: -
+-- Name: tokens_document_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX mentions_document_id ON public.mentions USING btree (document_id);
-
-
---
--- Name: mentions_document_id_and_cluster_id_and_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX mentions_document_id_and_cluster_id_and_id ON public.mentions USING btree (document_id, cluster_id, id);
+CREATE INDEX tokens_document_id ON public.tokens USING btree (document_id);
 
 
 --
--- Name: mentions_document_id_and_id; Type: INDEX; Schema: public; Owner: -
+-- Name: tokens_document_id_and_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX mentions_document_id_and_id ON public.mentions USING btree (document_id, id);
+CREATE UNIQUE INDEX tokens_document_id_and_id ON public.tokens USING btree (document_id, id);
 
 
 --
--- Name: mentions_id; Type: INDEX; Schema: public; Owner: -
+-- Name: tokens_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX mentions_id ON public.mentions USING btree (id);
+CREATE INDEX tokens_id ON public.tokens USING btree (id);
+
+
+--
+-- Name: wikidata_alt_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX wikidata_alt_id ON public.wikidata USING btree (alt_id);
+
+
+--
+-- Name: wikidata_entity_name_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX wikidata_entity_name_id ON public.wikidata USING btree (entity_name);
+
+
+--
+-- Name: wikidata_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX wikidata_id ON public.wikidata USING btree (id);
+
+
+--
+-- Name: wikidata_id_alt_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX wikidata_id_alt_id ON public.wikidata USING btree (id, alt_id);
+
+
+--
+-- Name: annotations annotations_created_by_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.annotations
+    ADD CONSTRAINT annotations_created_by_fkey FOREIGN KEY (created_by) REFERENCES public.users(id) ON DELETE SET NULL;
+
+
+--
+-- Name: annotations annotations_document_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.annotations
+    ADD CONSTRAINT annotations_document_id_fkey FOREIGN KEY (document_id) REFERENCES public.documents(id) ON DELETE CASCADE;
+
+
+--
+-- Name: annotations annotations_updated_by_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.annotations
+    ADD CONSTRAINT annotations_updated_by_fkey FOREIGN KEY (updated_by) REFERENCES public.users(id) ON DELETE SET NULL;
+
+
+--
+-- Name: annotations annotations_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.annotations
+    ADD CONSTRAINT annotations_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(id) ON DELETE SET NULL;
+
+
+--
+-- Name: clusters clusters_annotation_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.clusters
+    ADD CONSTRAINT clusters_annotation_id_fkey FOREIGN KEY (annotation_id) REFERENCES public.annotations(id) ON DELETE CASCADE;
 
 
 --
@@ -468,27 +702,51 @@ ALTER TABLE ONLY public.clusters
 
 
 --
--- Name: clusters clusters_dataset_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.clusters
-    ADD CONSTRAINT clusters_dataset_id_fkey FOREIGN KEY (dataset_id) REFERENCES public.datasets(id) ON DELETE CASCADE;
-
-
---
--- Name: clusters clusters_document_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.clusters
-    ADD CONSTRAINT clusters_document_id_fkey FOREIGN KEY (document_id) REFERENCES public.documents(id) ON DELETE CASCADE;
-
-
---
 -- Name: clusters clusters_updated_by_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.clusters
     ADD CONSTRAINT clusters_updated_by_fkey FOREIGN KEY (updated_by) REFERENCES public.users(id) ON DELETE SET NULL;
+
+
+--
+-- Name: coreferences coreferences_annotation_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.coreferences
+    ADD CONSTRAINT coreferences_annotation_id_fkey FOREIGN KEY (annotation_id) REFERENCES public.annotations(id) ON DELETE CASCADE;
+
+
+--
+-- Name: coreferences coreferences_cluster_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.coreferences
+    ADD CONSTRAINT coreferences_cluster_id_fkey FOREIGN KEY (cluster_id) REFERENCES public.clusters(id) ON DELETE CASCADE;
+
+
+--
+-- Name: coreferences coreferences_created_by_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.coreferences
+    ADD CONSTRAINT coreferences_created_by_fkey FOREIGN KEY (created_by) REFERENCES public.users(id) ON DELETE SET NULL;
+
+
+--
+-- Name: coreferences coreferences_mention_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.coreferences
+    ADD CONSTRAINT coreferences_mention_id_fkey FOREIGN KEY (mention_id) REFERENCES public.mentions(id) ON DELETE CASCADE;
+
+
+--
+-- Name: coreferences coreferences_updated_by_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.coreferences
+    ADD CONSTRAINT coreferences_updated_by_fkey FOREIGN KEY (updated_by) REFERENCES public.users(id) ON DELETE SET NULL;
 
 
 --
@@ -532,27 +790,67 @@ ALTER TABLE ONLY public.documents
 
 
 --
--- Name: entitylink entitylink_created_by_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: entity_categories entity_categories_created_by_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.entitylink
-    ADD CONSTRAINT entitylink_created_by_fkey FOREIGN KEY (created_by) REFERENCES public.users(id) ON DELETE SET NULL;
-
-
---
--- Name: entitylink entitylink_dataset_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.entitylink
-    ADD CONSTRAINT entitylink_dataset_id_fkey FOREIGN KEY (dataset_id) REFERENCES public.datasets(id) ON DELETE CASCADE;
+ALTER TABLE ONLY public.entity_categories
+    ADD CONSTRAINT entity_categories_created_by_fkey FOREIGN KEY (created_by) REFERENCES public.users(id) ON DELETE SET NULL;
 
 
 --
--- Name: entitylink entitylink_updated_by_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: entity_categories entity_categories_updated_by_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.entitylink
-    ADD CONSTRAINT entitylink_updated_by_fkey FOREIGN KEY (updated_by) REFERENCES public.users(id) ON DELETE SET NULL;
+ALTER TABLE ONLY public.entity_categories
+    ADD CONSTRAINT entity_categories_updated_by_fkey FOREIGN KEY (updated_by) REFERENCES public.users(id) ON DELETE SET NULL;
+
+
+--
+-- Name: entity_links entity_links_annotation_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.entity_links
+    ADD CONSTRAINT entity_links_annotation_id_fkey FOREIGN KEY (annotation_id) REFERENCES public.annotations(id) ON DELETE CASCADE;
+
+
+--
+-- Name: entity_links entity_links_cluster_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.entity_links
+    ADD CONSTRAINT entity_links_cluster_id_fkey FOREIGN KEY (cluster_id) REFERENCES public.clusters(id) ON DELETE CASCADE;
+
+
+--
+-- Name: entity_links entity_links_created_by_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.entity_links
+    ADD CONSTRAINT entity_links_created_by_fkey FOREIGN KEY (created_by) REFERENCES public.users(id) ON DELETE SET NULL;
+
+
+--
+-- Name: entity_links entity_links_updated_by_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.entity_links
+    ADD CONSTRAINT entity_links_updated_by_fkey FOREIGN KEY (updated_by) REFERENCES public.users(id) ON DELETE SET NULL;
+
+
+--
+-- Name: entity_links entity_links_wikidata_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.entity_links
+    ADD CONSTRAINT entity_links_wikidata_id_fkey FOREIGN KEY (wikidata_id) REFERENCES public.wikidata(db_id) ON DELETE CASCADE;
+
+
+--
+-- Name: mentions mentions_annotation_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.mentions
+    ADD CONSTRAINT mentions_annotation_id_fkey FOREIGN KEY (annotation_id) REFERENCES public.annotations(id) ON DELETE CASCADE;
 
 
 --
@@ -564,35 +862,99 @@ ALTER TABLE ONLY public.mentions
 
 
 --
--- Name: mentions mentions_dataset_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.mentions
-    ADD CONSTRAINT mentions_dataset_id_fkey FOREIGN KEY (dataset_id) REFERENCES public.datasets(id) ON DELETE CASCADE;
-
-
---
--- Name: mentions mentions_document_id_cluster_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.mentions
-    ADD CONSTRAINT mentions_document_id_cluster_id_fkey FOREIGN KEY (document_id, cluster_id) REFERENCES public.clusters(document_id, id) ON DELETE CASCADE;
-
-
---
--- Name: mentions mentions_document_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.mentions
-    ADD CONSTRAINT mentions_document_id_fkey FOREIGN KEY (document_id) REFERENCES public.documents(id) ON DELETE CASCADE;
-
-
---
 -- Name: mentions mentions_updated_by_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.mentions
     ADD CONSTRAINT mentions_updated_by_fkey FOREIGN KEY (updated_by) REFERENCES public.users(id) ON DELETE SET NULL;
+
+
+--
+-- Name: named_entities named_entities_annotation_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.named_entities
+    ADD CONSTRAINT named_entities_annotation_id_fkey FOREIGN KEY (annotation_id) REFERENCES public.annotations(id) ON DELETE CASCADE;
+
+
+--
+-- Name: named_entities named_entities_cluster_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.named_entities
+    ADD CONSTRAINT named_entities_cluster_id_fkey FOREIGN KEY (cluster_id) REFERENCES public.clusters(id) ON DELETE CASCADE;
+
+
+--
+-- Name: named_entities named_entities_created_by_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.named_entities
+    ADD CONSTRAINT named_entities_created_by_fkey FOREIGN KEY (created_by) REFERENCES public.users(id) ON DELETE SET NULL;
+
+
+--
+-- Name: named_entities named_entities_entity_category_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.named_entities
+    ADD CONSTRAINT named_entities_entity_category_id_fkey FOREIGN KEY (entity_category_id) REFERENCES public.entity_categories(id) ON DELETE CASCADE;
+
+
+--
+-- Name: named_entities named_entities_updated_by_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.named_entities
+    ADD CONSTRAINT named_entities_updated_by_fkey FOREIGN KEY (updated_by) REFERENCES public.users(id) ON DELETE SET NULL;
+
+
+--
+-- Name: tokens tokens_created_by_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.tokens
+    ADD CONSTRAINT tokens_created_by_fkey FOREIGN KEY (created_by) REFERENCES public.users(id) ON DELETE SET NULL;
+
+
+--
+-- Name: tokens tokens_document_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.tokens
+    ADD CONSTRAINT tokens_document_id_fkey FOREIGN KEY (document_id) REFERENCES public.documents(id) ON DELETE CASCADE;
+
+
+--
+-- Name: tokens tokens_updated_by_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.tokens
+    ADD CONSTRAINT tokens_updated_by_fkey FOREIGN KEY (updated_by) REFERENCES public.users(id) ON DELETE SET NULL;
+
+
+--
+-- Name: wikidata wikidata_created_by_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.wikidata
+    ADD CONSTRAINT wikidata_created_by_fkey FOREIGN KEY (created_by) REFERENCES public.users(id) ON DELETE SET NULL;
+
+
+--
+-- Name: wikidata wikidata_dataset_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.wikidata
+    ADD CONSTRAINT wikidata_dataset_id_fkey FOREIGN KEY (dataset_id) REFERENCES public.datasets(id) ON DELETE CASCADE;
+
+
+--
+-- Name: wikidata wikidata_updated_by_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.wikidata
+    ADD CONSTRAINT wikidata_updated_by_fkey FOREIGN KEY (updated_by) REFERENCES public.users(id) ON DELETE SET NULL;
 
 
 --
@@ -605,4 +967,5 @@ ALTER TABLE ONLY public.mentions
 --
 
 INSERT INTO public.schema_migrations (version) VALUES
-    ('20210525145829');
+    ('20210525145829'),
+    ('20210609200427');
