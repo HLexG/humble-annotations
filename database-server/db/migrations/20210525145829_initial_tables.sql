@@ -1,12 +1,25 @@
 -- migrate:up
 CREATE TYPE user_account_type AS ENUM (
     'user',
-    'admin'
+    'admin',
+    'model'
 );
 CREATE TYPE acl_permission_type AS ENUM (
     'read',
     'readwrite',
     'owner'
+);
+CREATE TYPE annotation_type AS ENUM (
+    'entity_mention',
+    'entity_coreference',
+    'named_entity_recognition',
+    'entity_linking',
+    'event_mention',
+    'event_coreference'
+);
+CREATE TYPE annotation_status AS ENUM (
+    'save',
+    'commit'
 );
 CREATE TABLE users (
     id BIGSERIAL PRIMARY KEY,
@@ -20,6 +33,15 @@ CREATE TABLE users (
     research_interests TEXT,
     created_at BIGINT NOT NULL DEFAULT EXTRACT(EPOCH FROM clock_timestamp()) * 1000,
     updated_at BIGINT
+);
+CREATE TABLE entity_categories (
+    id BIGSERIAL PRIMARY KEY,
+    category_code TEXT NOT NULL,
+    category_name TEXT,
+    created_at BIGINT NOT NULL DEFAULT EXTRACT(EPOCH FROM clock_timestamp()) * 1000,
+    created_by BIGINT REFERENCES users ON DELETE SET NULL,
+    updated_at BIGINT,
+    updated_by BIGINT REFERENCES users ON DELETE SET NULL
 );
 CREATE TABLE datasets (
     id BIGSERIAL PRIMARY KEY,
@@ -40,41 +62,82 @@ CREATE TABLE documents (
     updated_at BIGINT,
     updated_by BIGINT REFERENCES users ON DELETE SET NULL
 );
-CREATE TABLE clusters (
+CREATE TABLE tokens (
     db_id BIGSERIAL PRIMARY KEY,
-    id BIGINT NOT NULL DEFAULT currval('clusters_db_id_seq'),
-    dataset_id BIGINT NOT NULL REFERENCES datasets ON DELETE CASCADE,
+    id BIGINT NOT NULL DEFAULT currval('tokens_db_id_seq'),
     document_id BIGINT NOT NULL REFERENCES documents ON DELETE CASCADE,
+    position INT NOT NULL,
+    sentence_id INT NOT NULL,
+    created_at BIGINT NOT NULL DEFAULT EXTRACT(EPOCH FROM clock_timestamp()) * 1000,
+    created_by BIGINT REFERENCES users ON DELETE SET NULL,
+    updated_at BIGINT,
+    updated_by BIGINT REFERENCES users ON DELETE SET NULL
+);
+CREATE INDEX tokens_id ON tokens (id);
+CREATE INDEX tokens_document_id ON tokens (document_id);
+CREATE UNIQUE INDEX tokens_document_id_and_id ON tokens (document_id, id);
+CREATE TABLE annotations (
+    id BIGSERIAL PRIMARY KEY,
+    document_id BIGINT NOT NULL REFERENCES documents ON DELETE CASCADE,
+    user_id BIGINT REFERENCES users ON DELETE SET NULL,
+    type annotation_type NOT NULL,
+    status annotation_status NOT NULL DEFAULT 'save',
+    created_at BIGINT NOT NULL DEFAULT EXTRACT(EPOCH FROM clock_timestamp()) * 1000,
+    created_by BIGINT REFERENCES users ON DELETE SET NULL,
+    updated_at BIGINT,
+    updated_by BIGINT REFERENCES users ON DELETE SET NULL
+);
+CREATE TABLE mentions (
+    id BIGSERIAL PRIMARY KEY,
+    annotation_id BIGINT NOT NULL REFERENCES annotations ON DELETE CASCADE,
+    start_token_id INT NOT NULL,
+    end_token_id INT NOT NULL,
+    created_at BIGINT NOT NULL DEFAULT EXTRACT(EPOCH FROM clock_timestamp()) * 1000,
+    created_by BIGINT REFERENCES users ON DELETE SET NULL,
+    updated_at BIGINT,
+    updated_by BIGINT REFERENCES users ON DELETE SET NULL
+);
+-- CREATE UNIQUE INDEX mentions_annotation_id_and_id ON mentions (annotation_id, id);
+-- CREATE INDEX entity_mentions_id ON entity_mentions (id);
+-- CREATE INDEX entity_mentions_document_id ON entity_mentions (document_id);
+-- CREATE INDEX entity_mentions_cluster_id ON entity_mentions (cluster_id);
+-- CREATE UNIQUE INDEX mentions_document_id_and_id ON entity_mentions (document_id, id);
+-- CREATE UNIQUE INDEX entity_mentions_document_id_and_cluster_id_and_id ON entity_mentions (document_id, cluster_id, id);
+CREATE TABLE clusters (
+    id BIGSERIAL PRIMARY KEY,
+    annotation_id BIGINT NOT NULL REFERENCES annotations ON DELETE CASCADE,
     cluster_name TEXT NOT NULL,
     created_at BIGINT NOT NULL DEFAULT EXTRACT(EPOCH FROM clock_timestamp()) * 1000,
     created_by BIGINT REFERENCES users ON DELETE SET NULL,
     updated_at BIGINT,
     updated_by BIGINT REFERENCES users ON DELETE SET NULL
 );
-CREATE INDEX clusters_id ON clusters (id);
-CREATE INDEX clusters_document_id ON clusters (document_id);
-CREATE UNIQUE INDEX clusters_document_id_and_id ON clusters (document_id, id);
-CREATE TABLE mentions (
-    db_id BIGSERIAL PRIMARY KEY,
-    id BIGINT NOT NULL DEFAULT currval('mentions_db_id_seq'),
-    dataset_id BIGINT NOT NULL REFERENCES datasets ON DELETE CASCADE,
-    document_id BIGINT NOT NULL REFERENCES documents ON DELETE CASCADE,
-    sentence_id INT NOT NULL,
-    start_token_id INT NOT NULL,
-    end_token_id INT NOT NULL,
-    cluster_id BIGINT NOT NULL,
+-- CREATE UNIQUE INDEX clusters_annotation_id_and_id ON clusters (annotation_id, id);
+CREATE TABLE coreferences (
+    annotation_id BIGINT NOT NULL REFERENCES annotations ON DELETE CASCADE,
+    cluster_id BIGINT NOT NULL REFERENCES clusters ON DELETE CASCADE,
+    mention_id BIGINT NOT NULL REFERENCES mentions ON DELETE CASCADE,
     created_at BIGINT NOT NULL DEFAULT EXTRACT(EPOCH FROM clock_timestamp()) * 1000,
     created_by BIGINT REFERENCES users ON DELETE SET NULL,
     updated_at BIGINT,
-    updated_by BIGINT REFERENCES users ON DELETE SET NULL,
-    FOREIGN KEY (document_id, cluster_id) REFERENCES clusters (document_id, id) ON DELETE CASCADE
+    updated_by BIGINT REFERENCES users ON DELETE SET NULL
 );
-CREATE INDEX mentions_id ON mentions (id);
-CREATE INDEX mentions_document_id ON mentions (document_id);
-CREATE INDEX mentions_cluster_id ON mentions (cluster_id);
-CREATE UNIQUE INDEX mentions_document_id_and_id ON mentions (document_id, id);
-CREATE UNIQUE INDEX mentions_document_id_and_cluster_id_and_id ON mentions (document_id, cluster_id, id);
-CREATE TABLE entitylink (
+CREATE UNIQUE INDEX coreferences_annotation_cluster_mention ON coreferences (annotation_id, cluster_id, mention_id);
+-- CREATE INDEX entity_coreferences_id ON entity_coreferences (id);
+-- CREATE INDEX entity_coreferences_document_id ON entity_coreferences (document_id);
+-- CREATE UNIQUE INDEX entity_coreferences_document_id_and_id ON entity_coreferences (document_id, id);
+CREATE TABLE named_entities (
+    annotation_id BIGINT NOT NULL REFERENCES annotations ON DELETE CASCADE,
+    cluster_id BIGINT NOT NULL REFERENCES clusters ON DELETE CASCADE,
+    entity_category_id BIGINT NOT NULL REFERENCES entity_categories ON DELETE CASCADE,
+    created_at BIGINT NOT NULL DEFAULT EXTRACT(EPOCH FROM clock_timestamp()) * 1000,
+    created_by BIGINT REFERENCES users ON DELETE SET NULL,
+    updated_at BIGINT,
+    updated_by BIGINT REFERENCES users ON DELETE SET NULL
+);
+CREATE UNIQUE INDEX named_entities_annotation_cluster_entity_category ON named_entities (annotation_id, cluster_id, entity_category_id);
+
+CREATE TABLE wikidata (
     db_id BIGSERIAL PRIMARY KEY,
     id TEXT NOT NULL,
     alt_id TEXT DEFAULT '-1',
@@ -87,27 +150,52 @@ CREATE TABLE entitylink (
     updated_at BIGINT,
     updated_by BIGINT REFERENCES users ON DELETE SET NULL
 );
-CREATE INDEX entitylink_id ON entitylink (id);
-CREATE INDEX entitylink_alt_id ON entitylink (alt_id);
-CREATE INDEX entitylink_entity_name_id ON entitylink (entity_name);
-CREATE UNIQUE INDEX entitylink_id_alt_id ON entitylink (id, alt_id);
+CREATE INDEX wikidata_id ON wikidata (id);
+CREATE INDEX wikidata_alt_id ON wikidata (alt_id);
+CREATE INDEX wikidata_entity_name_id ON wikidata (entity_name);
+CREATE UNIQUE INDEX wikidata_id_alt_id ON wikidata (id, alt_id);
+
+CREATE TABLE entity_links (
+    annotation_id BIGINT NOT NULL REFERENCES annotations ON DELETE CASCADE,
+    cluster_id BIGINT NOT NULL REFERENCES clusters ON DELETE CASCADE,
+    wikidata_id BIGINT NOT NULL REFERENCES wikidata ON DELETE CASCADE,
+    created_at BIGINT NOT NULL DEFAULT EXTRACT(EPOCH FROM clock_timestamp()) * 1000,
+    created_by BIGINT REFERENCES users ON DELETE SET NULL,
+    updated_at BIGINT,
+    updated_by BIGINT REFERENCES users ON DELETE SET NULL
+);
+CREATE UNIQUE INDEX entity_links_annotation_cluster_wikidata ON entity_links (annotation_id, cluster_id, wikidata_id);
 
 -- migrate:down
-DROP INDEX IF EXISTS entitylink_id;
-DROP INDEX IF EXISTS entitylink_alt_id;
-DROP INDEX IF EXISTS entitylink_entity_name_id;
-DROP INDEX IF EXISTS entitylink_id_alt_id;
-DROP TABLE IF EXISTS entitylink;
-DROP INDEX IF EXISTS mentions_document_id_and_cluster_id_and_id;
-DROP INDEX IF EXISTS mentions_document_id_and_id;
-DROP INDEX IF EXISTS mentions_cluster_id;
-DROP INDEX IF EXISTS mentions_document_id;
-DROP INDEX IF EXISTS mentions_id;
-DROP TABLE IF EXISTS mentions;
-DROP INDEX IF EXISTS clusters_document_id_and_id;
-DROP INDEX IF EXISTS clusters_document_id;
-DROP INDEX IF EXISTS clusters_id;
+-- DROP INDEX IF EXISTS entity_mentions_document_id_and_cluster_id_and_id;
+-- DROP INDEX IF EXISTS entity_mentions_document_id_and_id;
+-- DROP INDEX IF EXISTS entity_mentions_cluster_id;
+-- DROP INDEX IF EXISTS entity_mentions_document_id;
+-- DROP INDEX IF EXISTS entity_mentions_id;
+--DROP INDEX IF EXISTS entity_coreferences_document_id_and_id;
+-- DROP INDEX IF EXISTS entity_coreferences_document_id;
+-- DROP INDEX IF EXISTS entity_coreferences_id;
+DROP INDEX IF EXISTS tokens_document_id;
+DROP INDEX IF EXISTS tokens_id;
+DROP INDEX IF EXISTS wikidata_id;
+DROP INDEX IF EXISTS wikidata_alt_id;
+DROP INDEX IF EXISTS wikidata_entity_name_id;
+DROP INDEX IF EXISTS wikidata_id_alt_id;
+
+DROP TABLE IF EXISTS entity_links;
+DROP TABLE IF EXISTS named_entities;
+DROP TABLE IF EXISTS wikidata;
+DROP TABLE IF EXISTS coreferences;
 DROP TABLE IF EXISTS clusters;
+DROP TABLE IF EXISTS mentions;
+DROP TABLE IF EXISTS annotations;
+DROP TABLE IF EXISTS tokens;
 DROP TABLE IF EXISTS documents;
 DROP TABLE IF EXISTS datasets;
+DROP TABLE IF EXISTS entity_categories;
 DROP TABLE IF EXISTS users;
+
+DROP TYPE IF EXISTS acl_permission_type;
+DROP TYPE IF EXISTS user_account_type;
+DROP TYPE IF EXISTS annotation_type;
+DROP TYPE IF EXISTS annotation_status;
