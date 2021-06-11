@@ -57,7 +57,6 @@ CREATE TABLE datasets_users (
     dataset_id BIGINT NOT NULL REFERENCES datasets ON DELETE CASCADE,
     user_id BIGINT NOT NULL REFERENCES users ON DELETE CASCADE,
     permission_type acl_permission_type NOT NULL,
-    is_default BOOLEAN NOT NULL,
     created_at BIGINT NOT NULL DEFAULT EXTRACT(EPOCH FROM clock_timestamp()) * 1000,
     created_by BIGINT REFERENCES users ON DELETE SET NULL,
     updated_at BIGINT,

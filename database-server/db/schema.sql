@@ -187,7 +187,6 @@ CREATE TABLE public.datasets_users (
     dataset_id bigint NOT NULL,
     user_id bigint NOT NULL,
     permission_type public.acl_permission_type NOT NULL,
-    is_default boolean NOT NULL,
     created_at bigint DEFAULT (date_part('epoch'::text, clock_timestamp()) * (1000)::double precision) NOT NULL,
     created_by bigint,
     updated_at bigint,
