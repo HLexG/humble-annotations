@@ -10,9 +10,10 @@ import Profile from '../components/settings/Profile';
 // import Annotation from "../components/Annotation";
 // import EditAnnotations from "../components/EditAnnotations";
 import { useAuthContext} from "../services/AuthService";
-import Datasets from "../components/Datasets";
+import DatasetsOverview from "../components/DatasetsOverview";
+import DocsOverview from "../components/DocsOverview";
 
-
+// 
 
 const AppRouter = ( props ) => {
 
@@ -54,7 +55,8 @@ const AppRouter = ( props ) => {
                 <AuthenticatedRoute path="/settings/profile">
                     <Profile />
                 </AuthenticatedRoute>
-                <Route path="/datasets" exact component={Datasets} />
+                <Route path="/datasets" exact component={DatasetsOverview} />
+                <Route path="/datasets/:docID" exact component={DocsOverview} />
                 <Route component={Error404} />
             </Switch>
         </React.Fragment>
