@@ -26,7 +26,7 @@ password_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 # Define PasswordBearer Auth Schema
 auth_scheme = OAuth2PasswordBearer(
-    tokenUrl="/auth/login",
+    tokenUrl="/v1/auth/login",
     scheme_name="OAuth2",
     auto_error=False
 )
