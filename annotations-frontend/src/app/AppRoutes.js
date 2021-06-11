@@ -7,8 +7,13 @@ import Signup from '../components/auth/Signup';
 import Logout from '../components/auth/Logout';
 import Account from '../components/settings/Account';
 import Profile from '../components/settings/Profile';
+// import Annotation from "../components/Annotation";
+import EditAnnotations from "../components/EditAnnotations";
 import { useAuthContext} from "../services/AuthService";
+import DatasetsOverview from "../components/DatasetsOverview";
+import DocsOverview from "../components/DocsOverview";
 
+// 
 
 const AppRouter = ( props ) => {
 
@@ -50,6 +55,20 @@ const AppRouter = ( props ) => {
                 <AuthenticatedRoute path="/settings/profile">
                     <Profile />
                 </AuthenticatedRoute>
+
+                {/* <AuthenticatedRoute path="/datasets">
+                  <DatasetsOverview />
+                </AuthenticatedRoute>
+                <AuthenticatedRoute path="/datasets/:dsID" >
+                  <DocsOverview />
+                </AuthenticatedRoute>
+                <AuthenticatedRoute path="/docs/:docID" >
+                  <EditAnnotations />
+                </AuthenticatedRoute> */}
+                <Route path="/datasets" exact component={DatasetsOverview} />
+                <Route path="/datasets/:dsID" exact component={DocsOverview} />
+                <Route path="/docs/:docID" exact component={EditAnnotations} />
+
                 <Route component={Error404} />
             </Switch>
         </React.Fragment>
@@ -57,3 +76,10 @@ const AppRouter = ( props ) => {
 }
 
 export default AppRouter;
+{/* 
+<Route path="/datasets" exact component={} />
+<Route path="/datasets/:dsID" exact component={DocsOverview} />
+<Route path="/docs/:docID" exact component={EditAnnotations} />
+
+
+*/}
