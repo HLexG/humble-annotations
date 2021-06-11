@@ -7,9 +7,9 @@ import Button from '@material-ui/core/Button';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
 
 const testDatasets = [
-  {id: 1, docID:'aa', title: 'Celeberty', descr: 'Welcome to learning React! Welcome to learning React! Welcome to learning React!'},
-  {id: 2, docID:'ab', title: 'Apple News', descr: 'You can install React from npm. You can install React from npm. You can install React from npm.'},
-  {id: 3, docID:'ac', title: 'Harry p', descr: 'You can install React from npm. Welcome to learning React! Welcome to learning React!'}
+  {id: 1, title: 'CeleBERTy', descr: 'Welcome to learning React! Welcome to learning React! Welcome to learning React!'},
+  {id: 2, title: 'Apple News', descr: 'You can install React from npm. You can install React from npm. You can install React from npm.'},
+  {id: 3, title: 'Harry p', descr: 'You can install React from npm. Welcome to learning React! Welcome to learning React!'}
 
 ];
 
