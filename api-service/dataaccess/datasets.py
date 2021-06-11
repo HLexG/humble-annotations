@@ -3,7 +3,8 @@ from typing import Any, Dict, List
 
 from dataaccess import utils as data_utils
 from dataaccess.session import database
-from dataaccess.errors import RecordNotFoundError
+from dataaccess.errors import RecordNotFoundError, NoAccessError
+from dataaccess.types import PermissionType
 
 async def browse(
     *,
@@ -122,6 +123,42 @@ async def update(id: int,
 
     if result is None:
         raise RecordNotFoundError(f"Could not update row with id '{id}'")
+
+    result = prep_data(result)
+    return result
+
+async def create_dataset_user(*,
+        dataset_id: int,
+        user_id: int,
+        permission_type: PermissionType,
+        id: int = None) -> Dict[str, Any]:
+    """
+    Create a new row. Returns the created record as a dict.
+    """
+
+    # Set the values
+    values = {
+        "dataset_id": dataset_id,
+        "user_id":user_id,
+        "permission_type":permission_type
+    }
+
+    # if the id was passed
+    if id is not None:
+        values["id"] = id
+
+
+    # Generate the field and values list
+    field_list = ", ".join(values.keys())
+    param_list = ", ".join(":" + key for key in values.keys())
+
+    result = await database.fetch_one(f"""
+        INSERT INTO datasets_users (
+            {field_list}
+        ) VALUES (
+            {param_list}
+        ) RETURNING *;
+    """, values=values)
 
     result = prep_data(result)
     return result
