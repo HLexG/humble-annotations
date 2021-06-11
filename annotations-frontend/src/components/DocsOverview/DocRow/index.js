@@ -12,10 +12,10 @@ import styles from './styles';
 // https://react.school/material-ui/card
 // https://codesandbox.io/s/material-ui-card-examples-bp96w?from-embed=&file=/CardActionsAreaExample.js:457-1003
 
-const CardDs = ( props ) => {
+const DatasetCard = ( props ) => {
     const {classes, ds} = props;
 
-    console.log("================================== CardDs ======================================");
+    console.log("================================== DatasetCard ======================================");
 
     // Component States
     
@@ -40,4 +40,4 @@ const CardDs = ( props ) => {
     );
 };
 
-export default withStyles( styles )( CardDs );
+export default withStyles( styles )( DatasetCard );

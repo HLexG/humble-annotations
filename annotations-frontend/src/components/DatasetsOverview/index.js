@@ -1,15 +1,15 @@
 import React, {useEffect, useRef, useState} from 'react';
 import { withStyles } from '@material-ui/core';
 import styles from './styles';
-import CardDs from './CardDs';
+import DatasetCard from './DatasetCard';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
 
 const testDatasets = [
-  {id: 1, title: 'Celeberty', descr: 'Welcome to learning React! Welcome to learning React! Welcome to learning React!'},
-  {id: 2, title: 'Apple News', descr: 'You can install React from npm. You can install React from npm. You can install React from npm.'},
-  {id: 3, title: 'Harry p', descr: 'You can install React from npm. Welcome to learning React! Welcome to learning React!'}
+  {id: 1, docID:'aa', title: 'Celeberty', descr: 'Welcome to learning React! Welcome to learning React! Welcome to learning React!'},
+  {id: 2, docID:'ab', title: 'Apple News', descr: 'You can install React from npm. You can install React from npm. You can install React from npm.'},
+  {id: 3, docID:'ac', title: 'Harry p', descr: 'You can install React from npm. Welcome to learning React! Welcome to learning React!'}
 
 ];
 
@@ -22,7 +22,7 @@ const Datasets = ( props ) => {
     let { tokens } = props;
     let { annotations } = props;
 
-    console.log("================================== AnnotationPanel ======================================");
+    console.log("================================== DatasetsOverview ======================================");
 
     // Component States
     return (
@@ -41,7 +41,7 @@ const Datasets = ( props ) => {
           {datasets.map(ds => {
               return (
                 <Grid item xs={4} key={ds.id}>
-                  <CardDs ds={ds}/>
+                  <DatasetCard ds={ds}/>
                 </Grid>
               );
             })}
