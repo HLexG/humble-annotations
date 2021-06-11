@@ -22,7 +22,7 @@ const DatasetCard = ( props ) => {
     
     return (
     <Card className={classes.root} key={ds.id}>
-      <CardActionArea component={Link} to={`/datasets/${ds.docID}`}>
+      <CardActionArea component={Link} to={`/datasets/${ds.id}`}>
         <CardContent>
           <Typography gutterBottom variant="h5" component="h2">
             {ds.title}

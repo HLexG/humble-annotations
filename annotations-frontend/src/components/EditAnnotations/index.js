@@ -16,7 +16,7 @@ import FormLabel from '@material-ui/core/FormLabel';
 
 import Annotation from '../Annotation';
 import AnnotationPanel from '../AnnotationPanel';
-import DataService from '../../services/DataService';
+import DataServices from '../../services/DataService';
 import styles from './styles';
 import {handleApplyFeatureExtraction, ClearAnnotations} from './handlers';
 
