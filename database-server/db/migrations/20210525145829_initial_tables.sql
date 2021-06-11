@@ -52,6 +52,18 @@ CREATE TABLE datasets (
     updated_at BIGINT,
     updated_by BIGINT REFERENCES users ON DELETE SET NULL
 );
+CREATE TABLE datasets_users (
+    id BIGSERIAL PRIMARY KEY,
+    dataset_id BIGINT NOT NULL REFERENCES datasets ON DELETE CASCADE,
+    user_id BIGINT NOT NULL REFERENCES users ON DELETE CASCADE,
+    permission_type acl_permission_type NOT NULL,
+    is_default BOOLEAN NOT NULL,
+    created_at BIGINT NOT NULL DEFAULT EXTRACT(EPOCH FROM clock_timestamp()) * 1000,
+    created_by BIGINT REFERENCES users ON DELETE SET NULL,
+    updated_at BIGINT,
+    updated_by BIGINT REFERENCES users ON DELETE SET NULL
+);
+CREATE UNIQUE INDEX datasets_users_project_and_user ON datasets_users (dataset_id, user_id);
 CREATE TABLE documents (
     id BIGSERIAL PRIMARY KEY,
     dataset_id BIGINT NOT NULL REFERENCES datasets ON DELETE CASCADE,
@@ -191,6 +203,7 @@ DROP TABLE IF EXISTS mentions;
 DROP TABLE IF EXISTS annotations;
 DROP TABLE IF EXISTS tokens;
 DROP TABLE IF EXISTS documents;
+DROP TABLE IF EXISTS datasets_users;
 DROP TABLE IF EXISTS datasets;
 DROP TABLE IF EXISTS entity_categories;
 DROP TABLE IF EXISTS users;

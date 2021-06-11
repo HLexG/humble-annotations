@@ -179,6 +179,42 @@ ALTER SEQUENCE public.datasets_id_seq OWNED BY public.datasets.id;
 
 
 --
+-- Name: datasets_users; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.datasets_users (
+    id bigint NOT NULL,
+    dataset_id bigint NOT NULL,
+    user_id bigint NOT NULL,
+    permission_type public.acl_permission_type NOT NULL,
+    is_default boolean NOT NULL,
+    created_at bigint DEFAULT (date_part('epoch'::text, clock_timestamp()) * (1000)::double precision) NOT NULL,
+    created_by bigint,
+    updated_at bigint,
+    updated_by bigint
+);
+
+
+--
+-- Name: datasets_users_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.datasets_users_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: datasets_users_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.datasets_users_id_seq OWNED BY public.datasets_users.id;
+
+
+--
 -- Name: documents; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -455,6 +491,13 @@ ALTER TABLE ONLY public.datasets ALTER COLUMN id SET DEFAULT nextval('public.dat
 
 
 --
+-- Name: datasets_users id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.datasets_users ALTER COLUMN id SET DEFAULT nextval('public.datasets_users_id_seq'::regclass);
+
+
+--
 -- Name: documents id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -528,6 +571,14 @@ ALTER TABLE ONLY public.datasets
 
 
 --
+-- Name: datasets_users datasets_users_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.datasets_users
+    ADD CONSTRAINT datasets_users_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: documents documents_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -588,6 +639,13 @@ ALTER TABLE ONLY public.wikidata
 --
 
 CREATE UNIQUE INDEX coreferences_annotation_cluster_mention ON public.coreferences USING btree (annotation_id, cluster_id, mention_id);
+
+
+--
+-- Name: datasets_users_project_and_user; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX datasets_users_project_and_user ON public.datasets_users USING btree (dataset_id, user_id);
 
 
 --
@@ -763,6 +821,38 @@ ALTER TABLE ONLY public.datasets
 
 ALTER TABLE ONLY public.datasets
     ADD CONSTRAINT datasets_updated_by_fkey FOREIGN KEY (updated_by) REFERENCES public.users(id) ON DELETE SET NULL;
+
+
+--
+-- Name: datasets_users datasets_users_created_by_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.datasets_users
+    ADD CONSTRAINT datasets_users_created_by_fkey FOREIGN KEY (created_by) REFERENCES public.users(id) ON DELETE SET NULL;
+
+
+--
+-- Name: datasets_users datasets_users_dataset_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.datasets_users
+    ADD CONSTRAINT datasets_users_dataset_id_fkey FOREIGN KEY (dataset_id) REFERENCES public.datasets(id) ON DELETE CASCADE;
+
+
+--
+-- Name: datasets_users datasets_users_updated_by_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.datasets_users
+    ADD CONSTRAINT datasets_users_updated_by_fkey FOREIGN KEY (updated_by) REFERENCES public.users(id) ON DELETE SET NULL;
+
+
+--
+-- Name: datasets_users datasets_users_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.datasets_users
+    ADD CONSTRAINT datasets_users_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(id) ON DELETE CASCADE;
 
 
 --
