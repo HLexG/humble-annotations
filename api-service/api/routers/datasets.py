@@ -56,6 +56,28 @@ async def datasets_create(
 
     return dataset_db
 
+@router.put(
+    "/datasets/{id}",
+    tags=["Datasets"],
+    summary="Update dataset information",
+    description="Update dataset information",
+    response_description="The dataset information"
+)
+async def datasets_update(
+    dataset: DatasetUpdate, 
+    id: int = Path(..., description="The dataset id"),
+    auth: Auth = Depends()
+):
+
+    # Update
+    dataset_db = await dataaccess_datasets.update(
+        id=id,
+        dataset_name=dataset.dataset_name,
+        dataset_description=dataset.dataset_description
+    )
+
+    return dataset_db
+
 @router.get(
     "/datasets/{id}",
     tags=["Datasets"],
