@@ -16,7 +16,7 @@ import FormLabel from '@material-ui/core/FormLabel';
 
 import Annotation from '../Annotation';
 import AnnotationPanel from '../AnnotationPanel';
-import DataServices from '../../services/DataService';
+import DataService from '../../services/DataService';
 import styles from './styles';
 import {handleApplyFeatureExtraction, ClearAnnotations} from './handlers';
 
@@ -35,7 +35,7 @@ const EditAnnotations = ( props ) => {
     const [id , setId] = useState(1);
     const [document , setDocument] = useState(null);
     const loadDocument = (id) => {
-        DataServices.GetDocument(id)
+        DataService.GetDocument(id)
             .then(function (response) {
                 setDocument(response.data);
             })
@@ -137,10 +137,10 @@ const EditAnnotations = ( props ) => {
                     <Box p={1} onClick={()=>{setOpenFeatureExtractorDialog(!openFeatureExtractorDialog)}} className={classes.pointer}>
                         <Icon className={classes.toolbaricon}>grading</Icon>
                     </Box>
-                    <Box p={1} className={classes.pointer} onClick={()=>{console.log('annotations sent:');console.log(annotations["mentions"]); DataServices.SaveClusters(annotations);}}>
+                    <Box p={1} className={classes.pointer} onClick={()=>{console.log('annotations sent:');console.log(annotations["mentions"]); DataService.SaveClusters(annotations);}}>
                         <Icon className={classes.toolbaricon}>save</Icon>
                     </Box>
-                    <Box p={1} className={classes.pointer} onClick={()=>{console.log('annotations sent:');console.log(annotations["mentions"]); DataServices.SaveMentions(annotations, id, tokens);}}>
+                    <Box p={1} className={classes.pointer} onClick={()=>{console.log('annotations sent:');console.log(annotations["mentions"]); DataService.SaveMentions(annotations, id, tokens);}}>
                         <Icon className={classes.toolbaricon}>save</Icon>
                     </Box>
                 </Box>
