@@ -1,7 +1,7 @@
 import os
 import io
 import pandas as pd
-from fastapi import APIRouter, Path, Query, Depends
+from fastapi import APIRouter, Path, Query, Depends, File
 from starlette.responses import FileResponse
 from urllib.parse import urlparse
 
@@ -10,6 +10,7 @@ from api.data_models import DatasetCreate, DatasetUpdate, Pagination
 from dataaccess import datasets as dataaccess_datasets
 from api.errors import AccessDeniedError
 from dataaccess.types import PermissionType
+from fileaccess import datasets as fileaccess_datasets
 
 router = APIRouter()
 
@@ -91,3 +92,22 @@ async def datasets_fetch(
     result = await dataaccess_datasets.get(id)
 
     return result
+
+@router.post(
+    "/datasets/{id}/upload",
+    tags=["Datasets"],
+    summary="Upload a zip file of documents",
+    description="Upload a zip file of documents"
+)
+async def datasets_upload_with_id(
+        file: bytes = File(...),
+        id: int = Path(..., description="The dataset id"),
+        auth: Auth = Depends()
+):
+    print(len(file),type(file))
+
+    # Get dataset details
+    dataset = await dataaccess_datasets.get(id)
+
+    # Save the file
+    fileaccess_datasets.save_extract_dataset(file, str(id))
