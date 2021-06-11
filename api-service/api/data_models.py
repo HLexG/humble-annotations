@@ -32,3 +32,11 @@ class Pagination:
     def __init__(self, page_num: int = Query(0, ge=0, description="Page number"), page_size: int = Query(20, gt=0, le=100, description="Number of results per page")):
         self.page_number = page_num
         self.page_size = page_size
+
+class DatasetCreate(BaseModel):
+    dataset_name: str
+    dataset_description: Optional[str] = None
+
+class DatasetUpdate(BaseModel):
+    dataset_name: Optional[str] = None
+    dataset_description: Optional[str] = None
