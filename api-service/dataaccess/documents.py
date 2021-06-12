@@ -1,13 +1,9 @@
 import os
 import requests
 from typing import Any, Dict, List
-from nltk.tokenize import sent_tokenize
-from nltk.tokenize import word_tokenize
-import nltk
-nltk.download('averaged_perceptron_tagger')
-from nltk import pos_tag as pos
 
 from dataaccess.session import database
+from dataaccess import tokens as dataaccess_tokens
 from dataaccess.errors import RecordNotFoundError
 
 async def browse(
@@ -59,36 +55,9 @@ async def get(id: int) -> Dict[str, Any]:
 
     result = prep_data(result)
 
-    # Get the document
-    doc_file = requests.get(result["filepath"])
-    document = doc_file.text
-
-    # Generate sentences
-    sentences = sent_tokenize(document)
-
-    # Generate tokens
-    tokens = []
-    for s_idx,s in enumerate(sentences):
-        words = word_tokenize(s)
-        posList = pos(words)
-        for w_idx,w in enumerate(words):
-            token = {
-                "text": w,
-                "pos":posList[w_idx][1],
-                "token_id": w_idx,
-                "sentence_id": s_idx,
-                "document_id": result["id"]
-            }
-            tokens.append(token)
-    
-    result["text"] = document
+    # Get document tokens
+    tokens = await dataaccess_tokens.get_document_tokens(document_id=id)
     result["tokens"] = tokens
-
-    # Get any existing annotations for the document
-    result["annotations"] = {
-        "mentions":[],
-        "clusters":[]
-    }
 
     return result
 
