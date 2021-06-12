@@ -42,7 +42,9 @@ async def get(id: int) -> Dict[str, Any]:
     """
 
     query = """
-        select id,dataset_id,document_name,filepath from documents where id = :id
+        select id,dataset_id,document_name,filepath 
+        from documents 
+        where id = :id
     """
 
     values = {
@@ -88,6 +90,41 @@ async def get(id: int) -> Dict[str, Any]:
         "clusters":[]
     }
 
+    return result
+
+async def create(*,
+                 dataset_id: int,
+                 document_name: str,
+                 filepath: str,
+                 id: int = None) -> Dict[str, Any]:
+    """
+    Create a new row. Returns the created record as a dict.
+    """
+
+    # Set the values
+    values = {
+        "dataset_id": dataset_id,
+        "document_name": document_name,
+        "filepath": filepath
+    }
+
+    # if the id was passed
+    if id is not None:
+        values["id"] = id
+
+    # Generate the field and values list
+    field_list = ", ".join(values.keys())
+    param_list = ", ".join(":" + key for key in values.keys())
+
+    result = await database.fetch_one(f"""
+        INSERT INTO documents (
+            {field_list}
+        ) VALUES (
+            {param_list}
+        ) RETURNING *;
+    """, values=values)
+
+    result = prep_data(result)
     return result
 
 def prep_data(result) -> Dict[str, Any]:
