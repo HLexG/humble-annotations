@@ -5,6 +5,29 @@ from typing import Any, Dict, List
 from dataaccess.session import database
 from dataaccess.errors import RecordNotFoundError
 
+async def get_document_tokens(
+    *,
+    document_id: int
+) -> List[Dict[str, Any]]:
+    """
+    Retrieve a list of rows based on filters
+    """
+    
+    query = """
+        select id,document_id,sentence_id,token_id,token_text,token_pos_tag 
+        from tokens
+        where document_id = :document_id
+    """
+
+    values = {
+        "document_id": document_id
+    }
+
+    print("query",query)
+    result = await database.fetch_all(query, values)
+
+    return [prep_data(row) for row in result]
+
 async def create(*,
                  document_id: int,
                  sentence_id: int,
