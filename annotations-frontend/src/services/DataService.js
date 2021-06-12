@@ -10,10 +10,18 @@ const DataService = {
     GetUseProfile : async function(username){
         return await axios.get(BASE_API_URL+"/profile/"+username, { headers: authHeader() });
     },
-    // http://dev.humblenlp.com/api/v1/documents?dataset_id=1
-    // GetTestData : async function(username){
-    //   return await axios.get(BASE_API_URL+"/profile/"+username, { headers: authHeader() });
-    // },
+    GetDatasets : async function(){
+        return await axios.get(BASE_API_URL+"/datasets", { headers: authHeader() });
+    },
+    GetDataset : async function(id){
+        return await axios.get(BASE_API_URL+"/datasets/"+id, { headers: authHeader() });
+    },
+    GetDocuments : async function(dataset_id){
+        return await axios.get(BASE_API_URL+"/documents?dataset_id="+dataset_id, { headers: authHeader() });
+    },
+    GetDocument : async function(id){
+        return await axios.get(BASE_API_URL+"/documents/"+id, { headers: authHeader() });
+    },
 }
 
 export default DataService;
