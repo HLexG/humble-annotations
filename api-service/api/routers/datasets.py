@@ -5,9 +5,17 @@ from fastapi import APIRouter, Path, Query, Depends, File
 from starlette.responses import FileResponse
 from urllib.parse import urlparse
 
+import nltk
+nltk.download('averaged_perceptron_tagger')
+from nltk import pos_tag
+from nltk.tokenize import sent_tokenize
+from nltk.tokenize import word_tokenize
+
 from api.auth import Auth, OptionalAuth
 from api.data_models import DatasetCreate, DatasetUpdate, Pagination
 from dataaccess import datasets as dataaccess_datasets
+from dataaccess import documents as dataaccess_documents
+from dataaccess import tokens as dataaccess_tokens
 from api.errors import AccessDeniedError
 from dataaccess.types import PermissionType
 from fileaccess import datasets as fileaccess_datasets
@@ -109,5 +117,37 @@ async def datasets_upload_with_id(
     # Get dataset details
     dataset = await dataaccess_datasets.get(id)
 
-    # Save the file
-    fileaccess_datasets.save_extract_dataset(file, str(id))
+    # Save/Extract the file
+    document_list = fileaccess_datasets.save_extract_dataset(file, str(id))
+
+    for document_path in document_list:
+        print("Saving document:",document_path)
+        # Save Document into DB
+        document_db = await dataaccess_documents.create(
+            dataset_id=id,
+            document_name=os.path.basename(document_path),
+            filepath=document_path
+        )
+
+        # Read the document
+        with open(document_path) as f:
+            document = f.read()
+
+            # Generate sentences
+            sentences = sent_tokenize(document)
+
+            # Tokenize document content 
+            tokens = []
+            for s_idx,s in enumerate(sentences):
+                words = word_tokenize(s)
+                pos_tags = pos_tag(words)
+
+                for w_idx,w in enumerate(words):
+                    # Save tokens
+                    token_db = await dataaccess_tokens.create(
+                        document_id=document_db["id"],
+                        sentence_id=s_idx,
+                        token_id=w_idx,
+                        token_text=w,
+                        token_pos_tag=pos_tags[w_idx][1]
+                    )
