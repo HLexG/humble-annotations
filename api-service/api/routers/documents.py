@@ -12,6 +12,7 @@ router = APIRouter()
 
 @router.get(
     "/documents",
+    tags=["Documents"],
     summary="Get list of documents for a dataset",
     description="Get list of documents for a dataset"
 )
