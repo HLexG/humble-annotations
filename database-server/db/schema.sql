@@ -361,11 +361,12 @@ CREATE TABLE public.schema_migrations (
 --
 
 CREATE TABLE public.tokens (
-    db_id bigint NOT NULL,
     id bigint NOT NULL,
     document_id bigint NOT NULL,
-    "position" integer NOT NULL,
     sentence_id integer NOT NULL,
+    token_id integer NOT NULL,
+    token_text text NOT NULL,
+    token_pos_tag text NOT NULL,
     created_at bigint DEFAULT (date_part('epoch'::text, clock_timestamp()) * (1000)::double precision) NOT NULL,
     created_by bigint,
     updated_at bigint,
@@ -374,10 +375,10 @@ CREATE TABLE public.tokens (
 
 
 --
--- Name: tokens_db_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: tokens_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.tokens_db_id_seq
+CREATE SEQUENCE public.tokens_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -386,10 +387,10 @@ CREATE SEQUENCE public.tokens_db_id_seq
 
 
 --
--- Name: tokens_db_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+-- Name: tokens_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.tokens_db_id_seq OWNED BY public.tokens.db_id;
+ALTER SEQUENCE public.tokens_id_seq OWNED BY public.tokens.id;
 
 
 --
@@ -518,17 +519,10 @@ ALTER TABLE ONLY public.mentions ALTER COLUMN id SET DEFAULT nextval('public.men
 
 
 --
--- Name: tokens db_id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.tokens ALTER COLUMN db_id SET DEFAULT nextval('public.tokens_db_id_seq'::regclass);
-
-
---
 -- Name: tokens id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.tokens ALTER COLUMN id SET DEFAULT currval('public.tokens_db_id_seq'::regclass);
+ALTER TABLE ONLY public.tokens ALTER COLUMN id SET DEFAULT nextval('public.tokens_id_seq'::regclass);
 
 
 --
@@ -614,7 +608,7 @@ ALTER TABLE ONLY public.schema_migrations
 --
 
 ALTER TABLE ONLY public.tokens
-    ADD CONSTRAINT tokens_pkey PRIMARY KEY (db_id);
+    ADD CONSTRAINT tokens_pkey PRIMARY KEY (id);
 
 
 --
@@ -669,17 +663,10 @@ CREATE INDEX tokens_document_id ON public.tokens USING btree (document_id);
 
 
 --
--- Name: tokens_document_id_and_id; Type: INDEX; Schema: public; Owner: -
+-- Name: tokens_document_sentence_token; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX tokens_document_id_and_id ON public.tokens USING btree (document_id, id);
-
-
---
--- Name: tokens_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX tokens_id ON public.tokens USING btree (id);
+CREATE UNIQUE INDEX tokens_document_sentence_token ON public.tokens USING btree (document_id, sentence_id, token_id);
 
 
 --
