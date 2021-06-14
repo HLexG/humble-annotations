@@ -50,16 +50,9 @@ const DocsOverview = ( props ) => {
     // Component States
     return (
         <div className={classes.root}>
-          <h1 className={classes.headerTextStyle}>Dataset</h1>
-          <p className={classes.headerTextStyle}>Here you can find dataset that you can help to annotate. You can also upload your own dataset so you and your team can start annotating</p>
-          <div className={classes.dsButtons}>
-            <Button variant="contained" color="primary" className={classes.uploadButton}>
-              Upload clean dataset
-            </Button>
-            <Button variant="contained" color="secondary">
-              Upload annotated dataset
-            </Button>
-          </div>
+          <h1 className={classes.headerTextStyle}>CeleBERTy dataset </h1>
+          <p className={classes.headerTextStyle}>Some general info about this dataset</p>
+          <br />
           <div style={{width: '100%' }}>
             <DataGrid
               autoHeight={true}

@@ -3,10 +3,6 @@ import { Link } from 'react-router-dom';
 import { withStyles } from '@material-ui/core';
 import Card from "@material-ui/core/Card";
 import CardActionArea from "@material-ui/core/CardActionArea";
-import CardActions from '@material-ui/core/CardActions';
-
-import Button from '@material-ui/core/Button';
-import ButtonGroup from '@material-ui/core/ButtonGroup';
 import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
 import Divider from '@material-ui/core/Divider';
@@ -20,12 +16,13 @@ import styles from './styles';
 const DatasetCard = ( props ) => {
     const {classes, ds} = props;
 
-    console.log("================================== DatasetCard ======================================");
+    console.log("================================== CrossDocCard ======================================");
 
     // Component States
     
     return (
     <Card className={classes.root} key={ds.id}>
+      <CardActionArea component={Link} to={`/datasets/${ds.id}`}>
         <CardContent>
           <Typography gutterBottom variant="h5" component="h2">
             {ds.title}
@@ -38,14 +35,10 @@ const DatasetCard = ( props ) => {
             <Typography className={classes.footerElement}>10%</Typography>
             <Typography className={classes.footerElement}>20%</Typography>
             <Typography className={classes.footerElement}>57%</Typography>
+
           </div>
         </CardContent>
-        <CardActions>
-        <ButtonGroup fullWidth={true} size="large" color="primary" aria-label="large outlined primary button group">
-          <Button component={Link} to={`/datasets/${ds.id}`} >Annotate</Button>
-          <Button component={Link} to={`/datasets/cross_doc/${ds.id}`}>CrossDoc</Button>
-        </ButtonGroup>
-        </CardActions>
+      </CardActionArea>
     </Card>
     );
 };

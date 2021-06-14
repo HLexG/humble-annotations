@@ -12,7 +12,7 @@ import EditAnnotations from "../components/EditAnnotations";
 import { useAuthContext} from "../services/AuthService";
 import DatasetsOverview from "../components/DatasetsOverview";
 import DocsOverview from "../components/DocsOverview";
-
+import CrossDocOverview from "../components/CrossDocOverview";
 // 
 
 const AppRouter = ( props ) => {
@@ -67,6 +67,7 @@ const AppRouter = ( props ) => {
                 </AuthenticatedRoute> */}
                 <Route path="/datasets" exact component={DatasetsOverview} />
                 <Route path="/datasets/:dsID" exact component={DocsOverview} />
+                <Route path="/datasets/cross_doc/:dsID" exact component={CrossDocOverview} />
                 <Route path="/docs/:docID" exact component={EditAnnotations} />
 
                 <Route component={Error404} />
