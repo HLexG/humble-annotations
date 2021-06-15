@@ -16,6 +16,7 @@ torch = "==1.6"
 transformers = "==3.0"
 scipy = "==1.4.1"
 spacy-alignments = "*"
+databases = {extras = ["postgresql"], version = "*"}
 
 [requires]
 python_version = "3.8"
