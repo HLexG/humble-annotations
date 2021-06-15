@@ -7,6 +7,7 @@ from fastapi import APIRouter, Path, Query
 #from starlette.responses import FileResponse
 #from urllib.parse import urlparse
 
+from extractor import processor
 from extractor.routers.utils import download_file, process_clusters
 
 import sys
@@ -40,3 +41,15 @@ async def find_mentions(
     
 
     return annotations
+
+@router.get(
+    "/process_dataset/{id}",
+    summary="Process a dataset",
+    description="Process a dataset"
+)
+async def find_mentions(
+    id: int = Path(..., description="The dataset id"),
+):
+    print("process_dataset")
+
+    await processor.process(id)
