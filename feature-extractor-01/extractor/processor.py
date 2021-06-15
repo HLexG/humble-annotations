@@ -23,7 +23,7 @@ async def process(id):
 
     # Get all documents
     query = """
-        select id,dataset_id,document_name,filepath 
+        select id,dataset_id,document_name,filepath ,document_text
         from documents
         where dataset_id = :dataset_id
     """
