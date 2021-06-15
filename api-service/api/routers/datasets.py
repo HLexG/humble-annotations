@@ -122,16 +122,18 @@ async def datasets_upload_with_id(
 
     for document_path in document_list:
         print("Saving document:",document_path)
-        # Save Document into DB
-        document_db = await dataaccess_documents.create(
-            dataset_id=id,
-            document_name=os.path.basename(document_path),
-            filepath=document_path
-        )
 
         # Read the document
         with open(document_path) as f:
             document = f.read()
+
+            # Save Document into DB
+            document_db = await dataaccess_documents.create(
+                dataset_id=id,
+                document_name=os.path.basename(document_path),
+                filepath=document_path,
+                document_text=document
+            )
 
             # Generate sentences
             sentences = sent_tokenize(document)
