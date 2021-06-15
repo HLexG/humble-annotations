@@ -65,6 +65,7 @@ async def create(*,
                  dataset_id: int,
                  document_name: str,
                  filepath: str,
+                 document_text: str,
                  id: int = None) -> Dict[str, Any]:
     """
     Create a new row. Returns the created record as a dict.
@@ -74,7 +75,8 @@ async def create(*,
     values = {
         "dataset_id": dataset_id,
         "document_name": document_name,
-        "filepath": filepath
+        "filepath": filepath,
+        "document_text": document_text
     }
 
     # if the id was passed
