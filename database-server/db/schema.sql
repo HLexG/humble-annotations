@@ -222,6 +222,7 @@ CREATE TABLE public.documents (
     dataset_id bigint NOT NULL,
     document_name text NOT NULL,
     filepath text NOT NULL,
+    document_text text NOT NULL,
     created_at bigint DEFAULT (date_part('epoch'::text, clock_timestamp()) * (1000)::double precision) NOT NULL,
     created_by bigint,
     updated_at bigint,
