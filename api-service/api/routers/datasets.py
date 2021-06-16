@@ -5,6 +5,7 @@ from fastapi import APIRouter, Path, Query, Depends, File
 from starlette.responses import FileResponse
 from urllib.parse import urlparse
 
+<<<<<<< HEAD
 import nltk
 nltk.download('averaged_perceptron_tagger')
 from nltk import pos_tag
@@ -16,6 +17,11 @@ from api.data_models import DatasetCreate, DatasetUpdate, Pagination
 from dataaccess import datasets as dataaccess_datasets
 from dataaccess import documents as dataaccess_documents
 from dataaccess import tokens as dataaccess_tokens
+=======
+from api.auth import Auth, OptionalAuth
+from api.data_models import DatasetCreate, DatasetUpdate, Pagination
+from dataaccess import datasets as dataaccess_datasets
+>>>>>>> 6c3f63a13b817a3d49f1208f43637f19dc6556b0
 from api.errors import AccessDeniedError
 from dataaccess.types import PermissionType
 from fileaccess import datasets as fileaccess_datasets
@@ -117,6 +123,7 @@ async def datasets_upload_with_id(
     # Get dataset details
     dataset = await dataaccess_datasets.get(id)
 
+<<<<<<< HEAD
     # Save/Extract the file
     document_list = fileaccess_datasets.save_extract_dataset(file, str(id))
 
@@ -151,3 +158,7 @@ async def datasets_upload_with_id(
                         token_text=w,
                         token_pos_tag=pos_tags[w_idx][1]
                     )
+=======
+    # Save the file
+    fileaccess_datasets.save_extract_dataset(file, str(id))
+>>>>>>> 6c3f63a13b817a3d49f1208f43637f19dc6556b0

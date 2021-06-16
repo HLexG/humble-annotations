@@ -74,19 +74,33 @@ CREATE TABLE documents (
     updated_by BIGINT REFERENCES users ON DELETE SET NULL
 );
 CREATE TABLE tokens (
+<<<<<<< HEAD
     id BIGSERIAL PRIMARY KEY,
     document_id BIGINT NOT NULL REFERENCES documents ON DELETE CASCADE,
     sentence_id INT NOT NULL,
     token_id INT NOT NULL,
     token_text TEXT NOT NULL,
     token_pos_tag TEXT NOT NULL,
+=======
+    db_id BIGSERIAL PRIMARY KEY,
+    id BIGINT NOT NULL DEFAULT currval('tokens_db_id_seq'),
+    document_id BIGINT NOT NULL REFERENCES documents ON DELETE CASCADE,
+    position INT NOT NULL,
+    sentence_id INT NOT NULL,
+>>>>>>> 6c3f63a13b817a3d49f1208f43637f19dc6556b0
     created_at BIGINT NOT NULL DEFAULT EXTRACT(EPOCH FROM clock_timestamp()) * 1000,
     created_by BIGINT REFERENCES users ON DELETE SET NULL,
     updated_at BIGINT,
     updated_by BIGINT REFERENCES users ON DELETE SET NULL
 );
+<<<<<<< HEAD
 CREATE INDEX tokens_document_id ON tokens (document_id);
 CREATE UNIQUE INDEX tokens_document_sentence_token ON tokens (document_id,sentence_id, token_id);
+=======
+CREATE INDEX tokens_id ON tokens (id);
+CREATE INDEX tokens_document_id ON tokens (document_id);
+CREATE UNIQUE INDEX tokens_document_id_and_id ON tokens (document_id, id);
+>>>>>>> 6c3f63a13b817a3d49f1208f43637f19dc6556b0
 CREATE TABLE annotations (
     id BIGSERIAL PRIMARY KEY,
     document_id BIGINT NOT NULL REFERENCES documents ON DELETE CASCADE,

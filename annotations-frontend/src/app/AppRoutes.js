@@ -12,7 +12,11 @@ import EditAnnotations from "../components/EditAnnotations";
 import { useAuthContext} from "../services/AuthService";
 import DatasetsOverview from "../components/DatasetsOverview";
 import DocsOverview from "../components/DocsOverview";
+<<<<<<< HEAD
 import CrossDocOverview from "../components/CrossDocOverview";
+=======
+
+>>>>>>> 6c3f63a13b817a3d49f1208f43637f19dc6556b0
 // 
 
 const AppRouter = ( props ) => {
