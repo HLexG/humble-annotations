@@ -361,20 +361,12 @@ CREATE TABLE public.schema_migrations (
 --
 
 CREATE TABLE public.tokens (
-<<<<<<< HEAD
     id bigint NOT NULL,
     document_id bigint NOT NULL,
     sentence_id integer NOT NULL,
     token_id integer NOT NULL,
     token_text text NOT NULL,
     token_pos_tag text NOT NULL,
-=======
-    db_id bigint NOT NULL,
-    id bigint NOT NULL,
-    document_id bigint NOT NULL,
-    "position" integer NOT NULL,
-    sentence_id integer NOT NULL,
->>>>>>> 6c3f63a13b817a3d49f1208f43637f19dc6556b0
     created_at bigint DEFAULT (date_part('epoch'::text, clock_timestamp()) * (1000)::double precision) NOT NULL,
     created_by bigint,
     updated_at bigint,
@@ -383,17 +375,10 @@ CREATE TABLE public.tokens (
 
 
 --
-<<<<<<< HEAD
 -- Name: tokens_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
 CREATE SEQUENCE public.tokens_id_seq
-=======
--- Name: tokens_db_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.tokens_db_id_seq
->>>>>>> 6c3f63a13b817a3d49f1208f43637f19dc6556b0
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -402,17 +387,10 @@ CREATE SEQUENCE public.tokens_db_id_seq
 
 
 --
-<<<<<<< HEAD
 -- Name: tokens_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
 ALTER SEQUENCE public.tokens_id_seq OWNED BY public.tokens.id;
-=======
--- Name: tokens_db_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.tokens_db_id_seq OWNED BY public.tokens.db_id;
->>>>>>> 6c3f63a13b817a3d49f1208f43637f19dc6556b0
 
 
 --
@@ -541,24 +519,10 @@ ALTER TABLE ONLY public.mentions ALTER COLUMN id SET DEFAULT nextval('public.men
 
 
 --
-<<<<<<< HEAD
 -- Name: tokens id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.tokens ALTER COLUMN id SET DEFAULT nextval('public.tokens_id_seq'::regclass);
-=======
--- Name: tokens db_id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.tokens ALTER COLUMN db_id SET DEFAULT nextval('public.tokens_db_id_seq'::regclass);
-
-
---
--- Name: tokens id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.tokens ALTER COLUMN id SET DEFAULT currval('public.tokens_db_id_seq'::regclass);
->>>>>>> 6c3f63a13b817a3d49f1208f43637f19dc6556b0
 
 
 --
@@ -644,11 +608,7 @@ ALTER TABLE ONLY public.schema_migrations
 --
 
 ALTER TABLE ONLY public.tokens
-<<<<<<< HEAD
     ADD CONSTRAINT tokens_pkey PRIMARY KEY (id);
-=======
-    ADD CONSTRAINT tokens_pkey PRIMARY KEY (db_id);
->>>>>>> 6c3f63a13b817a3d49f1208f43637f19dc6556b0
 
 
 --
@@ -703,24 +663,10 @@ CREATE INDEX tokens_document_id ON public.tokens USING btree (document_id);
 
 
 --
-<<<<<<< HEAD
 -- Name: tokens_document_sentence_token; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE UNIQUE INDEX tokens_document_sentence_token ON public.tokens USING btree (document_id, sentence_id, token_id);
-=======
--- Name: tokens_document_id_and_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX tokens_document_id_and_id ON public.tokens USING btree (document_id, id);
-
-
---
--- Name: tokens_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX tokens_id ON public.tokens USING btree (id);
->>>>>>> 6c3f63a13b817a3d49f1208f43637f19dc6556b0
 
 
 --

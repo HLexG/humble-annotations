@@ -1,19 +1,9 @@
 import os
 import requests
 from typing import Any, Dict, List
-<<<<<<< HEAD
 
 from dataaccess.session import database
 from dataaccess import tokens as dataaccess_tokens
-=======
-from nltk.tokenize import sent_tokenize
-from nltk.tokenize import word_tokenize
-import nltk
-nltk.download('averaged_perceptron_tagger')
-from nltk import pos_tag as pos
-
-from dataaccess.session import database
->>>>>>> 6c3f63a13b817a3d49f1208f43637f19dc6556b0
 from dataaccess.errors import RecordNotFoundError
 
 async def browse(
@@ -48,13 +38,9 @@ async def get(id: int) -> Dict[str, Any]:
     """
 
     query = """
-<<<<<<< HEAD
         select id,dataset_id,document_name,filepath 
         from documents 
         where id = :id
-=======
-        select id,dataset_id,document_name,filepath from documents where id = :id
->>>>>>> 6c3f63a13b817a3d49f1208f43637f19dc6556b0
     """
 
     values = {
@@ -69,7 +55,6 @@ async def get(id: int) -> Dict[str, Any]:
 
     result = prep_data(result)
 
-<<<<<<< HEAD
     # Get document tokens
     tokens = await dataaccess_tokens.get_document_tokens(document_id=id)
     result["tokens"] = tokens
@@ -109,39 +94,6 @@ async def create(*,
     """, values=values)
 
     result = prep_data(result)
-=======
-    # Get the document
-    doc_file = requests.get(result["filepath"])
-    document = doc_file.text
-
-    # Generate sentences
-    sentences = sent_tokenize(document)
-
-    # Generate tokens
-    tokens = []
-    for s_idx,s in enumerate(sentences):
-        words = word_tokenize(s)
-        posList = pos(words)
-        for w_idx,w in enumerate(words):
-            token = {
-                "text": w,
-                "pos":posList[w_idx][1],
-                "token_id": w_idx,
-                "sentence_id": s_idx,
-                "document_id": result["id"]
-            }
-            tokens.append(token)
-    
-    result["text"] = document
-    result["tokens"] = tokens
-
-    # Get any existing annotations for the document
-    result["annotations"] = {
-        "mentions":[],
-        "clusters":[]
-    }
-
->>>>>>> 6c3f63a13b817a3d49f1208f43637f19dc6556b0
     return result
 
 def prep_data(result) -> Dict[str, Any]:
