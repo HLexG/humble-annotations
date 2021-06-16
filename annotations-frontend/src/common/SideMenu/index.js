@@ -106,6 +106,12 @@ const SideMenu = (props) => {
                     </ListItemIcon>
                     <ListItemText primary="Resources" />
                   </ListItem>
+ 		<ListItem button component={Link} to="/" onClick={toggleDrawer(false)}>
+                    <ListItemIcon>
+                      <DataUsageIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="Document Stats" />
+                  </ListItem>
 
               </div>
             </Drawer>
