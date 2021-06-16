@@ -15,6 +15,12 @@ const DataService = {
     GetDatasets : async function(){
         return await axios.get(BASE_API_URL+"/datasets", { headers: authHeader() });
     },
+    UploadDatasetInfo : async function(ds_info){
+        return await axios.post(BASE_API_URL+"/datasets", ds_info, { headers: authHeader() });
+    },
+    UploadDataset : async function(dataset_id, ds){
+        return await axios.post(BASE_API_URL+"/datasets/"+dataset_id+"/upload", ds, { headers: authHeader() });
+    },
     GetDataset : async function(id){
         return await axios.get(BASE_API_URL+"/datasets/"+id, { headers: authHeader() });
     },
