@@ -85,6 +85,8 @@ async def create(*,
     """, values=values)
 
     result = prep_data(result)
+
+
     return result
 
 async def update(id: int,

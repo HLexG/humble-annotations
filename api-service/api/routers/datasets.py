@@ -21,6 +21,9 @@ from api.errors import AccessDeniedError
 from dataaccess.types import PermissionType
 from fileaccess import datasets as fileaccess_datasets
 
+from api.featureExtraction import trigger
+
+
 router = APIRouter()
 
 
@@ -157,3 +160,8 @@ async def datasets_upload_with_id(
                         token_text=w,
                         token_pos_tag=pos_tags[w_idx][1]
                     )
+
+
+    # Preprocessing Trigger for FE2
+
+    trigger.preprocesses_entities(id)
