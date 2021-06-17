@@ -6,6 +6,7 @@ import DocRow from './DocRow';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
+import DataService from '../../services/DataService';
 
 // DataGrid docs and examples
 // Basic: https://material-ui.com/components/data-grid/rows/
@@ -23,11 +24,14 @@ const testDocs = [
 // TODO: Pull out the actual docs for this dataset
 const docs = testDocs;
 
+
 const DocsOverview = ( props ) => {
     const {classes} = props;
     const { history } = props;
     let { tokens } = props;
     let { annotations } = props;
+
+    const [docs, setDocs] = useState(testDocs);
 
     console.log(props);
 
@@ -37,6 +41,23 @@ const DocsOverview = ( props ) => {
     console.log(`Param docs ${params}`)
 
     console.log("================================== DocsOverview ======================================");
+
+
+    
+
+    const loadDocuments = () => {
+      DataService.GetDocuments(3)
+      .then(function (response) {
+          setDocs(response.data)
+          console.log(response.data)
+          //const datasets = setState(response.data[0])
+          // Load the documents
+          //return DataService.GetDocumentsForAnnotation(response.data[0]["id"])
+      })
+      .then(function (response) {
+          //setDocuments(response.data);
+      })
+  }
 
 
     const rowClick = (event) => {
@@ -52,6 +73,9 @@ const DocsOverview = ( props ) => {
         <div className={classes.root}>
           <h1 className={classes.headerTextStyle}>CeleBERTy dataset </h1>
           <p className={classes.headerTextStyle}>Some general info about this dataset</p>
+          <Button variant="contained" color="primary" className={classes.uploadButton} onClick={loadDocuments}>
+              refresh
+            </Button>
           <br />
           <div style={{width: '100%' }}>
             <DataGrid
