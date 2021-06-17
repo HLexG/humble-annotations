@@ -34,6 +34,11 @@ const EditAnnotations = ( props ) => {
 
     console.log("================================== EditAnnotations ======================================");
     
+    const [tokens , setTokens] = useState([]);
+    const [annotations , setAnnotations] = useState(null);
+    const [openFeatureExtractorDialog , setOpenFeatureExtractorDialog] = useState(false);
+    const [featureExtractor , setFeatureExtractor] = useState(null);
+
 
     // Component States
     const [id , setId] = useState(params.id);
@@ -42,13 +47,10 @@ const EditAnnotations = ( props ) => {
         DataService.GetDocument(id)
             .then(function (response) {
                 setDocument(response.data);
-                console.log(`doc data: ${JSON.stringify(response)}`)
+                console.log(`doc data: ${JSON.stringify(response['data']['tokens'])}`)
+                setTokens(response['data']['tokens'])
             })
     }
-    const [tokens , setTokens] = useState([]);
-    const [annotations , setAnnotations] = useState(null);
-    const [openFeatureExtractorDialog , setOpenFeatureExtractorDialog] = useState(false);
-    const [featureExtractor , setFeatureExtractor] = useState(null);
 
     /*annoClose = this.annoClose.bind(this);
 
@@ -96,7 +98,7 @@ const EditAnnotations = ( props ) => {
       }, [id]);
     useEffect(() => {
         if(document){
-            setTokens(document["tokens"]);
+         //   setTokens(document["tokens"]);
             setAnnotations(document["annotations"]);
         }
       }, [document]);
