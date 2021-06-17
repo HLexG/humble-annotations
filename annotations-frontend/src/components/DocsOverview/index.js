@@ -24,6 +24,8 @@ const testDocs = [
 // TODO: Pull out the actual docs for this dataset
 const docs = testDocs;
 
+const axios = require('axios');
+
 
 const DocsOverview = ( props ) => {
     const {classes} = props;
@@ -44,6 +46,17 @@ const DocsOverview = ( props ) => {
     console.log(`Param docs ${params}`)
 
     console.log("================================== DocsOverview ======================================");
+
+    const preAnno = () => {
+        axios({
+          method: 'get',
+          url: `http://0.0.0.0:9111/v1/process_dataset/${params.dsID}`,
+          responseType: 'application/json'
+        })
+          .then(function (response) {
+            console.log('Success!')
+          });
+    }
 
 
     
@@ -86,6 +99,9 @@ const DocsOverview = ( props ) => {
           <p className={classes.headerTextStyle}>{pageDesc}</p>
           <Button variant="contained" color="primary" className={classes.uploadButton} onClick={loadDocuments}>
               refresh
+            </Button>
+            <Button variant="contained" color="primary" className={classes.uploadButton} onClick={preAnno}>
+              pre anno
             </Button>
           <br />
           <div style={{width: '100%' }}>

@@ -21,7 +21,7 @@ def preprocesses_entities(id):
     summary="Entity pre-annotations upon the upload of a dataset",
     description="Entity pre-annotations upon the upload of a dataset"
     """
-    url = feat_two_url+'/v1/process_dataset/'+str(id)
+    url = '172.18.0.6'+'/v1/process_dataset/'+str(id)
 
     session = requests.Session()
     retry = Retry(connect=3, backoff_factor=0.5)
