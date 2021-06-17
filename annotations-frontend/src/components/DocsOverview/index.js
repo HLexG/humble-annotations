@@ -63,8 +63,8 @@ const DocsOverview = ( props ) => {
           .then(function (resp) {
             console.log(resp.data)
 
-            setPageDesc(resp.data[params.dsID]['dataset_description'])
-            setPageTitle(resp.data[params.dsID]['dataset_name']);
+            setPageDesc(resp.data[params.dsID-1]['dataset_description'])
+            setPageTitle(resp.data[params.dsID-1]['dataset_name']);
 
           })
       })
