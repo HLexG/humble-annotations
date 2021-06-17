@@ -15,6 +15,8 @@ const testDatasets = [
 
 ];
 
+const delay = ms => new Promise(res => setTimeout(res, ms));
+
 // TODO: Pull out the actual basic info of all the dataset
 const datasets = testDatasets;
 
@@ -30,6 +32,7 @@ const Datasets = ( props ) => {
     const [formDescr, setFormDescr] = useState("");
     const [selectedFormFile, setSelectedFormFile] = useState(null);
     const [datasets, setDataset] = useState(testDatasets);
+    const [dsetId, setDsetId] = useState(null);
 
 
      const loadDatasets = () => {
@@ -63,6 +66,9 @@ const Datasets = ( props ) => {
       console.log(formTitle);
       console.log(formDescr);
       console.log(selectedFormFile);
+
+      const axios = require('axios');
+
       
 
       const datasetInfo = {
@@ -73,6 +79,7 @@ const Datasets = ( props ) => {
       DataService.UploadDatasetInfo(datasetInfo)
       .then(function (response) {
           console.log(response.data);
+          setDsetId(response.data.id)
 
 
           //convertBase64(selectedFormFile)
@@ -82,6 +89,8 @@ const Datasets = ( props ) => {
             DataService.UploadDataset(response.data.id, selectedFormFile)
             .then(function (response) {
                 console.log(response.data);
+
+                
       
                 
                 // let annotations = response.data;
@@ -97,6 +106,18 @@ const Datasets = ( props ) => {
           // let annotations = response.data;
 
       });
+
+      await delay(30000);
+
+      axios({
+        method: 'get',
+        url: `http://0.0.0.0:9111/v1/process_dataset/${dsetId}`,
+        responseType: 'application/json'
+      })
+        .then(function (resp) {
+          console.log('Success!')
+          console.log(resp)
+        });
 
 
       // Lastly close when all correct info has been retrieved
