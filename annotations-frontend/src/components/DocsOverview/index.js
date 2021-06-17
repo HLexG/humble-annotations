@@ -16,9 +16,9 @@ import DataService from '../../services/DataService';
 
 
 const testDocs = [
-  {id: 1, docID: 1, title: 'Ellen DeGeneres to host 2014 Oscars',lastModified:'15/11/2020', done:true, words:10},
-  {id: 2, docID: 2, title: 'Lindsay Lohan Leaves Betty Ford',lastModified:'12/01/2021', done:true, words:10},
-  {id: 3, docID: 3, title: 'Apple unveils new macbook pro',lastModified:'27/03/2021', done:true, words:10},
+  {id: 1, docID: 1, document_name: 'Ellen DeGeneres to host 2014 Oscars',updated_at:'15/11/2020', done:true, words:10},
+  {id: 2, docID: 2, document_name: 'Lindsay Lohan Leaves Betty Ford',updated_at:'12/01/2021', done:true, words:10},
+  {id: 3, docID: 3, document_name: 'Apple unveils new macbook pro',updated_at:'27/03/2021', done:true, words:10},
 ];
 
 // TODO: Pull out the actual docs for this dataset
@@ -32,6 +32,9 @@ const DocsOverview = ( props ) => {
     let { annotations } = props;
 
     const [docs, setDocs] = useState(testDocs);
+    const [pageTitle, setPageTitle] = useState("CeleBERTy dataset ");
+    const [pageDesc, setPageDesc] = useState("Some general info about this dataset");
+
 
     console.log(props);
 
@@ -56,6 +59,14 @@ const DocsOverview = ( props ) => {
       })
       .then(function (response) {
           //setDocuments(response.data);
+          DataService.GetDatasets(params.dsID)
+          .then(function (resp) {
+            console.log(resp.data)
+
+            setPageDesc(resp.data[params.dsID]['dataset_description'])
+            setPageTitle(resp.data[params.dsID]['dataset_name']);
+
+          })
       })
   }
 
@@ -71,8 +82,8 @@ const DocsOverview = ( props ) => {
     // Component States
     return (
         <div className={classes.root}>
-          <h1 className={classes.headerTextStyle}>CeleBERTy dataset </h1>
-          <p className={classes.headerTextStyle}>Some general info about this dataset</p>
+          <h1 className={classes.headerTextStyle}>{pageTitle} </h1>
+          <p className={classes.headerTextStyle}>{pageDesc}</p>
           <Button variant="contained" color="primary" className={classes.uploadButton} onClick={loadDocuments}>
               refresh
             </Button>
@@ -86,9 +97,9 @@ const DocsOverview = ( props ) => {
               // options={{ onRowSelection: rowClick }}
               onRowClick={rowClick}
               columns={[
-                { field: 'docID', type: 'string', width:120 },
-                { field: 'title', type: 'string', width:300 },
-                { field: 'lastModified', type: 'date', width:130},
+                { field: 'id', type: 'string', width:120 },
+                { field: 'document_name', type: 'string', width:300 },
+                { field: 'updated_at', type: 'date', width:130},
                 { field: 'done', type: 'boolean', width:120 },
                 { field: 'words', type: 'number', width:120},
               ]}
