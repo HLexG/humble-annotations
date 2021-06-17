@@ -47,12 +47,15 @@ const Datasets = ( props ) => {
   // https://stackoverflow.com/a/64767180/8970591
   const convertBase64 = (file) => {
     return new Promise((resolve, reject) => {
-      const fileReader = new FileReader();
-      fileReader.readAsDataURL(file)
-      fileReader.onload = () => {
-        resolve(fileReader.result);
-      }
-      fileReader.onerror = (error) => {
+ //     const fileReader = new FileReader();
+ //     fileReader.readAsDataURL(file)
+ //     fileReader.onload = () => {
+   // resolve(fileReader.result);
+        resolve(file);
+      //}
+      //       fileReader.onerror = (error) => {
+
+        file.onerror = (error) => {
         reject(error);
       }
     })
@@ -75,20 +78,20 @@ const Datasets = ( props ) => {
           console.log(response.data);
 
 
-          convertBase64(selectedFormFile)
-          .then(fileBase64 => {
-            console.log("File Is", fileBase64);
+          //convertBase64(selectedFormFile)
+          //.then(fileBase64 => {
+          //  console.log("File Is", fileBase64);
 
-            DataService.UploadDataset(response.data.id, fileBase64)
+            DataService.UploadDataset(response.data.id, selectedFormFile)
             .then(function (response) {
                 console.log(response.data);
       
                 
                 // let annotations = response.data;
       
-            });
+            })
    
-          })
+          
           .catch(err => {
             console.log(err);
           });
