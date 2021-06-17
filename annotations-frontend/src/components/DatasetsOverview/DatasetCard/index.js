@@ -42,7 +42,7 @@ const DatasetCard = ( props ) => {
         </CardContent>
         <CardActions>
         <ButtonGroup fullWidth={true} size="large" color="primary" aria-label="large outlined primary button group">
-          <Button component={Link} to={`/datasets/${ds.id}`} >Annotate</Button>
+          <Button component={Link} to={`/datasets/${ds.id}`} >InDoc</Button>
           <Button component={Link} to={`/datasets/cross_doc/${ds.id}`}>CrossDoc</Button>
         </ButtonGroup>
         </CardActions>

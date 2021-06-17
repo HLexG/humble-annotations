@@ -1,0 +1,7 @@
+spacy
+pandas
+uvicorn
+fastapi
+nltk
+requests
+aiofiles

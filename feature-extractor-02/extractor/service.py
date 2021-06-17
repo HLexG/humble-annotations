@@ -4,6 +4,7 @@ from starlette.requests import Request
 from starlette.responses import JSONResponse
 from starlette.staticfiles import StaticFiles
 
+import extractor.session as database_session
 from extractor.routers import mentions
 
 
@@ -40,11 +41,13 @@ async def generic_exception_handler(request: Request, exc: Exception):
 
 @app.on_event("startup")
 async def startup():
-    pass
+    # Connect to database
+    await database_session.connect()
 
 @app.on_event("shutdown")
 async def shutdown():
-    pass
+    # Disconnect from database
+    await database_session.disconnect()
 
 # Routes
 @app.get(

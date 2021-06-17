@@ -6,6 +6,7 @@ from starlette.responses import FileResponse
 from urllib.parse import urlparse
 
 import nltk
+
 nltk.download('averaged_perceptron_tagger')
 from nltk import pos_tag
 from nltk.tokenize import sent_tokenize
@@ -22,6 +23,7 @@ from fileaccess import datasets as fileaccess_datasets
 
 router = APIRouter()
 
+
 @router.get(
     "/datasets",
     tags=["Datasets"],
@@ -29,16 +31,16 @@ router = APIRouter()
     description="Get list of datasets"
 )
 async def datasets_index(
-    q: str = Query(None, description="An optional search query"),
-    pagination: Pagination = Depends(), 
-    auth: OptionalAuth = Depends()
+        q: str = Query(None, description="An optional search query"),
+        pagination: Pagination = Depends(),
+        auth: OptionalAuth = Depends()
 ):
-    
     return await dataaccess_datasets.browse(
         q=q,
         page_number=pagination.page_number,
         page_size=pagination.page_size
     )
+
 
 @router.post(
     "/datasets",
@@ -48,8 +50,8 @@ async def datasets_index(
     response_description="The created dataset"
 )
 async def datasets_create(
-    dataset: DatasetCreate, 
-    auth: Auth = Depends()
+        dataset: DatasetCreate,
+        auth: Auth = Depends()
 ):
     # Create dataset
     dataset_db = await dataaccess_datasets.create(
@@ -65,6 +67,7 @@ async def datasets_create(
 
     return dataset_db
 
+
 @router.put(
     "/datasets/{id}",
     tags=["Datasets"],
@@ -73,11 +76,10 @@ async def datasets_create(
     response_description="The dataset information"
 )
 async def datasets_update(
-    dataset: DatasetUpdate, 
-    id: int = Path(..., description="The dataset id"),
-    auth: Auth = Depends()
+        dataset: DatasetUpdate,
+        id: int = Path(..., description="The dataset id"),
+        auth: Auth = Depends()
 ):
-
     # Update
     dataset_db = await dataaccess_datasets.update(
         id=id,
@@ -86,6 +88,7 @@ async def datasets_update(
     )
 
     return dataset_db
+
 
 @router.get(
     "/datasets/{id}",
@@ -101,6 +104,7 @@ async def datasets_fetch(
 
     return result
 
+
 @router.post(
     "/datasets/{id}/upload",
     tags=["Datasets"],
@@ -112,7 +116,7 @@ async def datasets_upload_with_id(
         id: int = Path(..., description="The dataset id"),
         auth: Auth = Depends()
 ):
-    print(len(file),type(file))
+    print(len(file), type(file))
 
     # Get dataset details
     dataset = await dataaccess_datasets.get(id)
@@ -121,7 +125,7 @@ async def datasets_upload_with_id(
     document_list = fileaccess_datasets.save_extract_dataset(file, str(id))
 
     for document_path in document_list:
-        print("Saving document:",document_path)
+        print("Saving document:", document_path)
 
         # Read the document
         with open(document_path) as f:
@@ -138,13 +142,13 @@ async def datasets_upload_with_id(
             # Generate sentences
             sentences = sent_tokenize(document)
 
-            # Tokenize document content 
+            # Tokenize document content
             tokens = []
-            for s_idx,s in enumerate(sentences):
+            for s_idx, s in enumerate(sentences):
                 words = word_tokenize(s)
                 pos_tags = pos_tag(words)
 
-                for w_idx,w in enumerate(words):
+                for w_idx, w in enumerate(words):
                     # Save tokens
                     token_db = await dataaccess_tokens.create(
                         document_id=document_db["id"],

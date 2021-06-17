@@ -3,6 +3,8 @@ import {authHeader} from "./AuthService";
 
 const axios = require('axios');
 
+
+// TODO: Add the POST endpoints, 2 step process, first title and description and then another POST to upload the zip
 const DataService = {
     Init: function(){
         // Any application initialization logic comes here
@@ -12,6 +14,14 @@ const DataService = {
     },
     GetDatasets : async function(){
         return await axios.get(BASE_API_URL+"/datasets", { headers: authHeader() });
+    },
+    UploadDatasetInfo : async function(ds_info){
+        return await axios.post(BASE_API_URL+"/datasets", ds_info, { headers: authHeader() });
+    },
+    UploadDataset : async function(dataset_id, ds){
+        // var formData = new FormData();
+        // formData.append("file", ds);
+        return await axios.post(BASE_API_URL+"/datasets/"+dataset_id+"/upload", ds, { headers: authHeader() });
     },
     GetDataset : async function(id){
         return await axios.get(BASE_API_URL+"/datasets/"+id, { headers: authHeader() });
