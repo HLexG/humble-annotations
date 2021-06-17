@@ -210,8 +210,8 @@ async def process(id, model):
     #        await database.execute_many(query=query, values=values)
 
         print('Done!')
-        a = 2+2
-        return a
+    a = 2+2
+    return a
 
 
 def prep_data(result) -> Dict[str, Any]:

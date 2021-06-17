@@ -10,10 +10,11 @@ from requests.adapters import HTTPAdapter
 from requests.packages.urllib3.util.retry import Retry
 import time
 
+from utils import extract_environment_variable
 
+feat_two_url = extract_environment_variable("FEAT_EXT_TWO_URL")
 
-
-feat_two_url = os.environ["FEAT_EXT_TWO_URL"]
+#feat_two_url = os.environ["FEAT_EXT_TWO_URL"]
 
 def preprocesses_entities(id):
     """
