@@ -188,26 +188,26 @@ async def process(id, model):
         print('coref added to db successfully')
 
         # Get NER categories
-        query = """
-                    select id, category_code
-                    from entity_categories
-                """
-
-        result = await database.fetch_all(query)
-        categories = [prep_data(row) for row in result]
-        categories_dict = {cat['category_code']: cat['id'] for cat in categories}
-
-        values = [{'annotation_id': annotation_id,
-                   'cluster_id': mention['cluster_id']+1,
-                   'entity_category_id': categories_dict[ent_label],
-                   } for mention, ent_label in zip(annotations['mentions'], ent_labels)]
-
-        query = """
-            insert into named_entities(annotation_id, cluster_id, entity_category_id)
-            values (:annotation_id, :cluster_id, :entity_category_id)
-        """
-
-        await database.execute_many(query=query, values=values)
+    #        query = """
+    #                    select id, category_code
+    #                    from entity_categories
+    #                """
+    #
+    #        result = await database.fetch_all(query)
+    #        categories = [prep_data(row) for row in result]
+    #        categories_dict = {cat['category_code']: cat['id'] for cat in categories}
+    #
+    #        values = [{'annotation_id': annotation_id,
+    #                   'cluster_id': mention['cluster_id']+1,
+    #                   'entity_category_id': categories_dict[ent_label],
+    #                   } for mention, ent_label in zip(annotations['mentions'], ent_labels)]
+    #
+    #        query = """
+    #            insert into named_entities(annotation_id, cluster_id, entity_category_id)
+    #            values (:annotation_id, :cluster_id, :entity_category_id)
+    #        """
+    #
+    #        await database.execute_many(query=query, values=values)
 
 
     print('Done!')
