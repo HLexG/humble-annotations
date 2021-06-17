@@ -21,7 +21,7 @@ async def mentions_index(dataset_id: int = Query(None, description="Dataset id t
 @router.post("/mentions")
 async def mentions_new(input: dict):
                         #dataset_id: int,
-                        #ocument_id: int,
+                        #document_id: int,
                         #sentence_id: int,
                         #start_token_id: int,
                         #end_token_id: int,
