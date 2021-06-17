@@ -47,13 +47,7 @@ const Datasets = ( props ) => {
   // https://stackoverflow.com/a/64767180/8970591
   const convertBase64 = (file) => {
     return new Promise((resolve, reject) => {
- //     const fileReader = new FileReader();
- //     fileReader.readAsDataURL(file)
- //     fileReader.onload = () => {
-   // resolve(fileReader.result);
         resolve(file);
-      //}
-      //       fileReader.onerror = (error) => {
 
         file.onerror = (error) => {
         reject(error);
