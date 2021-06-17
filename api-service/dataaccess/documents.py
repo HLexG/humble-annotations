@@ -6,16 +6,17 @@ from dataaccess.session import database
 from dataaccess import tokens as dataaccess_tokens
 from dataaccess.errors import RecordNotFoundError
 
+
 async def browse(
-    *,
-    dataset_id: int,
-    page_number: int = 0,
-    page_size: int = 20
+        *,
+        dataset_id: int,
+        page_number: int = 0,
+        page_size: int = 20
 ) -> List[Dict[str, Any]]:
     """
     Retrieve a list of rows based on filters
     """
-    
+
     query = """
         select id,dataset_id,document_name,filepath 
         from documents
@@ -26,14 +27,15 @@ async def browse(
         "dataset_id": dataset_id
     }
 
-    print("query",query)
+    print("query", query)
     result = await database.fetch_all(query, values)
 
     return [prep_data(row) for row in result]
 
+
 async def get(id: int) -> Dict[str, Any]:
     """
-    Retrieve one row based by its id. Return object is a dict. 
+    Retrieve one row based by its id. Return object is a dict.
     Raises if the record was not found.
     """
 
@@ -47,7 +49,7 @@ async def get(id: int) -> Dict[str, Any]:
         "id": id
     }
 
-    print("query:",query, "values:", values)
+    print("query:", query, "values:", values)
     result = await database.fetch_one(query, values)
 
     if result is None:
@@ -61,10 +63,12 @@ async def get(id: int) -> Dict[str, Any]:
 
     return result
 
+
 async def create(*,
                  dataset_id: int,
                  document_name: str,
                  filepath: str,
+                 document_text: str,
                  id: int = None) -> Dict[str, Any]:
     """
     Create a new row. Returns the created record as a dict.
@@ -74,7 +78,8 @@ async def create(*,
     values = {
         "dataset_id": dataset_id,
         "document_name": document_name,
-        "filepath": filepath
+        "filepath": filepath,
+        "document_text": document_text
     }
 
     # if the id was passed
@@ -95,6 +100,7 @@ async def create(*,
 
     result = prep_data(result)
     return result
+
 
 def prep_data(result) -> Dict[str, Any]:
     if result is None:

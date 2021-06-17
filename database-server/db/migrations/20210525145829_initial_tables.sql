@@ -68,6 +68,7 @@ CREATE TABLE documents (
     dataset_id BIGINT NOT NULL REFERENCES datasets ON DELETE CASCADE,
     document_name TEXT NOT NULL,
     filepath TEXT NOT NULL,
+    document_text TEXT NOT NULL,
     created_at BIGINT NOT NULL DEFAULT EXTRACT(EPOCH FROM clock_timestamp()) * 1000,
     created_by BIGINT REFERENCES users ON DELETE SET NULL,
     updated_at BIGINT,
@@ -101,6 +102,7 @@ CREATE TABLE annotations (
 CREATE TABLE mentions (
     id BIGSERIAL PRIMARY KEY,
     annotation_id BIGINT NOT NULL REFERENCES annotations ON DELETE CASCADE,
+    sentence_id INT NOT NULL,
     start_token_id INT NOT NULL,
     end_token_id INT NOT NULL,
     created_at BIGINT NOT NULL DEFAULT EXTRACT(EPOCH FROM clock_timestamp()) * 1000,
