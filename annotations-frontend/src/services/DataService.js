@@ -19,9 +19,9 @@ const DataService = {
         return await axios.post(BASE_API_URL+"/datasets", ds_info, { headers: authHeader() });
     },
     UploadDataset : async function(dataset_id, ds){
-        var formData = new FormData();
-        formData.append("file", ds);
-        return await axios.post(BASE_API_URL+"/datasets/"+dataset_id+"/upload", formData, { headers: authHeader() });
+        // var formData = new FormData();
+        // formData.append("file", ds);
+        return await axios.post(BASE_API_URL+"/datasets/"+dataset_id+"/upload", ds, { headers: authHeader() });
     },
     GetDataset : async function(id){
         return await axios.get(BASE_API_URL+"/datasets/"+id, { headers: authHeader() });
