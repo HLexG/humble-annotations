@@ -98,7 +98,11 @@ async def process(id, model):
         result = await database.fetch_all(query, values)
         tokens = [prep_data(row) for row in result]
 
+        print('tokens gathered successfully')
+
         spacy_doc = model(doc['document_text'])
+
+        print('model loaded successfully')
 
         # Initialize matcher
         matcher = Matcher(model.vocab)
@@ -114,6 +118,9 @@ async def process(id, model):
             span = spacy_doc[start:end]  # The matched span
             spans.append(span)
 
+
+        print('nouns added successfully')
+
         # Add entities to spans list
         ent_labels = []
         for ent in spacy_doc.ents:
@@ -122,11 +129,15 @@ async def process(id, model):
             end = ent.end
             span = spacy_doc[start:end]
             spans.append(span)
+        
+        print('entities labeled successfully')
 
         # Filter by longest span
         spans = filter_spans(spans)
 
         annotations = process_clusters(spacy_doc, spans)
+
+        print('coref performed successfully')
 
         # Insert annotations
         query = """
@@ -134,6 +145,7 @@ async def process(id, model):
             values (:document_id, :user_id, :type, :status)
             returning *
         """
+        
 
         # Get annotation id
         values = {"document_id": doc["id"],
@@ -143,6 +155,8 @@ async def process(id, model):
 
         result = await database.fetch_one(query=query, values=values)
         annotation_id = result['id']
+
+        print('annos added to db successfully')
 
         # Insert mentions
         query = """
@@ -157,6 +171,8 @@ async def process(id, model):
 
         await database.execute_many(query=query, values=values)
 
+        print('mentions added to db successfully')
+
         # Insert clusters
         query = """
             insert into clusters(annotation_id, cluster_name)
@@ -168,6 +184,8 @@ async def process(id, model):
                    'cluster_name': str(n_cluster)} for n_cluster in range(num_clusters)]
 
         await database.execute_many(query=query, values=values)
+
+        print('coref added to db successfully')
 
         # Get NER categories
         query = """
