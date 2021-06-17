@@ -23,15 +23,17 @@ const Home = ( props ) => {
     const [dataset , setDataset] = useState(null);
     const [documents , setDocuments] = useState(null);
     const loadDocuments = () => {
-        // DataService.GetDatasets()
-        //     .then(function (response) {
-        //         setDataset(response.data[0]);
-        //         // Load the documents
-        //         return DataService.GetDocumentsForAnnotation(response.data[0]["id"])
-        //     })
-        //     .then(function (response) {
-        //         setDocuments(response.data);
-        //     })
+         DataService.GetDatasets()
+             .then(function (response) {
+                 setDataset(response.data[0]);
+                 console.log(response.data[0])
+                 // Load the documents
+                 //return DataService.GetDocumentsForAnnotation(response.data[0]["id"])
+                 return DataService.GetDocuments(response.data[0]["id"])
+             })
+             .then(function (response) {
+                 setDocuments(response.data);
+             })
     }
 
     // Setup Component

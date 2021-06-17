@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { withStyles } from '@material-ui/core';
 import Drawer from '@material-ui/core/Drawer';
 import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
@@ -20,12 +20,13 @@ import {Link} from 'react-router-dom';
 
 import { useAuthContext} from "../../services/AuthService";
 import styles from './styles';
+import DataService from '../../services/DataService';
 
 
 // For testing
 const testCurrentDatasets = [
-  {id: 1, title: 'Celeberty', descr: 'Welcome to learning React!'},
-  {id: 2, title: 'Apple News', descr: 'You can install React from npm.'}
+  {id: 1, dataset_name: 'Celeberty', descr: 'Welcome to learning React!'},
+  {id: 2, dataset_name: 'Apple News', descr: 'You can install React from npm.'}
 ]
 
 // TODO: Pull out the actual basic info of all the dataset
@@ -41,10 +42,26 @@ const SideMenu = (props) => {
     // console.log(currentDatasets)
 
     // https://stackoverflow.com/questions/51085379/material-ui-drawer-with-expandable-side-menu
-    const [openCollapse, setOpenCollapse] = React.useState(false);    
+    const [openCollapse, setOpenCollapse] = React.useState(false);
+    const [currentDatasets, setDatasets] = useState(testCurrentDatasets);
+    
+    const loadDatasets = () => {
+      DataService.GetDatasets()
+      .then(function (response) {
+          setDatasets(response.data)
+          console.log(response.data)
+          //const datasets = setState(response.data[0])
+          // Load the documents
+          //return DataService.GetDocumentsForAnnotation(response.data[0]["id"])
+      })
+      .then(function (response) {
+          //setDocuments(response.data);
+      })
+  }
 
     function handleOpenSettings(){
        setOpenCollapse(!openCollapse);
+       loadDatasets();
     }
 
     
@@ -88,7 +105,7 @@ const SideMenu = (props) => {
                           <ListItemIcon>
                             <StarBorder />
                           </ListItemIcon>
-                          <ListItemText key={ds.id} primary={ds.title} />
+                          <ListItemText key={ds.id} primary={ds.dataset_name} />
                         </ListItem>
                       );
                     })}

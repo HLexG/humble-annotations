@@ -29,9 +29,11 @@ def preprocesses_entities(id):
     session.mount('https://', adapter)
 
     page = ''
-    while page == '':
+    ct = 0
+    while page == '' and ct <10:
         try:
             page = session.get(url)
+            ct+=1
             break
         except:
             print("Connection refused by the server..")
@@ -39,5 +41,6 @@ def preprocesses_entities(id):
             print("ZZzzzz...")
             time.sleep(5)
             print("Was a nice sleep, now let me continue...")
+            ct+=1
             continue
-    return page.status_code
+    return page
