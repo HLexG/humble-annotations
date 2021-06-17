@@ -29,19 +29,21 @@ const Datasets = ( props ) => {
     const [formTitle, setFormTitle] = useState("");
     const [formDescr, setFormDescr] = useState("");
     const [selectedFormFile, setSelectedFormFile] = useState(null);
+    const [datasets, setDataset] = useState(testDatasets);
 
 
-  //   const loadDatasets = () => {
-  //     DataService.GetDatasets()
-  //     .then(function (response) {
-  //         setDataset(response.data[0]);
-  //         // Load the documents
-  //         return DataService.GetDocumentsForAnnotation(response.data[0]["id"])
-  //     })
-  //     .then(function (response) {
-  //         setDocuments(response.data);
-  //     })
-  // }
+     const loadDatasets = () => {
+       DataService.GetDatasets()
+       .then(function (response) {
+           setDataset(response.data)
+           //const datasets = setState(response.data[0])
+           // Load the documents
+           //return DataService.GetDocumentsForAnnotation(response.data[0]["id"])
+       })
+       .then(function (response) {
+           //setDocuments(response.data);
+       })
+   }
 
 
   // https://stackoverflow.com/a/64767180/8970591
@@ -121,6 +123,9 @@ const Datasets = ( props ) => {
           <div className={classes.dsButtons}>
             <Button variant="contained" color="primary" className={classes.uploadButton} onClick={handleClickOpenDialog}>
               Upload clean dataset
+            </Button>
+            <Button variant="contained" color="primary" className={classes.uploadButton} onClick={loadDatasets}>
+              refresh
             </Button>
             <UploadDsCard 
               handleClickOpenDialog={handleClickOpenDialog} 
