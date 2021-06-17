@@ -4,7 +4,7 @@ from typing import Any, Dict, List
 
 from extractor.session import database
 
-from extractor.routers.patterns import pattern_np, pattern_prn
+from extractor.routers.patterns import pattern_vrb
 
 import spacy
 from spacy.matcher import Matcher
@@ -108,9 +108,8 @@ async def process(id, model):
         matcher = Matcher(model.vocab)
 
         spans = []
-
-        matcher.add("NP", [pattern_np])  # Add noun phrases pattern
-        matcher.add('PRN', [pattern_prn])  # Add pronoun pattern
+        
+        matcher.add('VRB', [pattern_vrb])  # Add verb pattern
         matches = matcher(spacy_doc)  # Match tokens with pattern defined above
 
         # Add noun phrases to spans list
@@ -119,19 +118,9 @@ async def process(id, model):
             spans.append(span)
 
 
-        print('nouns added successfully')
+        print('verbs added successfully')
 
-        # Add entities to spans list
-        ent_labels = []
-        for ent in spacy_doc.ents:
-            ent_labels.append(ent.label_)
-            start = ent.start
-            end = ent.end
-            span = spacy_doc[start:end]
-            spans.append(span)
         
-        print('entities labeled successfully')
-
         # Filter by longest span
         spans = filter_spans(spans)
 
@@ -150,7 +139,7 @@ async def process(id, model):
         # Get annotation id
         values = {"document_id": doc["id"],
                   "user_id": 1, # user_id 1 is Spacy
-                  "type": "entity_mention",
+                  "type": "event_mention",
                   "status":"commit"}
 
         result = await database.fetch_one(query=query, values=values)
@@ -187,27 +176,7 @@ async def process(id, model):
 
         print('coref added to db successfully')
 
-        # Get NER categories
-    #        query = """
-    #                    select id, category_code
-    #                    from entity_categories
-    #                """
-    #
-    #        result = await database.fetch_all(query)
-    #        categories = [prep_data(row) for row in result]
-    #        categories_dict = {cat['category_code']: cat['id'] for cat in categories}
-    #
-    #        values = [{'annotation_id': annotation_id,
-    #                   'cluster_id': mention['cluster_id']+1,
-    #                   'entity_category_id': categories_dict[ent_label],
-    #                   } for mention, ent_label in zip(annotations['mentions'], ent_labels)]
-    #
-    #        query = """
-    #            insert into named_entities(annotation_id, cluster_id, entity_category_id)
-    #            values (:annotation_id, :cluster_id, :entity_category_id)
-    #        """
-    #
-    #        await database.execute_many(query=query, values=values)
+
 
 
     print('Done!')
