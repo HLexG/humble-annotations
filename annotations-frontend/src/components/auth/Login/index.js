@@ -48,8 +48,8 @@ const Login = ( props ) => {
                             </Typography>
                             <div className={classes.inputContainer}>
                                 <TextField
-                                    label="Username or email"
-                                    placeholder="Username or email"
+                                    label="Username"
+                                    placeholder="Username"
                                     helperText=""
                                     fullWidth
                                     margin="normal"
