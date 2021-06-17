@@ -5,7 +5,7 @@ import styles from './styles';
 
 // https://www.pluralsight.com/guides/how-to-use-a-simple-form-submit-with-files-in-react
 
-// const F ileUploader = (props) => {
+// const FileUploader = (props) => {
 const FileUploader = ( props ) => {
 
     const {classes, onFileSelectError, onFileSelectSuccess} = props;
@@ -23,7 +23,7 @@ const FileUploader = ( props ) => {
         onFileSelectError({ error: "File size cannot exceed more than 200MB" });
       }
       else {
-        // console.log("safd")
+        console.log("safe")
         setUploadButtonOn(false);
         setUploadButtonTitle(`File '${file.name}' uploaded`);
         onFileSelectSuccess(file);
