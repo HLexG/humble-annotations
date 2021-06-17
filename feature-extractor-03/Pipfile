@@ -11,8 +11,7 @@ pandas = "*"
 uvicorn = "*"
 fastapi = "*"
 aiofiles = "*"
-nltk = "*"
-wikipedia = "==1.6"
+wikipedia = "*"
 
 
 [requires]

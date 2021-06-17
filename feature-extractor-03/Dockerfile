@@ -32,7 +32,7 @@ RUN set -ex; \
     chown app:app /app
 
 # Expose port
-EXPOSE 9010
+EXPOSE 9013
 
 # Switch to the new user
 USER app
@@ -42,9 +42,6 @@ WORKDIR /app
 ADD --chown=app:app Pipfile Pipfile.lock /app/
 
 RUN pipenv sync
-
-# NLTK
-RUN pipenv run python -m nltk.downloader punkt
 
 # Add the rest of the source code. This is done last so we don't invalidate all
 # layers when we change a line of code.
