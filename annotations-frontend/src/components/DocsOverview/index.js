@@ -49,7 +49,7 @@ const DocsOverview = ( props ) => {
     
 
     const loadDocuments = () => {
-      DataService.GetDocuments({params.dsID})
+      DataService.GetDocuments(params.dsID)
       .then(function (response) {
           setDocs(response.data)
           console.log(response.data)
