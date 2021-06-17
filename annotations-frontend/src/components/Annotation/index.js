@@ -9,13 +9,13 @@ import {handleKeyDown, handleTokenClick,handleMentionClick,
 const Annotation = ( props ) => {
     const {classes} = props;
     const { history } = props;
-    let { tokens } = props;
+    //let { tokens } = props;
     let { annotations } = props;
 
     console.log("================================== Annotation ======================================");
 
     // Component States
-    // const [tokens , setTokens] = useState([]);
+    const [tokens , setTokens] = useState([]);
     // const [annotations, setAnnotations] = useState([]);
     const [annotationTree, setAnnotationTree] = useState(null);
     const loadAnnotationTree = () => {
@@ -50,7 +50,7 @@ const Annotation = ( props ) => {
     // Setup Component
     useEffect(() => {
         // Set state from props
-        // setTokens(props.tokens);
+        setTokens(props.tokens);
          // setAnnotations(props.annotations);
 
         // Keydown event listener
@@ -101,13 +101,13 @@ const Annotation = ( props ) => {
         return (
             <>
                 { items.map(i => {
-                    if(i.type == "token"){
+                    if(i){
                         let className = classes.token;
-                        let style = isTokenSelected(i.obj);
-                        let onClick = (event)=>handleTokenClick(event,i.obj,false,state);
+                        let style = isTokenSelected(i);
+                        let onClick = (event)=>handleTokenClick(event,i,false,state);
 
                         // Styles for special character tokens
-                        if([',','.',';'].includes(i.obj.text)){
+                        if([',','.',';'].includes(i)){
                             style["whiteSpace"] = "normal";
                             style["marginLeft"] = "-2px";
                         }
@@ -119,7 +119,7 @@ const Annotation = ( props ) => {
                                 style={style}
                                 background-color={i.backgroundColor}
                             >
-                                {i.obj.text}
+                                {i}
                             </a> 
                         )
                     }else{
@@ -135,7 +135,7 @@ const Annotation = ( props ) => {
                                 style = {isMentionSelected(i.obj)}
                                 background-color={i.backgroundColor}
                             >
-                                <mark style={{backgroundColor : colorList[i.obj.cluster_id]}} className={classes.mentionhead}><a className={classes.mentionheadtext}>{ i.obj.text }</a></mark>
+                                <mark style={{backgroundColor : colorList[i.obj.cluster_id]}} className={classes.mentionhead}><a className={classes.mentionheadtext}>{ i }</a></mark>
                                 { i.nodes && renderAnnotationItems(i.nodes) }
                             </span>
                         )

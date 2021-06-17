@@ -43,12 +43,15 @@ const EditAnnotations = ( props ) => {
     // Component States
     const [id , setId] = useState(params.id);
     const [document , setDocument] = useState(null);
+    const tokList = [];
     const loadDocument = (id) => {
         DataService.GetDocument(id)
             .then(function (response) {
                 setDocument(response.data);
                 console.log(`doc data: ${JSON.stringify(response['data']['tokens'])}`)
-                setTokens(response['data']['tokens'])
+                for (var i = 0; i < response.data['tokens'].length; i++) 
+                    tokList.push(response.data['tokens'][i]['token_text']);
+                setTokens( tokList )
             })
     }
 
@@ -130,7 +133,7 @@ const EditAnnotations = ( props ) => {
                             <option value="5">5</option>
                         </select>
                     </Box>
-                    <Box p={1} variant="contained" onClick={()=>{loadDocument(id);setTokens(document["tokens"]); setAnnotations(document["annotations"]);}} color="primary">
+                    <Box p={1} variant="contained" onClick={()=>{loadDocument(id); setAnnotations(document["annotations"]);}} color="primary">
                         <div style={{fontSize:25}}>🤭</div>
                         </Box>  
 
@@ -153,9 +156,9 @@ const EditAnnotations = ( props ) => {
                 </Box>
                 <Grid container spacing={0}>
                     <Grid item sm={10}>
-                        {tokens && annotations && (
-                            <Annotation tokens={tokens} annotations={annotations}></Annotation>
-                        )}
+                        
+                            <Annotation tokens={tokens}></Annotation>
+                        
                     </Grid>
                     <Grid item sm={2}>
                         <AnnotationPanel tokens={tokens} annotations={annotations}></AnnotationPanel>
