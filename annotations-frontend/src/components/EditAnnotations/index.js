@@ -25,6 +25,10 @@ import {handleApplyFeatureExtraction, ClearAnnotations} from './handlers';
 const EditAnnotations = ( props ) => {
     const {classes} = props;
     const { history } = props;
+
+    const { match: { params } } = props;
+
+    console.log(`Param docs ${params}`)
     
 
 
@@ -32,12 +36,13 @@ const EditAnnotations = ( props ) => {
     
 
     // Component States
-    const [id , setId] = useState(1);
+    const [id , setId] = useState(params.id);
     const [document , setDocument] = useState(null);
     const loadDocument = (id) => {
         DataService.GetDocument(id)
             .then(function (response) {
                 setDocument(response.data);
+                console.log(`doc data: ${JSON.stringify(response)}`)
             })
     }
     const [tokens , setTokens] = useState([]);

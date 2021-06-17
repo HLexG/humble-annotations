@@ -75,7 +75,7 @@ const DocsOverview = ( props ) => {
       const {row} = event;
       console.log(row);
 
-      history.push(`/docs/${row.docID}`);
+      history.push(`/docs/${row.id}`);
 
     }
 

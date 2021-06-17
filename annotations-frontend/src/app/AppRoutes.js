@@ -68,7 +68,7 @@ const AppRouter = ( props ) => {
                 <Route path="/datasets" exact component={DatasetsOverview} />
                 <Route path="/datasets/:dsID" exact component={DocsOverview} />
                 <Route path="/datasets/cross_doc/:dsID" exact component={CrossDocOverview} />
-                <Route path="/docs/:docID" exact component={EditAnnotations} />
+                <Route path="/docs/:id" exact component={EditAnnotations} />
 
                 <Route component={Error404} />
             </Switch>
