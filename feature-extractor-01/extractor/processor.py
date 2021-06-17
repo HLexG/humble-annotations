@@ -156,23 +156,6 @@ async def process(id, model):
                    'end_token_id': mention['end_token_id']} for mention in annotations['mentions']]
 
         await database.execute_many(query=query, values=values)
-        """
-        # Insert annotations
-        query = """
-        #    insert into annotations(document_id, user_id, type, status)
-        #    values (:document_id, :user_id, :type, :status)
-        #    returning *
-        """
-
-        # Get annotation id
-        values = {"document_id": doc["id"],
-                  "user_id": 2,
-                  "type": "entity_coreference",
-                  "status":"commit"}
-
-        result = await database.fetch_one(query=query, values=values)
-        annotation_id = result['id']
-        """
 
         # Insert clusters
         query = """

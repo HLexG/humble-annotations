@@ -4,7 +4,7 @@ from typing import Any, Dict, List
 
 from extractor.session import database
 
-from extractor.routers.patterns import pattern_np, pattern_prn, spacy_entities
+from extractor.routers.patterns import pattern_np, pattern_prn
 
 import spacy
 from spacy.matcher import Matcher
@@ -115,8 +115,9 @@ async def process(id, model):
             spans.append(span)
 
         # Add entities to spans list
+        ent_labels = []
         for ent in spacy_doc.ents:
-            print(ent.label_)
+            ent_labels.append(ent.label_)
             start = ent.start
             end = ent.end
             span = spacy_doc[start:end]
@@ -153,6 +154,40 @@ async def process(id, model):
                    'sentence_id': mention['sentence_id'],
                    'start_token_id': mention['start_token_id'],
                    'end_token_id': mention['end_token_id']} for mention in annotations['mentions']]
+
+        await database.execute_many(query=query, values=values)
+
+        # Insert clusters
+        query = """
+            insert into clusters(annotation_id, cluster_name)
+            values (:annotation_id, :cluster_name)
+        """
+
+        num_clusters = max([mention['cluster_id'] for mention in annotations['mentions']])+1
+        values = [{'annotation_id': annotation_id,
+                   'cluster_name': str(n_cluster)} for n_cluster in range(num_clusters)]
+
+        await database.execute_many(query=query, values=values)
+
+        # Get NER categories
+        query = """
+                    select id, category_code
+                    from entity_categories
+                """
+
+        result = await database.fetch_all(query)
+        categories = [prep_data(row) for row in result]
+        categories_dict = {cat['category_code']: cat['id'] for cat in categories}
+
+        values = [{'annotation_id': annotation_id,
+                   'cluster_id': mention['cluster_id']+1,
+                   'entity_category_id': categories_dict[ent_label],
+                   } for mention, ent_label in zip(annotations['mentions'], ent_labels)]
+
+        query = """
+            insert into named_entities(annotation_id, cluster_id, entity_category_id)
+            values (:annotation_id, :cluster_id, :entity_category_id)
+        """
 
         await database.execute_many(query=query, values=values)
 
