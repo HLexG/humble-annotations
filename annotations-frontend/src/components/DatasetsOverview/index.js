@@ -29,6 +29,8 @@ const Datasets = ( props ) => {
     const [formTitle, setFormTitle] = useState("");
     const [formDescr, setFormDescr] = useState("");
     const [selectedFormFile, setSelectedFormFile] = useState(null);
+    const [myDatasets, setMyDatasets] = useState(datasets);
+
 
 
   //   const loadDatasets = () => {
@@ -40,11 +42,22 @@ const Datasets = ( props ) => {
   //     })
   //     .then(function (response) {
   //         setDocuments(response.data);
-  //     })
+  //     }) 
   // }
 
 
   // https://stackoverflow.com/a/64767180/8970591
+
+     const loadMyDatasets = () => {
+      DataService.GetDatasets()
+      .then(response => setMyDatasets(response.data.result))
+       
+   }
+
+
+
+
+
   const convertBase64 = (file) => {
     return new Promise((resolve, reject) => {
       const fileReader = new FileReader();
@@ -116,6 +129,10 @@ const Datasets = ( props ) => {
 
     console.log("================================== DatasetsOverview ======================================");
 
+
+  //  useEffect(() => {
+  //    loadMyDatasets()
+  //  }, []);
     // Component States
     return (
         <div className={classes.root}>
@@ -125,6 +142,7 @@ const Datasets = ( props ) => {
             <Button variant="contained" color="primary" className={classes.uploadButton} onClick={handleClickOpenDialog}>
               Upload clean dataset
             </Button>
+
             <UploadDsCard 
               handleClickOpenDialog={handleClickOpenDialog} 
               handleCloseDialog={handleCloseDialog} 
@@ -149,6 +167,7 @@ const Datasets = ( props ) => {
               );
             })}
           </Grid>
+
           
         </div>
     );
