@@ -5,7 +5,7 @@ set -e
 # Load the environment file
 source ./env.dev
 
-
+# Create network if not done already
 docker network inspect hlexg >/dev/null 2>&1 || docker network create hlexg
 
 docker build -t $IMAGE_NAME -f Dockerfile .
