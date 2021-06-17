@@ -1,6 +1,12 @@
 # Humble Annotations App
 
 ## Prerequisites
+
+### Create Local Dataset Folder
+In the same directory as 'humble-annotations' (not inside humble-annotations):
+`λ ~ mkdir dataset-store`
+
+
 ### Install Docker 
 Install `Docker Desktop`
 
