@@ -28,10 +28,10 @@ const DatasetCard = ( props ) => {
     <Card className={classes.root} key={ds.id}>
         <CardContent>
           <Typography gutterBottom variant="h5" component="h2">
-            {ds.title}
+            {ds.dataset_name}
           </Typography>
           <Typography variant="body2" color="textSecondary" component="p">
-            {ds.descr}
+            {ds.dataset_description}
           </Typography>
           <Divider/>
           <div className={classes.footer}>

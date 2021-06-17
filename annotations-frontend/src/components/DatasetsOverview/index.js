@@ -9,9 +9,9 @@ import UploadDsCard from './UploadDsCard';
 import DataService from "../../services/DataService";
 
 const testDatasets = [
-  {id: 1, title: 'CeleBERTy', descr: 'Welcome to learning React! Welcome to learning React! Welcome to learning React!'},
-  {id: 2, title: 'Apple News', descr: 'You can install React from npm. You can install React from npm. You can install React from npm.'},
-  {id: 3, title: 'Harry p', descr: 'You can install React from npm. Welcome to learning React! Welcome to learning React!'}
+  {id: 1, dataset_name: 'CeleBERTy', dataset_description: 'Welcome to learning React! Welcome to learning React! Welcome to learning React!'},
+  {id: 2, dataset_name: 'Apple News', dataset_description: 'You can install React from npm. You can install React from npm. You can install React from npm.'},
+  {id: 3, dataset_name: 'Harry p', dataset_description: 'You can install React from npm. Welcome to learning React! Welcome to learning React!'}
 
 ];
 
@@ -36,6 +36,7 @@ const Datasets = ( props ) => {
        DataService.GetDatasets()
        .then(function (response) {
            setDataset(response.data)
+           console.log(response.data)
            //const datasets = setState(response.data[0])
            // Load the documents
            //return DataService.GetDocumentsForAnnotation(response.data[0]["id"])
