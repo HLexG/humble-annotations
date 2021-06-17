@@ -10,7 +10,7 @@ const FileUploader = ( props ) => {
 
     const {classes, onFileSelectError, onFileSelectSuccess} = props;
     const fileInput = useRef(null);
-    const [uploadButtonTitle, setUploadButtonTitle] = useState("Upload File");
+    const [uploadButtonTitle, setUploadButtonTitle] = useState("Upload Zip File");
     const [uploadButtonOn, setUploadButtonOn] = useState(true);
 
     
