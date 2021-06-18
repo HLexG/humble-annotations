@@ -14,7 +14,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
 import FormLabel from '@material-ui/core/FormLabel';
 
-import Annotation from '../Annotation';
+import Annotation  from '../Annotation';
 import AnnotationPanel from '../AnnotationPanel';
 import DataService from '../../services/DataService';
 import styles from './styles';
@@ -66,9 +66,9 @@ const EditAnnotations = ( props ) => {
     // State holder for reference in handlers
     let state = {
         "document": document,
-        "tokens": tokens,
+        /*"tokens": tokens,
         "annotations": annotations,
-        "setAnnotations": setAnnotations,
+        "setAnnotations": setAnnotations,*/
         "featureExtractor":featureExtractor,
         "setFeatureExtractor":setFeatureExtractor,
         "openFeatureExtractorDialog":openFeatureExtractorDialog,
@@ -98,8 +98,8 @@ const EditAnnotations = ( props ) => {
       }, [id]);
     useEffect(() => {
         if(document){
-         //   setTokens(document["tokens"]);
-            setAnnotations(document["annotations"]);
+            //setTokens(document["tokens"]);
+            //setAnnotations(document["annotations"]);
         }
       }, [document]);
 
@@ -130,7 +130,7 @@ const EditAnnotations = ( props ) => {
                             <option value="5">5</option>
                         </select>
                     </Box>
-                    <Box p={1} variant="contained" onClick={()=>{loadDocument(id);setTokens(document["tokens"]); setAnnotations(document["annotations"]);}} color="primary">
+                    <Box p={1} variant="contained" onClick={()=>{loadDocument(id)}} color="primary">
                         <div style={{fontSize:25}}>🤭</div>
                         </Box>  
 
@@ -152,14 +152,17 @@ const EditAnnotations = ( props ) => {
                     </Box>
                 </Box>
                 <Grid container spacing={0}>
-                    <Grid item sm={10}>
-                        {tokens && annotations && (
-                            <Annotation tokens={tokens} annotations={annotations}></Annotation>
-                        )}
+
+                <Grid item sm={10}>
+
+
+
+
+
+
                     </Grid>
-                    <Grid item sm={2}>
-                        <AnnotationPanel tokens={tokens} annotations={annotations}></AnnotationPanel>
-                    </Grid>
+
+
                 </Grid>
             </main>
             <Dialog open={openFeatureExtractorDialog} onClose={()=>{setOpenFeatureExtractorDialog(false)}}>

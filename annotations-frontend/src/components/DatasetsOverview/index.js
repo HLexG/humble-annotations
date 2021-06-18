@@ -117,6 +117,7 @@ const Datasets = ( props ) => {
         .then(function (resp) {
           console.log('Success!')
           console.log(resp)
+          alert("Your dataset is uploaded!");
         });
 
 
@@ -133,6 +134,7 @@ const Datasets = ( props ) => {
       setFormDescr("");
       setSelectedFormFile(null);
       setOpen(false);
+      loadDatasets()
     };
 
     console.log("================================== DatasetsOverview ======================================");
