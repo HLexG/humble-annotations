@@ -33,6 +33,8 @@ const EditAnnotations = ( props ) => {
 
 
     console.log("================================== EditAnnotations ======================================");
+    console.log(props);
+
     
     const [tokens , setTokens] = useState([]);
     const [annotations , setAnnotations] = useState(null);
@@ -47,7 +49,9 @@ const EditAnnotations = ( props ) => {
         DataService.GetDocument(id)
             .then(function (response) {
                 setDocument(response.data);
-                console.log(`doc data: ${JSON.stringify(response['data']['tokens'])}`)
+                console.log(`Token data: ${JSON.stringify(response['data']['tokens'])}`)
+                console.log(`Gen. data: ${JSON.stringify(response['data'])}`)
+
                 setTokens(response['data']['tokens'])
             })
     }

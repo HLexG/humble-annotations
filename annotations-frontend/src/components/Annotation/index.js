@@ -14,6 +14,9 @@ const Annotation = ( props ) => {
 
     console.log("================================== Annotation ======================================");
 
+    console.log(props);
+
+
     // Component States
     // const [tokens , setTokens] = useState([]);
     // const [annotations, setAnnotations] = useState([]);
