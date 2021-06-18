@@ -155,8 +155,8 @@ const EditAnnotations = ( props ) => {
 
                 <Grid item sm={10}>
                 <Grid item sm={10}>
-                        {tokens && (
-                            <Annotation tokens={tokens}></Annotation>
+                        {tokens && annotations && (
+                            <Annotation tokens={tokens} annotations={annotations}></Annotation>
                         )}
                     </Grid>
                     <Grid item sm={2}>
