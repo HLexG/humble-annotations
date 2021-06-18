@@ -100,18 +100,7 @@ const Datasets = ( props ) => {
       
             })
             .then(function (response) {
-              delay(20000);
-
-              axios({
-                method: 'get',
-                url: `http://0.0.0.0:9111/v1/process_dataset/${dsetId}`,
-                responseType: 'application/json'
-              })
-                .then(function (resp) {
-                  console.log('Success!')
-                  console.log(resp)
-                  alert("Your dataset is uploaded!");
-                });}
+;}
 
 
 
@@ -130,18 +119,6 @@ const Datasets = ( props ) => {
       
 
       
-
-        await delay(30000);
-
-        axios({
-          method: 'get',
-          url: `http://0.0.0.0:9013/v1/process_dataset_event/${dsetId}`,
-          responseType: 'application/json'
-        })
-          .then(function (resp) {
-            console.log('Events = Success!')
-            console.log(resp)
-          });
 
 
       // Lastly close when all correct info has been retrieved
