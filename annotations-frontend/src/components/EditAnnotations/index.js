@@ -41,18 +41,27 @@ const EditAnnotations = ( props ) => {
     const [openFeatureExtractorDialog , setOpenFeatureExtractorDialog] = useState(false);
     const [featureExtractor , setFeatureExtractor] = useState(null);
 
+    const exResult = ['this','is', 'my', 'example'];
+    const result = exResult;
+    
+
 
     // Component States
     const [id , setId] = useState(params.id);
     const [document , setDocument] = useState(null);
+    
     const loadDocument = (id) => {
-        DataService.GetDocument(id)
+        DataService.GetDocument(params.id)
             .then(function (response) {
                 setDocument(response.data);
-                console.log(`Token data: ${JSON.stringify(response['data']['tokens'])}`)
+                console.log(`Token data: ${JSON.stringify(response['data']['tokens'].token_text)}`)
                 console.log(`Gen. data: ${JSON.stringify(response['data'])}`)
 
                 setTokens(response['data']['tokens'])
+
+                const result = response['data']['tokens'].filter(function(element) {
+                    return element.key == 'token_text';
+                });
             })
     }
 
@@ -110,6 +119,7 @@ const EditAnnotations = ( props ) => {
     return (
         <div className={classes.root}>
             <main className={classes.main}>
+                <Button onClick={loadDocument}></Button>
                 <Box display="flex" p={1} className={classes.toolbar}>
                     <Box p={1}>
                         <span className={classes.toolbartitle}>Document: </span>
@@ -155,18 +165,16 @@ const EditAnnotations = ( props ) => {
                         <Icon className={classes.toolbaricon}>save</Icon>
                     </Box>
                 </Box>
-                <Grid container spacing={0}>
+                <Grid container spacing={2}>
+                
+                {/*{ tokens && annotations && (   <Grid item sm={3} tokens={tokens} annotations = {annotations}/> )}*/} 
 
-                <Grid item sm={10}>
-                <Grid item sm={10}>
-                        {tokens && annotations && (
-                            <Annotation tokens={tokens} annotations={annotations}></Annotation>
-                        )}
-                    </Grid>
-                    <Grid item sm={2}>
+                <Grid item sm={2}>
                         <AnnotationPanel annotations={annotations}></AnnotationPanel>
-                    </Grid>
-                    </Grid>
+                        </Grid>
+                {tokens.map(token =><Grid spacing={5} item id = {id} sm={0.5}>{token.token_text}</Grid>)}
+                
+
 
 
                 </Grid>
