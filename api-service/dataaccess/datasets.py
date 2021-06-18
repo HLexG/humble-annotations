@@ -5,6 +5,8 @@ from dataaccess import utils as data_utils
 from dataaccess.session import database
 from dataaccess.errors import RecordNotFoundError, NoAccessError
 from dataaccess.types import PermissionType
+from fastapi import APIRouter, Path, Query, Depends, File
+
 
 async def browse(
     *,
@@ -56,6 +58,7 @@ async def get(id: int) -> Dict[str, Any]:
 async def create(*,
                  dataset_name: str,
                  dataset_description: str = None,
+                 auth: Auth = Depends(),
                  id: int = None) -> Dict[str, Any]:
     """
     Create a new row. Returns the created record as a dict.
