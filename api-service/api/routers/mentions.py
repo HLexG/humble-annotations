@@ -34,3 +34,12 @@ async def mentions_new(input: dict):
                                     end_token_id=input['end_token_id'],
                                     cluster_id=input['cluster_id'],
                                     pos=input['pos'])
+
+@router.get(
+    "/mentionsdoc/{document_id}",
+    summary="Get list of mentions for a document", 
+    description="Get list of mentions for a document", 
+)
+async def mentions_doc_index(document_id: int = Query(None, description="Document id to filter by")):
+    
+    return await mentions.get_document_mentions(document_id=document_id)
