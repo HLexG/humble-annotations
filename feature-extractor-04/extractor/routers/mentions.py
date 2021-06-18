@@ -97,4 +97,4 @@ async def find_event_mentions(
 ):
     print("process_dataset")
 
-    await processor.process(id, model)
+    await processor.process(int(id), model)

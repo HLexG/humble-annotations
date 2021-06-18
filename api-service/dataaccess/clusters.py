@@ -50,7 +50,7 @@ async def create(*,
         "dataset_id": dataset_id,
         "document_id": document_id,
         "cluster_name": cluster_name,
-        "created_by": auth.user_id
+     #   "created_by": auth.user_id
     }
 
     # if the id was passed

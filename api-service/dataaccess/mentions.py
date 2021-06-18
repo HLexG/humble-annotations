@@ -84,7 +84,7 @@ async def create(*,
         "end_token_id": end_token_id,
         "cluster_id": cluster_id, 
         "pos":pos,
-        "created_by": auth.user_id
+       # "created_by": auth.user_id
     }
 
     # if the id was passed

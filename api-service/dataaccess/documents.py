@@ -81,7 +81,7 @@ async def create(*,
         "document_name": document_name,
         "filepath": filepath,
         "document_text": document_text,
-        "created_by": auth.user_id
+        #"created_by": auth.user_id
     }
 
     # if the id was passed

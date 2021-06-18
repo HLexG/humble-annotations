@@ -28,7 +28,7 @@ def process_clusters(doc, spans):
 
         mentions.append({
             "cluster_id": mention_id,
-            "document_id": int(doc["id"]),
+            #"document_id": int(doc["id"]),
             "start_token_id": mention.start,
             "end_token_id": mention.end - 1,
             "sentence_id": curr_sent,

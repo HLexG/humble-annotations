@@ -84,7 +84,7 @@ async def create(*,
         "entity_name": entity_name,
         "description": description,
         "url": url,
-        "created_by": auth.user_id
+        #"created_by": auth.user_id
     }
 
     # if the id was passed

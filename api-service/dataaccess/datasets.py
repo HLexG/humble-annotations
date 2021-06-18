@@ -1,6 +1,6 @@
 import os
 from typing import Any, Dict, List
-from api.auth import Auth, OptionalAuth # auth.user_id
+from api.auth import Auth, AuthData # auth.user_id
 from dataaccess import utils as data_utils
 from dataaccess.session import database
 from dataaccess.errors import RecordNotFoundError, NoAccessError
@@ -67,7 +67,7 @@ async def create(*,
     # Set the values
     values = {
         "dataset_name": dataset_name,
-        "created_by": auth.user_id
+        #"created_by": AuthData.user_id
     }
 
     # if the id was passed
