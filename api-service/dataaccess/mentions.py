@@ -41,7 +41,7 @@ async def get_document_mentions(
     """
     
     query = """
-        select id,document_id,sentence_id,token_id,token_text,token_pos_tag 
+        select id,annotation_id,document_id,sentence_id,start_token_id,end_token_id
         from mentions
         where document_id = :document_id
     """
