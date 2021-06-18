@@ -27,6 +27,7 @@ RUN set -ex; \
     rm -rf /var/lib/apt/lists/* && \
     pip install --no-cache-dir --upgrade pip && \
     pip install pipenv && \
+    pip install -r requirements.txt && \
     useradd -ms /bin/bash app -d /home/app -u 1000 -p "$(openssl passwd -1 Passw0rd)" && \
     mkdir -p /app && \
     chown app:app /app
