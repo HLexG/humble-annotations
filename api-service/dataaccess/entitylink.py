@@ -3,7 +3,7 @@ import requests
 from typing import Any, Dict, List
 from nltk.tokenize import sent_tokenize
 from nltk.tokenize import word_tokenize
-
+from api.auth import Auth, OptionalAuth # auth.user_id
 from dataaccess.session import database
 from dataaccess.errors import RecordNotFoundError
 
@@ -84,6 +84,7 @@ async def create(*,
         "entity_name": entity_name,
         "description": description,
         "url": url,
+        "created_by": auth.user_id
     }
 
     # if the id was passed
