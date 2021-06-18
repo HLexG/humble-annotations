@@ -17,6 +17,7 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import Icon from '@material-ui/core/Icon';
 import {Link} from 'react-router-dom';
+import ListAltIcon from '@material-ui/icons/ListAlt';
 
 import { useAuthContext} from "../../services/AuthService";
 import styles from './styles';
@@ -122,6 +123,12 @@ const SideMenu = (props) => {
                       <DataUsageIcon />
                     </ListItemIcon>
                     <ListItemText primary="Resources" />
+                  </ListItem>
+                  <ListItem button component={Link} to="/grounding" onClick={toggleDrawer(false)}>
+                    <ListItemIcon>
+                      <ListAltIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="Annotate" />
                   </ListItem>
 
               </div>
