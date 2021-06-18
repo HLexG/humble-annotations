@@ -13,6 +13,7 @@ import { useAuthContext} from "../services/AuthService";
 import DatasetsOverview from "../components/DatasetsOverview";
 import DocsOverview from "../components/DocsOverview";
 import CrossDocOverview from "../components/CrossDocOverview";
+import EntityLinking from "../components/EntityLinking";
 // 
 
 const AppRouter = ( props ) => {
@@ -69,6 +70,7 @@ const AppRouter = ( props ) => {
                 <Route path="/datasets/:dsID" exact component={DocsOverview} />
                 <Route path="/datasets/cross_doc/:dsID" exact component={CrossDocOverview} />
                 <Route path="/docs/:id" exact component={EditAnnotations} />
+                <Route path="/grounding" exact component={EntityLinking} />
 
                 <Route component={Error404} />
             </Switch>
