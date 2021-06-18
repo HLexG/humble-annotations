@@ -29,7 +29,8 @@ const Home = ( props ) => {
                  console.log(response.data[0])
                  // Load the documents
                  //return DataService.GetDocumentsForAnnotation(response.data[0]["id"])
-                 return DataService.GetDocuments(response.data[0]["id"])
+                 //return DataService.GetDocuments(response.data[0]["id"])
+                 return DataService.GetDocuments(response.data[0])
              })
              .then(function (response) {
                  setDocuments(response.data);
