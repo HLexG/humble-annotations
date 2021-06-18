@@ -5,6 +5,8 @@ from starlette.responses import JSONResponse
 from starlette.staticfiles import StaticFiles
 
 from extractor.routers import mentions
+import extractor.session as database_session
+
 
 
 prefix = "/v1"
@@ -40,11 +42,12 @@ async def generic_exception_handler(request: Request, exc: Exception):
 
 @app.on_event("startup")
 async def startup():
-    pass
+    await database_session.connect()
 
 @app.on_event("shutdown")
 async def shutdown():
-    pass
+    await database_session.disconnect()
+
 
 # Routes
 @app.get(
