@@ -1,5 +1,6 @@
 import {BASE_API_URL} from "./Common";
 import {authHeader} from "./AuthService";
+import PreAnnotation from "./PreAnno";
 
 const axios = require('axios');
 
@@ -21,7 +22,12 @@ const DataService = {
     UploadDataset : async function(dataset_id, ds){
         var formData = new FormData();
         formData.append("file", ds);
-        return await axios.post(BASE_API_URL+"/datasets/"+dataset_id+"/upload", formData, { headers: authHeader() });
+        var outputs = await axios.post(BASE_API_URL+"/datasets/"+dataset_id+"/upload", formData, { headers: authHeader() });
+        // Post-upload pre-annotation services go here
+        PreAnnotation.RunSpanBertSpacy(dataset_id)
+        PreAnnotation.RunEventTriggers(dataset_id)
+        
+        return outputs ;
     },
     GetDataset : async function(id){
         return await axios.get(BASE_API_URL+"/datasets/"+id, { headers: authHeader() });
