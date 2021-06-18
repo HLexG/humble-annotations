@@ -5,3 +5,5 @@ fastapi
 nltk
 requests
 aiofiles
+databases
+asyncpg
