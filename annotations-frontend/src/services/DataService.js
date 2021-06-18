@@ -32,6 +32,9 @@ const DataService = {
     GetDocument : async function(id){
         return await axios.get(BASE_API_URL+"/documents/"+id, { headers: authHeader() });
     },
+    GetMentions : async function(id){
+        return await axios.get(BASE_API_URL+"/mentionsdoc/"+id, { headers: authHeader() });
+    },
 }
 
 export default DataService;
