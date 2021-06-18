@@ -101,7 +101,8 @@ async def update(id: int,
     """
 
     values = {
-        "id": id
+        "id": id,
+        "updated_by": auth.user_id
     }
 
     changes: Dict[str, Any] = {
