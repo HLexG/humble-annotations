@@ -1,6 +1,8 @@
 import React, {useEffect, useRef, useState} from 'react';
 import { withStyles } from '@material-ui/core';
 
+import DataService from '../../services/DataService';
+
 import styles from './styles';
 import {buildAnnotationTree} from './functions';
 import {handleKeyDown, handleTokenClick,handleMentionClick,
@@ -9,7 +11,7 @@ import {handleKeyDown, handleTokenClick,handleMentionClick,
 const Annotation = ( props ) => {
     const {classes} = props;
     const { history } = props;
-    let { tokens } = props;
+    //let { tokens } = props;
     let { annotations } = props;
 
     console.log("================================== Annotation ======================================");
@@ -18,7 +20,8 @@ const Annotation = ( props ) => {
 
 
     // Component States
-    // const [tokens , setTokens] = useState([]);
+    const [tokens , setTokens] = useState([]);
+    const [document , setDocument] = useState([]);
     // const [annotations, setAnnotations] = useState([]);
     const [annotationTree, setAnnotationTree] = useState(null);
     const loadAnnotationTree = () => {
@@ -66,6 +69,7 @@ const Annotation = ( props ) => {
       }, []);
     useEffect(() => {
         // Build annotation tree
+        loadDocument()
         loadAnnotationTree()
         /*const dynColor = colorList[this.props.annotations.cluster_id]*/
       }, [refresh, props.annotations]);
@@ -99,6 +103,18 @@ const Annotation = ( props ) => {
     }
 
 
+    const loadDocument = (id) => {
+        DataService.GetDocument(id)
+            .then(function (response) {
+                setDocument(response.data);
+                console.log(`Token data: ${JSON.stringify(response['data']['tokens'])}`)
+                console.log(`Gen. data: ${JSON.stringify(response['data'])}`)
+
+                setTokens(response['data']['tokens'])
+            })
+    }
+
+
 
     const renderAnnotationItems = (items) => {
         return (
@@ -122,7 +138,7 @@ const Annotation = ( props ) => {
                                 style={style}
                                 background-color={i.backgroundColor}
                             >
-                                {i.obj.text}
+                                {i.token_text}
                             </a> 
                         )
                     }else{
