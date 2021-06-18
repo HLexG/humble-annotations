@@ -16,6 +16,7 @@ const testDatasets = [
 ];
 
 const delay = ms => new Promise(res => setTimeout(res, ms));
+const axios = require('axios');
 
 // TODO: Pull out the actual basic info of all the dataset
 const datasets = testDatasets;
@@ -120,6 +121,18 @@ const Datasets = ( props ) => {
           alert("Your dataset is uploaded!");
         });
 
+        await delay(30000);
+
+        axios({
+          method: 'get',
+          url: `http://0.0.0.0:9013/v1/process_dataset_event/${dsetId}`,
+          responseType: 'application/json'
+        })
+          .then(function (resp) {
+            console.log('Events = Success!')
+            console.log(resp)
+          });
+
 
       // Lastly close when all correct info has been retrieved
       // handleCloseDialog();
@@ -137,6 +150,17 @@ const Datasets = ( props ) => {
       loadDatasets()
     };
 
+    const loadEvents = () => {        
+      axios({
+      method: 'get',
+      url: `http://0.0.0.0:9013/v1/process_dataset_event/${dsetId}`,
+      responseType: 'application/json'
+    })
+      .then(function (resp) {
+        console.log('Events = Success!')
+        console.log(resp)
+      });}
+
     console.log("================================== DatasetsOverview ======================================");
 
     // Component States
@@ -150,6 +174,9 @@ const Datasets = ( props ) => {
             </Button>
             <Button variant="contained" color="primary" className={classes.uploadButton} onClick={loadDatasets}>
               refresh
+            </Button>
+            <Button variant="contained" color="primary" className={classes.uploadButton} onClick={loadEvents}>
+              event test
             </Button>
             <UploadDsCard 
               handleClickOpenDialog={handleClickOpenDialog} 
