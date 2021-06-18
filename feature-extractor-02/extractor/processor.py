@@ -160,14 +160,15 @@ async def process(id, model):
 
         # Insert mentions
         query = """
-            insert into mentions(annotation_id, sentence_id, start_token_id, end_token_id)
-            values (:annotation_id, :sentence_id, :start_token_id, :end_token_id)
+            insert into mentions(annotation_id, document_id, sentence_id, start_token_id, end_token_id)
+            values (:annotation_id, :document_id, :sentence_id, :start_token_id, :end_token_id)
         """
 
         values = [{'annotation_id': annotation_id,
-                   'sentence_id': mention['sentence_id'],
-                   'start_token_id': mention['start_token_id'],
-                   'end_token_id': mention['end_token_id']} for mention in annotations['mentions']]
+                     'document_id': doc["id"],
+                     'sentence_id': mention['sentence_id'],
+                  'start_token_id': mention['start_token_id'],
+                    'end_token_id': mention['end_token_id']} for mention in annotations['mentions']]
 
         await database.execute_many(query=query, values=values)
 
