@@ -1,6 +1,6 @@
 import React, {useEffect, useRef, useState} from 'react';
 import { withStyles } from '@material-ui/core';
-
+import { Button } from '@material-ui/core';
 import DataService from '../../services/DataService';
 
 import styles from './styles';
@@ -11,7 +11,7 @@ import {handleKeyDown, handleTokenClick,handleMentionClick,
 const Annotation = ( props ) => {
     const {classes} = props;
     const { history } = props;
-    //let { tokens } = props;
+    let { tokens } = props;
     let { annotations } = props;
 
     console.log("================================== Annotation ======================================");
@@ -20,7 +20,7 @@ const Annotation = ( props ) => {
 
 
     // Component States
-    const [tokens , setTokens] = useState([]);
+    //const [tokens , setTokens] = useState([]);
     const [document , setDocument] = useState([]);
     // const [annotations, setAnnotations] = useState([]);
     const [annotationTree, setAnnotationTree] = useState(null);
@@ -110,7 +110,7 @@ const Annotation = ( props ) => {
                 console.log(`Token data: ${JSON.stringify(response['data']['tokens'])}`)
                 console.log(`Gen. data: ${JSON.stringify(response['data'])}`)
 
-                setTokens(response['data']['tokens'])
+               // setTokens(response['data']['tokens'])
             })
     }
 
@@ -167,6 +167,7 @@ const Annotation = ( props ) => {
 
     return (
         <div className={classes.content}>
+            <Button onClick = {loadDocument}></Button>
             {annotationTree && (
                 renderAnnotationItems(annotationTree.nodes)
             )}
