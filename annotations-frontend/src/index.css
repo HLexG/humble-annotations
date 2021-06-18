@@ -1,6 +1,12 @@
+@font-face {
+  font-family: "Inter Variable";
+  src: url("./styling/Inter-3/InterWeb/Inter.var.woff2") format("woff2");
+  font-weight: 100 900;
+}
+
 body {
     margin: 0;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    font-family: "Inter Variable" -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
       'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
       sans-serif;
     -webkit-font-smoothing: antialiased;
