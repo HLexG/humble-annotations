@@ -1,9 +1,10 @@
 import os
 import requests
 from typing import Any, Dict, List
-
+from api.auth import Auth, OptionalAuth # auth.user_id
 from dataaccess.session import database
 from dataaccess import tokens as dataaccess_tokens
+from dataaccess import mentions as dataaccess_mentions
 from dataaccess.errors import RecordNotFoundError
 
 
@@ -79,7 +80,8 @@ async def create(*,
         "dataset_id": dataset_id,
         "document_name": document_name,
         "filepath": filepath,
-        "document_text": document_text
+        "document_text": document_text,
+        "created_by": auth.user_id
     }
 
     # if the id was passed
