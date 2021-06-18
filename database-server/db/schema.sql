@@ -309,6 +309,7 @@ CREATE TABLE public.mentions (
     sentence_id integer NOT NULL,
     start_token_id integer NOT NULL,
     end_token_id integer NOT NULL,
+    mention_text text NOT NULL,
     created_at bigint DEFAULT (date_part('epoch'::text, clock_timestamp()) * (1000)::double precision) NOT NULL,
     created_by bigint,
     updated_at bigint,

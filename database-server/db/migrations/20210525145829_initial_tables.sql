@@ -106,6 +106,7 @@ CREATE TABLE mentions (
     sentence_id INT NOT NULL,
     start_token_id INT NOT NULL,
     end_token_id INT NOT NULL,
+    mention_text TEXT NOT NULL,
     created_at BIGINT NOT NULL DEFAULT EXTRACT(EPOCH FROM clock_timestamp()) * 1000,
     created_by BIGINT REFERENCES users ON DELETE SET NULL,
     updated_at BIGINT,
