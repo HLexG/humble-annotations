@@ -125,7 +125,8 @@ async def update(id: int,
     values = {
         "dataset_id": dataset_id,
         "document_id": document_id,
-        "id": id
+        "id": id,
+        "updated_by": auth.user_id
     }
 
     changes: Dict[str, Any] = {
