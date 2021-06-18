@@ -10,6 +10,9 @@ from fastapi import APIRouter, Path, Query
 from extractor.routers.utils import process_clusters
 from extractor.routers.patterns import pattern_vrb
 
+from extractor import processor
+
+
 import spacy
 from spacy.matcher import Matcher
 from spacy.util import filter_spans
@@ -84,4 +87,14 @@ async def find_mentions_event(
 
 
 # Get method for Dataset Processing
+@router.get(
+    "/process_dataset_event/{id}",
+    summary="Process a dataset",
+    description="Process a dataset"
+)
+async def find_event_mentions(
+    id: int = Path(..., description="The dataset id"),
+):
+    print("process_dataset")
 
+    await processor.process(id, model)
