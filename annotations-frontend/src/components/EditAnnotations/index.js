@@ -154,12 +154,14 @@ const EditAnnotations = ( props ) => {
                 <Grid container spacing={0}>
 
                 <Grid item sm={10}>
-
-
-
-
-
-
+                <Grid item sm={10}>
+                        {tokens && (
+                            <Annotation tokens={tokens}></Annotation>
+                        )}
+                    </Grid>
+                    <Grid item sm={2}>
+                        <AnnotationPanel annotations={annotations}></AnnotationPanel>
+                    </Grid>
                     </Grid>
 
 

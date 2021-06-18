@@ -76,7 +76,12 @@ async def find_mentions_event(
         spans = filter_spans(spans)
 
         annotations = process_clusters(doc, spans)
+        print(annotations)
 
     return {
         "response": {'annotations':annotations}
     }
+
+
+# Get method for Dataset Processing
+
