@@ -21,6 +21,7 @@ The following commands are available:
 "
 
 if [ "${DEV}" = 1 ]; then
+  source ./env.dev
   pipenv shell
 else
   uvicorn_server_production
