@@ -3,11 +3,11 @@
 echo "Container is running!!!"
 
 uvicorn_server() {
-    uvicorn extractor.service:app --host 0.0.0.0 --port 9012 --log-level debug --reload --reload-dir extractor/ "$@"
+    uvicorn extractor.service:app --host 0.0.0.0 --port 9013 --log-level debug --reload --reload-dir extractor/ "$@"
 }
 
 uvicorn_server_production() {
-    pipenv run uvicorn api.service:app --host 0.0.0.0 --port 9012 --lifespan on
+    pipenv run uvicorn api.service:app --host 0.0.0.0 --port 9013 --lifespan on
 }
 
 export -f uvicorn_server
@@ -21,6 +21,8 @@ The following commands are available:
 "
 
 if [ "${DEV}" = 1 ]; then
+  # Load the environment file
+  source ./env.dev
   pipenv shell
 else
   uvicorn_server_production

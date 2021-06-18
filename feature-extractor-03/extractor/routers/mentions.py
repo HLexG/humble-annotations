@@ -7,36 +7,45 @@ from fastapi import APIRouter, Path, Query
 #from starlette.responses import FileResponse
 #from urllib.parse import urlparse
 
-from extractor.routers.utils import download_file, process_clusters
-
-import sys
-sys.path.append("extractor/models/wikiPull")
-
-from inference.inference import Inference
+from extractor import processor
 
 router = APIRouter()
 
-# Download !!!!!!!!!!!!!!!
-download_file("https://storage.googleapis.com/hlexg/models/spanbert_model.pth", base_path="extractor/models/spanbert")
-# Initialize SpanBERT model (this step will download SpanBERT from Huggingface)
-model = Inference("extractor/models/spanbert/spanbert_model.pth")
 
 @router.post(
-    "/find_entity_links",
-    summary="Find entity links in given text",
-    description="Find entity links in given text"
+    "/find_mentions",
+    summary="Find mentions in given text with SpaCy",
+    description="Find mentions in given text with SpaCy"
 )
-async def find_entity_links(
+async def find_mentions(
         input: dict
 ):
-    print("find_entity_links")
+    """
+    :param input: Dictionary with keys:
+               "text": String representing the text to be processed
+               "pattern": Pattern to match with SpaCy, with choices:
+                   "coref": Entity mentions
+
+    :return: response
+    """
+
+    print("find_mentions")
     print("input", input)
 
-    # Find entity links
-    model_output = model.perform_coreference(input['text'])
+    annotations = ''
 
-    # Format output mentions /clusters
-    annotations = process_clusters(input['text'], model_output)
-    
+    return {
+        "response": {'annotations':annotations}
+    }
 
-    return annotations
+@router.get(
+    "/process_dataset/{id}",
+    summary="Process a dataset",
+    description="Process a dataset"
+)
+async def find_mentions(
+    id: int = Path(..., description="The dataset id"),
+):
+    print("process_dataset")
+
+    await processor.process(id)
