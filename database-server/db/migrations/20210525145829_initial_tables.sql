@@ -102,6 +102,7 @@ CREATE TABLE annotations (
 CREATE TABLE mentions (
     id BIGSERIAL PRIMARY KEY,
     annotation_id BIGINT NOT NULL REFERENCES annotations ON DELETE CASCADE,
+    document_id BIGINT NOT NULL,
     sentence_id INT NOT NULL,
     start_token_id INT NOT NULL,
     end_token_id INT NOT NULL,

@@ -305,6 +305,7 @@ CREATE TABLE public.entity_links (
 CREATE TABLE public.mentions (
     id bigint NOT NULL,
     annotation_id bigint NOT NULL,
+    document_id bigint NOT NULL,
     sentence_id integer NOT NULL,
     start_token_id integer NOT NULL,
     end_token_id integer NOT NULL,
