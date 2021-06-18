@@ -145,7 +145,7 @@ async def process(id, model):
             values (:document_id, :user_id, :type, :status)
             returning *
         """
-        
+
         # Get annotation id
         values = {"document_id": doc["id"],
                   "user_id": 1, # user_id 1 is Spacy
@@ -186,6 +186,42 @@ async def process(id, model):
         await database.execute_many(query=query, values=values)
 
         print('coref added to db successfully')
+
+        # Get cluster ids
+        query = """
+                select id from clusters
+                where annotation_id = :annotation_id 
+            """
+
+        values = {
+            "annotation_id": annotation_id
+        }
+
+        result = await database.fetch_all(query, values)
+        cluster_ids = [cl['id'] for cl in [prep_data(row) for row in result]]
+        cluster_ids_dict = {i: cl for i, cl in enumerate(cluster_ids)}
+
+        # Get mention ids
+        query = """
+                select id from mentions
+                where annotation_id = :annotation_id 
+            """
+
+        result = await database.fetch_all(query, values)
+        mention_ids = [me['id'] for me in [prep_data(row) for row in result]]
+        mention_ids_dict = {i: me for i, me in enumerate(mention_ids)}
+
+        values = [{'annotation_id': annotation_id,
+                   'cluster_id': cluster_ids_dict[annot['cluster_id']],
+                   'mention_id': mention_ids_dict[i]} for i, annot in enumerate(annotations['mentions'])]
+
+        # Insert coreferences
+        query = """
+                insert into coreferences(annotation_id, cluster_id, mention_id)
+                values (:annotation_id, :cluster_id, :mention_id)
+            """
+
+        await database.execute_many(query=query, values=values)
 
         # Get NER categories
         query = """
