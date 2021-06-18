@@ -27,4 +27,21 @@ import AllInclusiveIcon from '@material-ui/icons/AllInclusive'; // big corpus
 import DynamicFeedIcon from '@material-ui/icons/DynamicFeed'; // sort for them
 import FormatListBulletedIcon from '@material-ui/icons/FormatListBulleted'; // they pick
 import VerticalSplitIcon from '@material-ui/icons/VerticalSplit'; // cdcr
+import { green } from '@material-ui/core/colors';
 
+const useStyles = theme => ({
+    root: {
+      flexGrow: 1,
+    },
+    paper: {
+      padding: 2,
+      textAlign: 'center',
+      color: green,
+    },
+    media: {
+      height: 900,
+    },
+  });
+
+
+  export default  useStyles;
