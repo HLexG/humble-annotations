@@ -40,15 +40,15 @@ def process_clusters(doc, spans):
     return annotations
 
 
-async def process_live(doc, tokens, model):
-
-    # Find mentions
-    model_output = model.perform_coreference(doc['document_text'])
-
-    # Format output mentions /clusters
-    annotations = process_clusters(tokens, model_output)
-
-    return annotations
+# async def process_live(doc, tokens, model):
+# 
+#     # Find mentions
+#     model_output = model.perform_coreference(doc['document_text'])
+# 
+#     # Format output mentions /clusters
+#     annotations = process_clusters(tokens, model_output)
+# 
+#     return annotations
 
 
 async def process(id, model):
@@ -126,7 +126,7 @@ async def process(id, model):
 
         annotations = process_clusters(spacy_doc, spans)
 
-        print('coref performed successfully')
+        print('cluster performed successfully')
 
         # Insert annotations
         query = """
@@ -147,34 +147,32 @@ async def process(id, model):
 
         print('annos added to db successfully')
 
-        # Insert mentions
-        query = """
-            insert into mentions(annotation_id, sentence_id, start_token_id, end_token_id)
-            values (:annotation_id, :sentence_id, :start_token_id, :end_token_id)
-        """
-
-        values = [{'annotation_id': annotation_id,
-                   'sentence_id': mention['sentence_id'],
-                   'start_token_id': mention['start_token_id'],
-                   'end_token_id': mention['end_token_id']} for mention in annotations['mentions']]
-
-        await database.execute_many(query=query, values=values)
-
-        print('mentions added to db successfully')
-
-        # Insert clusters
-        query = """
-            insert into clusters(annotation_id, cluster_name)
-            values (:annotation_id, :cluster_name)
-        """
-
-        num_clusters = max([mention['cluster_id'] for mention in annotations['mentions']])+1
-        values = [{'annotation_id': annotation_id,
-                   'cluster_name': str(n_cluster)} for n_cluster in range(num_clusters)]
-
-        await database.execute_many(query=query, values=values)
-
-        print('coref added to db successfully')
+#        # Insert mentions
+#        query = """
+#            insert into mentions(annotation_id, sentence_id, start_token_id, end_token_id)
+#            values (:annotation_id, :sentence_id, :start_token_id, :end_token_id)
+#        """
+#
+#        values = [{'annotation_id': annotation_id,
+#                   'sentence_id': mention['sentence_id'],
+#                   'start_token_id': mention['start_token_id'],
+#                   'end_token_id': mention['end_token_id']} for mention in annotations['mentions']]
+#
+#        await database.execute_many(query=query, values=values)
+#
+#        print('mentions added to db successfully')
+#
+#        # Insert clusters
+#        query = """
+#            insert into clusters(annotation_id, cluster_name)
+#            values (:annotation_id, :cluster_name)
+#        """
+#
+#        num_clusters = max([mention['cluster_id'] for mention in annotations['mentions']])+1
+#        values = [{'annotation_id': annotation_id,
+#                   'cluster_name': str(n_cluster)} for n_cluster in range(num_clusters)]
+#
+#        await database.execute_many(query=query, values=values)
 
 
 
