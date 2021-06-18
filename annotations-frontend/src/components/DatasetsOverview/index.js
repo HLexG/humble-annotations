@@ -33,7 +33,7 @@ const Datasets = ( props ) => {
     const [formDescr, setFormDescr] = useState("");
     const [selectedFormFile, setSelectedFormFile] = useState(null);
     const [datasets, setDataset] = useState(testDatasets);
-    const [dsetId, setDsetId] = useState(null);
+    const [dsetId, setDsetId] = useState(0);
 
 
      const loadDatasets = () => {
@@ -80,7 +80,9 @@ const Datasets = ( props ) => {
       DataService.UploadDatasetInfo(datasetInfo)
       .then(function (response) {
           console.log(response.data);
-          setDsetId(response.data.id)
+          setDsetId(response.data)
+          console.log(response.data);
+
 
 
           //convertBase64(selectedFormFile)
@@ -97,6 +99,23 @@ const Datasets = ( props ) => {
                 // let annotations = response.data;
       
             })
+            .then(function (response) {
+              delay(20000);
+
+              axios({
+                method: 'get',
+                url: `http://0.0.0.0:9111/v1/process_dataset/${dsetId}`,
+                responseType: 'application/json'
+              })
+                .then(function (resp) {
+                  console.log('Success!')
+                  console.log(resp)
+                  alert("Your dataset is uploaded!");
+                });}
+
+
+
+            )
    
           
           .catch(err => {
@@ -108,18 +127,9 @@ const Datasets = ( props ) => {
 
       });
 
-      await delay(30000);
+      
 
-      axios({
-        method: 'get',
-        url: `http://0.0.0.0:9111/v1/process_dataset/${dsetId}`,
-        responseType: 'application/json'
-      })
-        .then(function (resp) {
-          console.log('Success!')
-          console.log(resp)
-          alert("Your dataset is uploaded!");
-        });
+      
 
         await delay(30000);
 
