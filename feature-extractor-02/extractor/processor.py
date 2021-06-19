@@ -30,6 +30,7 @@ def process_clusters(doc, spans):
             "cluster_id": mention_id,
             "start_token_id": mention.start,
             "end_token_id": mention.end - 1,
+            "mention_text": mention.text,
             "sentence_id": curr_sent,
         })
     # Return dictionary
@@ -64,7 +65,6 @@ async def process(id, model):
     }
     result = await database.fetch_one(query, values)
     dataset = prep_data(result)
-    print("Dataset:",dataset)
 
     # Get all documents
     query = """
@@ -98,11 +98,7 @@ async def process(id, model):
         result = await database.fetch_all(query, values)
         tokens = [prep_data(row) for row in result]
 
-        print('tokens gathered successfully')
-
         spacy_doc = model(doc['document_text'])
-
-        print('model loaded successfully')
 
         # Initialize matcher
         matcher = Matcher(model.vocab)
@@ -118,9 +114,6 @@ async def process(id, model):
             span = spacy_doc[start:end]  # The matched span
             spans.append(span)
 
-
-        print('nouns added successfully')
-
         # Add entities to spans list
         ent_labels = []
         for ent in spacy_doc.ents:
@@ -129,15 +122,11 @@ async def process(id, model):
             end = ent.end
             span = spacy_doc[start:end]
             spans.append(span)
-        
-        print('entities labeled successfully')
 
         # Filter by longest span
         spans = filter_spans(spans)
 
         annotations = process_clusters(spacy_doc, spans)
-
-        print('coref performed successfully')
 
         # Insert annotations
         query = """
@@ -155,23 +144,20 @@ async def process(id, model):
         result = await database.fetch_one(query=query, values=values)
         annotation_id = result['id']
 
-        print('annos added to db successfully')
-
         # Insert mentions
         query = """
-            insert into mentions(annotation_id, document_id, sentence_id, start_token_id, end_token_id)
-            values (:annotation_id, :document_id, :sentence_id, :start_token_id, :end_token_id)
+            insert into mentions(annotation_id, document_id, sentence_id, start_token_id, end_token_id, mention_text)
+            values (:annotation_id, :document_id, :sentence_id, :start_token_id, :end_token_id, :mention_text)
         """
 
         values = [{'annotation_id': annotation_id,
                      'document_id': doc["id"],
                      'sentence_id': mention['sentence_id'],
                   'start_token_id': mention['start_token_id'],
-                    'end_token_id': mention['end_token_id']} for mention in annotations['mentions']]
+                    'end_token_id': mention['end_token_id'],
+                   'mention_text': mention['mention_text']} for mention in annotations['mentions']]
 
         await database.execute_many(query=query, values=values)
-
-        print('mentions added to db successfully')
 
         # Insert clusters
         query = """
@@ -184,8 +170,6 @@ async def process(id, model):
                    'cluster_name': str(n_cluster)} for n_cluster in range(num_clusters)]
 
         await database.execute_many(query=query, values=values)
-
-        print('coref added to db successfully')
 
         # Get cluster ids
         query = """
@@ -245,7 +229,7 @@ async def process(id, model):
 
         await database.execute_many(query=query, values=values)
 
-        print('Done!')
+    print('Done!')
 
 
 
