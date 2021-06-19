@@ -12,6 +12,7 @@ uvicorn = "*"
 fastapi = "*"
 aiofiles = "*"
 wikipedia = "*"
+wikimapper = "*"
 
 
 [requires]
