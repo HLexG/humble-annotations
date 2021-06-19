@@ -41,6 +41,8 @@ WORKDIR /app
 # Install python packages
 ADD --chown=app:app Pipfile Pipfile.lock /app/
 
+ADD --chown=app:app entities.csv /app/
+
 RUN pipenv sync
 
 # Add the rest of the source code. This is done last so we don't invalidate all

@@ -22,7 +22,7 @@ def process_clusters(doc, tokens):
     mentions = []
     for mention_id, mention in enumerate(doc.noun_chunks):
         ent_label = ''
-        if len(mention.ents)>0:
+        if len(mention.ents) > 0:
             if mention.ents[0].text == mention.text:
                 ent_label = mention.ents[0].label_
 
@@ -94,7 +94,6 @@ async def process(id, model):
     result = await database.fetch_all(query, values)
     documents = [prep_data(row) for row in result]
 
-    # Get Tokens
     for doc in documents:
 
         print("Processing document: ", doc['document_name'])
