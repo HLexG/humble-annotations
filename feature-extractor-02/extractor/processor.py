@@ -4,39 +4,53 @@ from typing import Any, Dict, List
 
 from extractor.session import database
 
-from extractor.routers.patterns import pattern_np, pattern_prn
+import spacy_alignments
 
-import spacy
-from spacy.matcher import Matcher
-from spacy.util import filter_spans
-
-
-def process_clusters(doc, spans):
+def process_clusters(doc, tokens):
     """
     Function to transform mentions given by SpaCy into our database format
     :param doc: Document processed by SpaCy
     :param spans: Filtered spans matched through pattern
     :return: Dictionary of mentions
     """
-    mentions = []
-    # Process Spacy candiate mentions into dictionaries with our database format
-    for mention_id, mention in enumerate(spans):
-        for n_sent, sent in enumerate(doc.sents):
-            if mention.sent.start == sent.start:
-                curr_sent = n_sent
-                continue
 
-        mentions.append({
-            "cluster_id": mention_id,
-            "start_token_id": mention.start,
-            "end_token_id": mention.end - 1,
-            "mention_text": mention.text,
-            "sentence_id": curr_sent,
-        })
+    spacy_tokens = [token.text for token in doc]
+    text_tokens = [tok['token_text'] for tok in tokens]
+
+    a2b, b2a = spacy_alignments.get_alignments(spacy_tokens, text_tokens)
+
+    mentions = []
+    for mention_id, mention in enumerate(doc.noun_chunks):
+        ent_label = ''
+        if len(mention.ents)>0:
+            if mention.ents[0].text == mention.text:
+                ent_label = mention.ents[0].label_
+
+
+        try:
+            mention_text = ' '.join(text_tokens[a2b[mention.start][0]:a2b[mention.end-1][0]+1])
+            start_token_id = tokens[a2b[mention.start][0]]['token_id']
+            sentence_id = tokens[a2b[mention.start][0]]['sentence_id']
+            end_token_id = tokens[a2b[mention.end-1][0]]['token_id']
+
+            mentions.append({
+                "cluster_id": mention_id,
+                "start_token_id": start_token_id,
+                "end_token_id": end_token_id,
+                'mention_text': mention_text,
+                "sentence_id": sentence_id,
+                "ent_label": ent_label,
+            })
+
+        # Bad alignment
+        except IndexError:
+            pass
+
     # Return dictionary
     annotations = {
         "mentions": mentions
     }
+
 
     return annotations
 
@@ -100,33 +114,9 @@ async def process(id, model):
 
         spacy_doc = model(doc['document_text'])
 
-        # Initialize matcher
-        matcher = Matcher(model.vocab)
-
-        spans = []
-
-        matcher.add("NP", [pattern_np])  # Add noun phrases pattern
-        matcher.add('PRN', [pattern_prn])  # Add pronoun pattern
-        matches = matcher(spacy_doc)  # Match tokens with pattern defined above
-
-        # Add noun phrases to spans list
-        for match_id, start, end in matches:
-            span = spacy_doc[start:end]  # The matched span
-            spans.append(span)
-
         # Add entities to spans list
-        ent_labels = []
-        for ent in spacy_doc.ents:
-            ent_labels.append(ent.label_)
-            start = ent.start
-            end = ent.end
-            span = spacy_doc[start:end]
-            spans.append(span)
 
-        # Filter by longest span
-        spans = filter_spans(spans)
-
-        annotations = process_clusters(spacy_doc, spans)
+        annotations = process_clusters(spacy_doc, tokens)
 
         # Insert annotations
         query = """
@@ -219,8 +209,8 @@ async def process(id, model):
 
         values = [{'annotation_id': annotation_id,
                    'cluster_id': mention['cluster_id']+1,
-                   'entity_category_id': categories_dict[ent_label],
-                   } for mention, ent_label in zip(annotations['mentions'], ent_labels)]
+                   'entity_category_id': categories_dict[mention['ent_label']],
+                   } for mention in annotations['mentions'] if mention['ent_label'] != '']
 
         query = """
             insert into named_entities(annotation_id, cluster_id, entity_category_id)
