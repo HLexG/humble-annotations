@@ -6,7 +6,7 @@ from starlette.staticfiles import StaticFiles
 
 import dataaccess.session as database_session
 from api import auth
-from api.routers import users, datasets, documents, entitylink, mentions, clusters
+from api.routers import users, datasets, documents, entitylink, mentions, clusters, enums
 
 
 prefix = "/v1"
@@ -28,6 +28,8 @@ app.add_middleware(
 )
 
 # Custom exception hooks
+
+
 @app.exception_handler(Exception)
 async def generic_exception_handler(request: Request, exc: Exception):
     return JSONResponse(
@@ -38,10 +40,13 @@ async def generic_exception_handler(request: Request, exc: Exception):
     )
 
 # Application start/stop hooks
+
+
 @app.on_event("startup")
 async def startup():
     # Connect to database
     await database_session.connect()
+
 
 @app.on_event("shutdown")
 async def shutdown():
@@ -49,6 +54,8 @@ async def shutdown():
     await database_session.disconnect()
 
 # Routes
+
+
 @app.get(
     "/",
     summary="Index",
@@ -61,6 +68,7 @@ async def get_index():
 
 # Additional routers here
 app.include_router(auth.router, prefix=prefix)
+app.include_router(enums.router, prefix=prefix)
 app.include_router(users.router, prefix=prefix)
 app.include_router(datasets.router, prefix=prefix)
 app.include_router(documents.router, prefix=prefix)
