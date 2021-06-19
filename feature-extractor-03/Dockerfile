@@ -32,7 +32,7 @@ RUN set -ex; \
     chown app:app /app
 
 # Expose port
-EXPOSE 9013
+EXPOSE 9012
 
 # Switch to the new user
 USER app
