@@ -15,50 +15,39 @@ def process_clusters(tokens, output):
     :param output: output from SpanBERT
     :return: Dictionary of mentions
     """
-
     # Load BERT tokenizer
     bert_tokenizer = BertTokenizer.from_pretrained('bert-base-cased')
     # Convert BERT tokens to tokens matching cluster output
     # SpanBERT "sentences" are chunks of 382 tokens
     bert_tokens = []
     for sent in output['tokenized_doc']['sentences']:
-      bert_tokens += bert_tokenizer.convert_tokens_to_string(sent).split(' ')
+        bert_tokens += bert_tokenizer.convert_tokens_to_string(sent).split(' ')
 
     # Align tokens from both models
     text_tokens = [tok['token_text'] for tok in tokens]
+
     a2b, b2a = spacy_alignments.get_alignments(bert_tokens, text_tokens)
 
-    # Map text tokens to tokens by sentence
-    tokenmap = {}
-    for idx, token in enumerate(tokens):
-        tokenmap[idx] = {'token_id': token['token_id'], 'sentence_id': token['sentence_id']}
-
-    # Process SpanBERT clusters into dictionaries with our database format
     mentions = []
     for c_idx, cluster in enumerate(output['clusters']):
         for mention in cluster:
-
-            # Handle alignments between tokens where there was no possible mapping
-            # Usually happens with symbols like " with NLTK
             try:
-                start_token_id = tokenmap[a2b[mention[0][0]][0]]["token_id"]
-                sentence_id = tokenmap[a2b[mention[0][0]][0]]["sentence_id"]
-            except (IndexError, KeyError):
-                start_token_id = tokenmap[a2b[mention[0][0]+1][0]]["token_id"]
-                sentence_id = tokenmap[a2b[mention[0][0]+1][0]]["sentence_id"]
+                mention_text = ' '.join(text_tokens[a2b[mention[0][0]][0]:a2b[mention[0][1]][0]+1])
+                start_token_id = tokens[a2b[mention[0][0]][0]]['token_id']
+                sentence_id = tokens[a2b[mention[0][0]][0]]['sentence_id']
+                end_token_id = tokens[a2b[mention[0][1]][0]]['token_id']
 
-            try:
-                end_token_id = tokenmap[a2b[mention[0][1]][0] - 1]["token_id"]
-            except (IndexError, KeyError):
-                end_token_id = tokenmap[a2b[mention[0][1]-1][0] - 1]["token_id"]
+                mentions.append({
+                    "cluster_id": c_idx,
+                    "start_token_id": start_token_id,
+                    "end_token_id": end_token_id,
+                    'mention_text': mention_text,
+                    "sentence_id": sentence_id,
+                })
 
-            mentions.append({
-                "cluster_id": c_idx,
-                "start_token_id": start_token_id,
-                "end_token_id": end_token_id,
-                "sentence_id": sentence_id,
-            })
-
+            # Bad alignment
+            except IndexError:
+                pass
 
     annotations = {"mentions": mentions}
 
@@ -126,7 +115,7 @@ async def process(id, model):
         # Get SpanBERTs predictions
         model_output = model.perform_coreference(doc['document_text'])
         # Format output mentions /clusters
-        annotations = process_clusters( tokens, model_output)
+        annotations = process_clusters(tokens, model_output)
 
         # Insert annotations
         query = """
@@ -146,14 +135,16 @@ async def process(id, model):
 
         # Insert mentions
         query = """
-            insert into mentions(annotation_id, sentence_id, start_token_id, end_token_id)
-            values (:annotation_id, :sentence_id, :start_token_id, :end_token_id)
+            insert into mentions(annotation_id, document_id, sentence_id, start_token_id, end_token_id, mention_text)
+            values (:annotation_id, :document_id, :sentence_id, :start_token_id, :end_token_id, :mention_text)
         """
 
         values = [{'annotation_id': annotation_id,
+                   'document_id': doc['id'],
                    'sentence_id': mention['sentence_id'],
                    'start_token_id': mention['start_token_id'],
-                   'end_token_id': mention['end_token_id']} for mention in annotations['mentions']]
+                   'end_token_id': mention['end_token_id'],
+                   'mention_text': mention['mention_text']} for mention in annotations['mentions']]
 
         await database.execute_many(query=query, values=values)
 
