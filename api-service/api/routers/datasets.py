@@ -1,3 +1,15 @@
+from api.featureExtraction import trigger
+from fileaccess import datasets as fileaccess_datasets
+from dataaccess.types import PermissionType
+from api.errors import AccessDeniedError
+from dataaccess import tokens as dataaccess_tokens
+from dataaccess import documents as dataaccess_documents
+from dataaccess import datasets as dataaccess_datasets
+from api.data_models import DatasetCreate, DatasetUpdate, Pagination
+from api.auth import Auth, OptionalAuth
+from nltk.tokenize import word_tokenize
+from nltk.tokenize import sent_tokenize
+from nltk import pos_tag
 import os
 import io
 import pandas as pd
@@ -8,20 +20,6 @@ from urllib.parse import urlparse
 import nltk
 
 nltk.download('averaged_perceptron_tagger')
-from nltk import pos_tag
-from nltk.tokenize import sent_tokenize
-from nltk.tokenize import word_tokenize
-
-from api.auth import Auth, OptionalAuth
-from api.data_models import DatasetCreate, DatasetUpdate, Pagination
-from dataaccess import datasets as dataaccess_datasets
-from dataaccess import documents as dataaccess_documents
-from dataaccess import tokens as dataaccess_tokens
-from api.errors import AccessDeniedError
-from dataaccess.types import PermissionType
-from fileaccess import datasets as fileaccess_datasets
-
-from api.featureExtraction import trigger
 
 
 router = APIRouter()
@@ -161,7 +159,21 @@ async def datasets_upload_with_id(
                         token_pos_tag=pos_tags[w_idx][1]
                     )
 
-
     # Preprocessing Trigger for FE2
 
-    #trigger.preprocesses_entities(id)
+    # trigger.preprocesses_entities(id)
+
+
+@router.delete(
+    "/datasets/{id}",
+    tags=["Datasets"],
+    summary="Delete a dataset",
+    description="Delete a dataset"
+)
+async def datasets_delete(
+    id: int = Path(..., description="The dataset id"),
+    auth: Auth = Depends()
+):
+    await dataaccess_datasets.delete(
+        id=id
+    )

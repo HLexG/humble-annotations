@@ -1,6 +1,6 @@
 import os
 from typing import Any, Dict, List
-from api.auth import Auth, AuthData # auth.user_id
+from api.auth import Auth, AuthData  # auth.user_id
 from dataaccess import utils as data_utils
 from dataaccess.session import database
 from dataaccess.errors import RecordNotFoundError, NoAccessError
@@ -17,7 +17,7 @@ async def browse(
     """
     Retrieve a list of rows based on filters
     """
-    
+
     query = """
         select id,dataset_name ,dataset_description
         from datasets
@@ -25,12 +25,14 @@ async def browse(
     """
 
     if q is not None:
-        query += " and (dataset_name like'%"+q+"%' or dataset_description like '%"+q+"%')"
+        query += " and (dataset_name like'%"+q + \
+            "%' or dataset_description like '%"+q+"%')"
 
-    print("query",query)
+    print("query", query)
     result = await database.fetch_all(query)
 
     return [prep_data(row) for row in result]
+
 
 async def get(id: int) -> Dict[str, Any]:
     """
@@ -47,13 +49,14 @@ async def get(id: int) -> Dict[str, Any]:
         "id": id
     }
 
-    print("query:",query, "values:", values)
+    print("query:", query, "values:", values)
     result = await database.fetch_one(query, values)
 
     if result is None:
         raise RecordNotFoundError(f"Could not find row with id '{id}'")
 
     return prep_data(result)
+
 
 async def create(*,
                  dataset_name: str,
@@ -67,7 +70,7 @@ async def create(*,
     # Set the values
     values = {
         "dataset_name": dataset_name,
-        #"created_by": AuthData.user_id
+        # "created_by": AuthData.user_id
     }
 
     # if the id was passed
@@ -90,8 +93,8 @@ async def create(*,
 
     result = prep_data(result)
 
-
     return result
+
 
 async def update(id: int,
                  dataset_name: str = None,
@@ -134,11 +137,12 @@ async def update(id: int,
     result = prep_data(result)
     return result
 
+
 async def create_dataset_user(*,
-        dataset_id: int,
-        user_id: int,
-        permission_type: PermissionType,
-        id: int = None) -> Dict[str, Any]:
+                              dataset_id: int,
+                              user_id: int,
+                              permission_type: PermissionType,
+                              id: int = None) -> Dict[str, Any]:
     """
     Create a new row. Returns the created record as a dict.
     """
@@ -146,14 +150,13 @@ async def create_dataset_user(*,
     # Set the values
     values = {
         "dataset_id": dataset_id,
-        "user_id":user_id,
-        "permission_type":permission_type
+        "user_id": user_id,
+        "permission_type": permission_type
     }
 
     # if the id was passed
     if id is not None:
         values["id"] = id
-
 
     # Generate the field and values list
     field_list = ", ".join(values.keys())
@@ -169,6 +172,24 @@ async def create_dataset_user(*,
 
     result = prep_data(result)
     return result
+
+
+async def delete(*, id: int) -> None:
+    """
+    Deletes an existing row. Raises if the record was not found.
+    """
+
+    deleted_row_count = await database.execute("""
+        WITH deleted AS (
+            DELETE FROM datasets
+            WHERE id = :id
+            RETURNING id
+        ) SELECT COUNT(id) FROM deleted;
+    """, values={"id": id})
+
+    if deleted_row_count == 0:
+        raise RecordNotFoundError(f"Could not delete row with id '{id}'")
+
 
 def prep_data(result) -> Dict[str, Any]:
     if result is None:
