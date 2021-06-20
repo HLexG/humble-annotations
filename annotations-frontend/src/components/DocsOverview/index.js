@@ -1,4 +1,6 @@
 import React, {useEffect, useRef, useState} from 'react';
+import axios from 'axios';
+import { Link } from 'react-router-dom';
 import { withStyles } from '@material-ui/core';
 import { DataGrid } from '@material-ui/data-grid';
 import styles from './styles';
@@ -15,25 +17,13 @@ import DataService from '../../services/DataService';
 // Pagination: https://material-ui.com/components/data-grid/pagination/
 
 
-const testDocs = [
-  {id: 1, docID: 1, document_name: 'Ellen DeGeneres to host 2014 Oscars',updated_at:'15/11/2020', done:true, words:10},
-  {id: 2, docID: 2, document_name: 'Lindsay Lohan Leaves Betty Ford',updated_at:'12/01/2021', done:true, words:10},
-  {id: 3, docID: 3, document_name: 'Apple unveils new macbook pro',updated_at:'27/03/2021', done:true, words:10},
-];
-
-// TODO: Pull out the actual docs for this dataset
-const docs = testDocs;
-
-const axios = require('axios');
-
-
 const DocsOverview = ( props ) => {
     const {classes} = props;
     const { history } = props;
     let { tokens } = props;
     let { annotations } = props;
 
-    const [docs, setDocs] = useState(testDocs);
+    const [docs, setDocs] = useState([]);
     const [pageTitle, setPageTitle] = useState("CeleBERTy dataset ");
     const [pageDesc, setPageDesc] = useState("Some general info about this dataset");
 
@@ -43,9 +33,17 @@ const DocsOverview = ( props ) => {
 
     const { match: { params } } = props;
 
-    console.log(`Param docs ${params}`)
+    console.log(`Param docs ${params.dsID}`)
 
     console.log("================================== DocsOverview ======================================");
+
+
+    // does the job of componentDidMount, componentDidUpdate, componentWillUpdate combined
+    useEffect(() => {
+        loadDocuments()
+    }, []) // Needed [], else we get an infinite loop to the state changing in loadDatasets()
+
+
 
     const preAnno = () => {
         axios({
@@ -72,25 +70,37 @@ const DocsOverview = ( props ) => {
       })
       .then(function (response) {
           //setDocuments(response.data);
-          DataService.GetDatasets(params.dsID)
+          DataService.GetDataset(params.dsID)
           .then(function (resp) {
             console.log(resp.data)
-
-            setPageDesc(resp.data[params.dsID-1]['dataset_description'])
-            setPageTitle(resp.data[params.dsID-1]['dataset_name']);
-
+            setPageDesc(resp.data['dataset_description'])
+            setPageTitle(resp.data['dataset_name']);
           })
       })
   }
 
 
-    const rowClick = (event) => {
-      const {row} = event;
-      console.log(row);
 
-      history.push(`/docs/${row.id}`);
-
-    }
+    const columns = [
+        { field: 'document_name', type: 'string', width:190 },
+        { field: 'updated_at', type: 'date', width:150},
+        { field: 'done', type: 'boolean', width:110 },
+        { field: 'words', type: 'number', width:120},
+        {
+            field: 'id',
+            headerName: 'Actions',
+            width: 150,
+            renderCell: (params) => (
+              <strong>
+                <ButtonGroup fullWidth={true} size="small" color="primary" aria-label="large outlined primary button group">
+                    <Button component={Link} to={`/docs_entity/${params.value}`}>Entity</Button>
+                    <Button component={Link} to={`/docs_event/${params.value}`}>Event</Button>
+                </ButtonGroup>
+              </strong>
+            ),
+          },
+      ];
+      
 
     // Component States
     return (
@@ -111,14 +121,7 @@ const DocsOverview = ( props ) => {
               rowsPerPageOptions={[5, 10, 20, 100]}
               // rowOptions={{ selectable: true }} 
               // options={{ onRowSelection: rowClick }}
-              onRowClick={rowClick}
-              columns={[
-                { field: 'id', type: 'string', width:120 },
-                { field: 'document_name', type: 'string', width:300 },
-                { field: 'updated_at', type: 'date', width:130},
-                { field: 'done', type: 'boolean', width:120 },
-                { field: 'words', type: 'number', width:120},
-              ]}
+              columns={columns}
               rows={docs}
             />
           </div>

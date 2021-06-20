@@ -24,7 +24,7 @@ const App = (props) => {
   DataService.Init();
 
   // State
-  const [drawerOpen, setDrawerOpen] = useState(true);
+  const [drawerOpen, setDrawerOpen] = useState(false);
 
   const toggleDrawer = (open) => () => {
     setDrawerOpen(open)

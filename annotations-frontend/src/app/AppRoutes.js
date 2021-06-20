@@ -56,16 +56,26 @@ const AppRouter = ( props ) => {
                 <AuthenticatedRoute path="/settings/profile">
                     <Profile />
                 </AuthenticatedRoute>
-
-                {/* <AuthenticatedRoute path="/datasets">
+{/* 
+                <AuthenticatedRoute path="/grounding">
+                  <EntityLinking />
+                </AuthenticatedRoute>
+                <AuthenticatedRoute path="/datasets">
                   <DatasetsOverview />
                 </AuthenticatedRoute>
                 <AuthenticatedRoute path="/datasets/:dsID" >
                   <DocsOverview />
                 </AuthenticatedRoute>
-                <AuthenticatedRoute path="/docs/:docID" >
+                <AuthenticatedRoute path="/cross_doc/:dsID" >
+                  <CrossDocOverview />
+                </AuthenticatedRoute>
+                <AuthenticatedRoute path="/docs_entity/:docID" >
+                  <EditAnnotations />
+                </AuthenticatedRoute>
+                <AuthenticatedRoute path="/docs_event/:docID" >
                   <EditAnnotations />
                 </AuthenticatedRoute> */}
+                
                 <Route path="/datasets" exact component={DatasetsOverview} />
                 <Route path="/datasets/:dsID" exact component={DocsOverview} />
                 <Route path="/datasets/cross_doc/:dsID" exact component={CrossDocOverview} />
