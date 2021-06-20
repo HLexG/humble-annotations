@@ -56,8 +56,7 @@ const AppRouter = ( props ) => {
                 <AuthenticatedRoute path="/settings/profile">
                     <Profile />
                 </AuthenticatedRoute>
-{/* 
-                <AuthenticatedRoute path="/grounding">
+                {/* <AuthenticatedRoute path="/grounding">
                   <EntityLinking />
                 </AuthenticatedRoute>
                 <AuthenticatedRoute path="/datasets">
@@ -79,7 +78,9 @@ const AppRouter = ( props ) => {
                 <Route path="/datasets" exact component={DatasetsOverview} />
                 <Route path="/datasets/:dsID" exact component={DocsOverview} />
                 <Route path="/datasets/cross_doc/:dsID" exact component={CrossDocOverview} />
-                <Route path="/docs/:id" exact component={EditAnnotations} />
+                <Route path="/docs_entity/:id" exact component={EditAnnotations} />
+                <Route path="/docs_event/:id" exact component={EditAnnotations} />
+
                 <Route path="/grounding" exact component={EntityLinking} />
 
                 <Route component={Error404} />
