@@ -100,7 +100,7 @@ const SideMenu = (props) => {
                           key={ds.id}
                           className={classes.nested}
                           component={Link} 
-                          to="/" 
+                          to={`/datasets/${ds.id}`}
                           onClick={toggleDrawer(false)}
                         >
                           <ListItemIcon>
