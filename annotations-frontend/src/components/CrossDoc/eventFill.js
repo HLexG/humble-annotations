@@ -72,11 +72,11 @@ const SupportText = (props) => {
     }
 
     return (
-        <div style={{padding: "1em"}}>
+        <span style={{padding: "1em"}}>
             {supportTextTree && supportTextTree.nodes && (
                 renderSupportTextItems(supportTextTree.nodes)
             )}
-        </div>
+        </span>
     );
 };
 
