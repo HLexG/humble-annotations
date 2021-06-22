@@ -9,13 +9,13 @@ router = APIRouter()
 
 
 @router.get(
-    "/document/{document_id}/annotations",
+    "/annotations",
     tags=["Annotations"],
     summary="Get list of annotations for a document",
     description="Get list of annotations for a document"
 )
 async def annotations_index(
-    document_id: int = Path(..., description="Document id to filter by"),
+    document_id: int = Query(..., description="Document id to filter by"),
     annotation_type: str = Query(
         AnnotationType.entity_mention, description="Annotation type filter"),
 ):

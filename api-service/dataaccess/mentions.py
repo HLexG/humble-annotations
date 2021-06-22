@@ -4,33 +4,39 @@ from typing import Any, Dict, List
 from nltk.tokenize import sent_tokenize
 from nltk.tokenize import word_tokenize
 #from nltk import pos_tag
-from api.auth import Auth, OptionalAuth # auth.user_id
+from api.auth import Auth, OptionalAuth  # auth.user_id
 
 from dataaccess.session import database
 from dataaccess.errors import RecordNotFoundError
 
+
 async def browse(
     *,
-    dataset_id: int
+    document_id: int,
+    annotation_id: int,
 ) -> List[Dict[str, Any]]:
     """
     Retrieve a list of rows based on filters
     """
-    
+
     query = """
-        select dataset_id, document_id, sentence_id, start_token_id, end_token_id, pos, text
-        from mentions
-        where dataset_id = :dataset_id
+        select m.id, m.document_id,m.annotation_id, m.sentence_id, m.start_token_id, m.end_token_id,m.mention_text
+        from mentions m
+        where 1=1
+        and m.document_id = :document_id
+        and m.annotation_id = :annotation_id
     """
 
     values = {
-        "dataset_id": dataset_id
+        "document_id": document_id,
+        "annotation_id": annotation_id
     }
 
-    print("query",query)
+    print("query", query)
     result = await database.fetch_all(query, values)
 
     return [prep_data(row) for row in result]
+
 
 async def get_document_mentions(
     *,
@@ -39,7 +45,7 @@ async def get_document_mentions(
     """
     Retrieve a list of rows based on filters
     """
-    
+
     query = """
         select id,annotation_id,document_id,sentence_id,start_token_id,end_token_id
         from mentions
@@ -50,16 +56,18 @@ async def get_document_mentions(
         "document_id": document_id
     }
 
-    print("query",query)
+    print("query", query)
     result = await database.fetch_all(query, values)
 
     return [prep_data(row) for row in result]
 
-#async def pull():
-async def retp(*,qu) -> Dict[str, Any]:
-     result = await database.fetch_all(qu, values)
-     result = prep_data(result)
-     return result
+# async def pull():
+
+
+async def retp(*, qu) -> Dict[str, Any]:
+    result = await database.fetch_all(qu, values)
+    result = prep_data(result)
+    return result
 
 
 async def create(*,
@@ -82,9 +90,9 @@ async def create(*,
         "sentence_id": sentence_id,
         "start_token_id": start_token_id,
         "end_token_id": end_token_id,
-        "cluster_id": cluster_id, 
-        "pos":pos,
-       # "created_by": auth.user_id
+        "cluster_id": cluster_id,
+        "pos": pos,
+        # "created_by": auth.user_id
     }
 
     # if the id was passed
@@ -108,6 +116,7 @@ async def create(*,
 
     result = prep_data(result)
     return result
+
 
 async def update(id: int,
                  dataset_id: int,
@@ -134,7 +143,7 @@ async def update(id: int,
 
     if start_token_id is not None:
         changes["start_token_id"] = start_token_id
-    
+
     if start_token_id is not None:
         changes["start_token_id"] = start_token_id
 
@@ -160,6 +169,7 @@ async def update(id: int,
     result = prep_data(result)
     return result
 
+
 async def delete_all_for_document(dataset_id: int, document_id: int) -> None:
     """
     Deletes existing records
@@ -171,6 +181,7 @@ async def delete_all_for_document(dataset_id: int, document_id: int) -> None:
         DELETE FROM mentions
             WHERE dataset_id = :dataset_id and document_id = :document_id;
     """, values=values)
+
 
 def prep_data(result) -> Dict[str, Any]:
     if result is None:
