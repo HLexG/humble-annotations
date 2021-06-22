@@ -124,6 +124,14 @@ async def get_event_help(
     res3Prep = [prep_data(row) for row in result3]
     print(res3Prep)
 
+    for i in res3Prep:
+        i['mention_check']='no'
+
+    for i in event_sents:
+     for j in res3Prep:
+             if (i['document_id'] == j['document_id'] and i['sentence_id'] == j['sentence_id'] and j['token_id'] >= i['start_token_id'] and j['token_id'] <= i['end_token_id']):
+                     j['mention_check']='yes'
+
 
 
     return res3Prep
