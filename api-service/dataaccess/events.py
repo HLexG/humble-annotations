@@ -64,32 +64,75 @@ async def get_event_help(
         "cluster_id": cluster_id
     }
 
-    print("query",query)
+    print("Query",query)
 
     result = await database.fetch_all(query, values)
 
     event_mentions = [prep_data(row) for row in result]
-
-
-
-## use mention_id (id = :mention_id) to get all sentences
-"""
+    # mention_id = event_mentions['mention_id']
+    
+    ## use mention_id (id = :mention_id) to get all sentences
+    print(event_mentions[0]['mention_id'])
+    
+    query2 = """
         select annotation_id, id, document_id, sentence_id, start_token_id, end_token_id,  mention_text
         from mentions
         where id = :mention_id
     """
+
+    values2 = {
+        "mention_id": event_mentions[0]['mention_id']
+    }
+    print("query2",query2)
+    result2 = await database.fetch_all(query2, values2)
+
+    event_sents = [prep_data(row) for row in result2]
+
+    print(event_sents)
+
+    
+    
+    condsList = []
+    
+    for i in event_sents:
+        itemConcat = ' (document_id = '+ str(i['document_id']) +' AND sentence_id = ' + str(i['sentence_id']) + ") "
+        condsList.append(itemConcat)
+    #dedupe
+    condsList = set(condsList)
+
+    cond_list = " OR ".join(condsList)
+
+    # get full sentences to show user for CDCR Anno
+    query3 = f"""
+        select id, document_id, sentence_id, token_id,  token_text
+        from tokens
+        where 
+         (
+            {cond_list}
+        )
+        
+    """
+    print("query3",query3)
+
+    values3 = {
+        "document_id": event_sents[0]['document_id'],
+        "sentence_id": event_sents[0]['sentence_id']
+    }
+
+    result3 = await database.fetch_all(query3)
+
+    res3Prep = [prep_data(row) for row in result3]
+    print(res3Prep)
+
+
+
+    return res3Prep
+
 ## use mention_text to bold in sentence for user for CDCR anno
 
 # get all sentences that are in the event coref cluster
 
-# get full sentences to show user for CDCR Anno
-"""
-        select id, document_id, sentence_id, token_id,  token_text
-        from tokens
-        where 
-        (document_id = :document_id)
-        and (sentence_id = :sentence_id)
-    """
+
 
 # get all entity coref clusters that are in the same sentences
 """
