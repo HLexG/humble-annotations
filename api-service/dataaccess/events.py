@@ -1,4 +1,13 @@
+import os
+import requests
+from typing import Any, Dict, List
+from nltk.tokenize import sent_tokenize
+from nltk.tokenize import word_tokenize
+#from nltk import pos_tag
+from api.auth import Auth, OptionalAuth # auth.user_id
 
+from dataaccess.session import database
+from dataaccess.errors import RecordNotFoundError
 
 
 
@@ -11,38 +20,58 @@
 
 
 # doc entities 
-async def get_document_entities(
-    *,
-    document_id: int
-) -> List[Dict[str, Any]]:
-    """
-    Retrieve a list of rows based on filters
-    """
-    
-    query = """
-        select id, annotation_id, document_id, sentence_id, start_token_id, end_token_id, mention_text
-        from mentions
-        where document_id = :document_id
-    """
-
-    values = {
-        "document_id": document_id
-    }
-
-    print("query",query)
-    result = await database.fetch_all(query, values)
-
-    return [prep_data(row) for row in result]
+# async def get_document_entities(
+#     *,
+#     document_id: int
+# ) -> List[Dict[str, Any]]:
+#     """
+#     Retrieve a list of rows based on filters
+#     """
+#     
+#     query = """
+#         select id, annotation_id, document_id, sentence_id, start_token_id, end_token_id, mention_text
+#         from mentions
+#         where document_id = :document_id
+#     """
+# 
+#     values = {
+#         "document_id": document_id
+#     }
+# 
+#     print("query",query)
+#     result = await database.fetch_all(query, values)
+# 
+#     return [prep_data(row) for row in result]
 
 
 #choose event clusters
 
 # get all mentions in cluster
-"""
+async def get_event_help(
+    *,
+    cluster_id: int
+) -> List[Dict[str, Any]]:
+    """
+    Retrieve a list of rows based on filters
+    """
+
+    query = """
         select cluster_id, mention_id from coreferences
         where
         cluster_id  = :cluster_id
-"""
+    """
+    values = {
+        "cluster_id": cluster_id
+    }
+
+    print("query",query)
+
+    result = await database.fetch_all(query, values)
+
+    event_mentions = [prep_data(row) for row in result]
+
+
+
 ## use mention_id (id = :mention_id) to get all sentences
 """
         select annotation_id, id, document_id, sentence_id, start_token_id, end_token_id,  mention_text
@@ -78,3 +107,22 @@ async def get_document_entities(
     """
 ##dedupe
 # get the named entity of each entity coref clusters
+
+
+
+
+
+
+
+
+
+
+
+
+def prep_data(result) -> Dict[str, Any]:
+    if result is None:
+        raise ValueError("Tried to prepare null result")
+
+    result = dict(result)
+
+    return result
