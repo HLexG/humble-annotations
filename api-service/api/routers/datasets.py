@@ -161,7 +161,7 @@ async def datasets_upload_with_id(
 
     # Preprocessing Trigger for FE2
 
-    # trigger.preprocesses_entities(id)
+    trigger.preprocesses_entities(id)
 
 
 @router.delete(

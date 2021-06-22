@@ -6,6 +6,7 @@ from dataaccess.session import database
 from dataaccess.errors import RecordNotFoundError, NoAccessError
 from dataaccess.types import PermissionType
 from fastapi import APIRouter, Path, Query, Depends, File
+from api.featureExtraction.trigger import preprocesses_entities
 
 
 async def browse(
@@ -92,6 +93,9 @@ async def create(*,
     """, values=values)
 
     result = prep_data(result)
+
+    #prep_out = preprocesses_entities(id)
+    #print(prep_out)
 
     return result
 

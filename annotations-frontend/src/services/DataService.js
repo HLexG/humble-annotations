@@ -24,8 +24,8 @@ const DataService = {
         formData.append("file", ds);
         var outputs = await axios.post(BASE_API_URL+"/datasets/"+dataset_id+"/upload", formData, { headers: authHeader() });
         // Post-upload pre-annotation services go here
-        PreAnnotation.RunSpanBertSpacy(dataset_id)
-        PreAnnotation.RunEventTriggers(dataset_id)
+        //PreAnnotation.RunSpanBertSpacy(dataset_id)
+        //PreAnnotation.RunEventTriggers(dataset_id)
         
         return outputs ;
     },
