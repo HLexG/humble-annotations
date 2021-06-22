@@ -13,28 +13,24 @@ import styles from './styles';
 const AnnotationPanel = (props) => {
     const { classes } = props;
     const { document } = props;
+    const { mentionAnnotations } = props;
     const { handleSetMentionAnnotation } = props;
+    const { handleCopyMentionAnnotation } = props;
 
     // Component States
-    const [mentionAnnotations, setMentionAnnotations] = useState([]);
-    const loadDMentionAnnotations = () => {
-        DataService.GetDocumentAnnotations(document.id, "entity_mention")
-            .then(function (response) {
-                setMentionAnnotations(response.data);
-            })
-    }
+
 
     // Setup Component
     useEffect(() => {
-        loadDMentionAnnotations();
-    }, [props.document]);
+
+    }, []);
 
     // Handlers
     const handleViewMention = (men) => {
         handleSetMentionAnnotation(men);
     }
     const handleCopyMention = (men) => {
-
+        handleCopyMentionAnnotation(men);
     }
 
     return (
