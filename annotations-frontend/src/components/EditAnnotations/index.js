@@ -17,6 +17,7 @@ import Annotations from './Annotations';
 import AnnotationPanel from './AnnotationPanel';
 import DataService from '../../services/DataService';
 import { useEnumContext } from "../../services/EnumService";
+import { useAuthContext } from "../../services/AuthService";
 import styles from './styles';
 import { handleApplyFeatureExtraction, ClearAnnotations } from './handlers';
 
@@ -27,8 +28,9 @@ const EditAnnotations = (props) => {
     const { history } = props;
 
     let id = props.match.params.id;
-    console.log(id);
 
+    // Get Auth Context
+    const auth = useAuthContext();
     const enums = useEnumContext();
 
     console.log("================================== EditAnnotations ======================================");
@@ -43,6 +45,14 @@ const EditAnnotations = (props) => {
     }
     const [search, setSearch] = useState('');
     const [task, setTask] = useState('entity_mention');
+
+    const [mentionAnnotations, setMentionAnnotations] = useState([]);
+    const loadDMentionAnnotations = () => {
+        DataService.GetDocumentAnnotations(document.id, "entity_mention")
+            .then(function (response) {
+                setMentionAnnotations(response.data);
+            })
+    }
 
     const [mentionAnnotation, setMentionAnnotation] = useState(null);
     const [mentions, setMentions] = useState(null);
@@ -60,6 +70,7 @@ const EditAnnotations = (props) => {
     // Setup Component
     useEffect(() => {
         loadDocument();
+        loadDMentionAnnotations();
     }, []);
     useEffect(() => {
         loadMentions();
@@ -68,6 +79,9 @@ const EditAnnotations = (props) => {
     // Handlers
     const handleSetMentionAnnotation = (mention_annotation) => {
         setMentionAnnotation(mention_annotation);
+    }
+    const handleCopyMentionAnnotation = (mention_annotation) => {
+
     }
 
     return (
@@ -129,7 +143,14 @@ const EditAnnotations = (props) => {
                         </Grid>
                         <Grid item sm={2}>
                             {document &&
-                                <AnnotationPanel document={document} handleSetMentionAnnotation={handleSetMentionAnnotation}></AnnotationPanel>
+                                <AnnotationPanel
+                                    document={document}
+                                    mentionAnnotations={mentionAnnotations}
+                                    handleSetMentionAnnotation={handleSetMentionAnnotation}
+                                    handleCopyMentionAnnotation={handleCopyMentionAnnotation}
+                                >
+
+                                </AnnotationPanel>
                             }
                         </Grid>
                     </Grid>
