@@ -50,7 +50,7 @@ async def process(id):
         insert into wikidata(id, alt_id, dataset_id, entity_name, description, url)
         values (:id, :alt_id, :dataset_id, :entity_name, :description, :url)
     """
-    #await database.execute_many(query=query, values=entity_links)
+    await database.execute_many(query=query, values=entity_links)
 
     print('Done!')
 
