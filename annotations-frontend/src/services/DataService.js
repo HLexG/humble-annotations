@@ -44,6 +44,9 @@ const DataService = {
     GetMentions: async function (id) {
         return await axios.get(BASE_API_URL + "/mentionsdoc/" + id, { headers: authHeader() });
     },
+    GetCDECRSupport: async function (cluster_id) {
+        return await axios.get(BASE_API_URL + "/ev_cl_mentions/" + cluster_id, { headers: authHeader() });
+    },
 }
 
 export default DataService;
