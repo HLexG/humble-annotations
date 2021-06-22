@@ -28,9 +28,9 @@ feat_4 = extract_environment_variable("FEATURE_EXTRACTOR_04")
 def preprocesses_entities(id):
     url = 'http://hlexg-feature-extractor-02:9111/v1/process_dataset/'+str(id)
     url2 = 'http://hlexg-feature-extractor-04:9013/v1/process_dataset_event/'+str(id)
-    url3 = 'http://hlexg-feature-extractor-01:9110/v1/process_dataset/'+str(id)
+    url3 = 'http://hlexg-feature-extractor-01:9010/v1/process_dataset/'+str(id)
     url4 = 'http://hlexg-feature-extractor-03:9112/v1/process_dataset/'+str(id)
-    urls = [url,url2,url3, url4]
+    urls = [url3, url,url2, url4]
 #    x = requests.get(url)
 #    return x.status_code
 #    """
@@ -47,6 +47,7 @@ def preprocesses_entities(id):
 #    session.mount('https://', adapter)
 #
     for i in urls:
+        print(i)
         page = ''
         ct = 0
         while page == '' and ct <10:
