@@ -17,6 +17,7 @@ import Annotations from './Annotations';
 import AnnotationPanel from './AnnotationPanel';
 import DataService from '../../services/DataService';
 import { useEnumContext } from "../../services/EnumService";
+import { useAuthContext } from "../../services/AuthService";
 import styles from './styles';
 import { handleApplyFeatureExtraction, ClearAnnotations } from './handlers';
 
@@ -27,8 +28,9 @@ const EditAnnotations = (props) => {
     const { history } = props;
 
     let id = props.match.params.id;
-    console.log(id);
 
+    // Get Auth Context
+    const auth = useAuthContext();
     const enums = useEnumContext();
 
     console.log("================================== EditAnnotations ======================================");
