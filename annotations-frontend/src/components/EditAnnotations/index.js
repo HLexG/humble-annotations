@@ -1,22 +1,22 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { withStyles } from '@material-ui/core';
+import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
-import Box from '@material-ui/core/Box';
-import Button from '@material-ui/core/Button';
+import Toolbar from '@material-ui/core/Toolbar';
+import Typography from '@material-ui/core/Typography';
+import InputAdornment from "@material-ui/core/InputAdornment";
+import TextField from "@material-ui/core/TextField";
+import IconButton from '@material-ui/core/IconButton';
+import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
 import Icon from '@material-ui/core/Icon';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Radio from '@material-ui/core/Radio';
-import RadioGroup from '@material-ui/core/RadioGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
-import FormLabel from '@material-ui/core/FormLabel';
 
-import Annotation from '../Annotation';
-import AnnotationPanel from '../AnnotationPanel';
+import Annotations from './Annotations';
+import AnnotationPanel from './AnnotationPanel';
 import DataService from '../../services/DataService';
+import { useEnumContext } from "../../services/EnumService";
 import styles from './styles';
 import { handleApplyFeatureExtraction, ClearAnnotations } from './handlers';
 
@@ -29,17 +29,20 @@ const EditAnnotations = (props) => {
     let id = props.match.params.id;
     console.log(id);
 
+    const enums = useEnumContext();
+
     console.log("================================== EditAnnotations ======================================");
 
     // Component States
     const [document, setDocument] = useState(null);
-
     const loadDocument = () => {
         DataService.GetDocument(id)
             .then(function (response) {
                 setDocument(response.data);
             })
     }
+    const [search, setSearch] = useState('');
+    const [task, setTask] = useState('entity_mention');
 
     // Setup Component
     useEffect(() => {
@@ -49,7 +52,67 @@ const EditAnnotations = (props) => {
     return (
         <div className={classes.root}>
             <main className={classes.main}>
+                <Container maxWidth={false} className={classes.container}>
+                    <Toolbar className={classes.toolBar}>
+                        <span className={classes.toolbartitle}>Document:&nbsp;&nbsp;</span>
+                        {document && (
+                            <span className={classes.toolbartext}>{document.document_name}</span>
+                        )}
+                        <TextField
+                            className={classes.searchInput}
+                            placeholder=""
+                            type="text"
+                            variant="outlined"
+                            size="small"
+                            onChange={(e) => setSearch(e.target.value)}
+                            value={search}
+                            InputProps={{
+                                startAdornment: (
+                                    <InputAdornment position="start">
+                                        <Icon color="disabled" fontSize="small">search</Icon>
+                                    </InputAdornment>
+                                ),
 
+                                endAdornment: search && (
+                                    <IconButton
+                                        aria-label="Clear search"
+                                        onClick={() => setSearch("")}
+                                    >
+                                        <CancelRoundedIcon />
+                                    </IconButton>
+                                )
+                            }}
+                        />
+                        <div className={classes.grow} />
+                        <span className={classes.tasktitle}>Task:&nbsp;&nbsp;</span>
+                        <FormControl variant="outlined" >
+                            <Select
+                                value={task}
+                                onChange={(e) => setTask(e.target.value)}
+                            >
+                                {enums["annotation_types"] && Object.keys(enums["annotation_types"]).map((key, index) =>
+                                    <MenuItem value={key} key={index}>{enums["annotation_types"][key]}</MenuItem>
+                                )}
+                            </Select>
+                        </FormControl>
+                        <span>&nbsp;&nbsp;</span>
+                        <IconButton aria-label="save" color="primary">
+                            <Icon>save</Icon>
+                        </IconButton>
+                    </Toolbar>
+                    <Grid container spacing={0}>
+                        <Grid item sm={10}>
+                            {document &&
+                                <Annotations document={document}></Annotations>
+                            }
+                        </Grid>
+                        <Grid item sm={2}>
+                            {document &&
+                                <AnnotationPanel document={document}></AnnotationPanel>
+                            }
+                        </Grid>
+                    </Grid>
+                </Container>
             </main>
         </div>
     );
