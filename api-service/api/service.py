@@ -6,7 +6,7 @@ from starlette.staticfiles import StaticFiles
 
 import dataaccess.session as database_session
 from api import auth
-from api.routers import users, datasets, documents, entitylink, mentions, clusters, enums, events
+from api.routers import users, datasets, documents, entitylink, mentions, clusters, enums, annotations, events
 
 
 prefix = "/v1"
@@ -76,3 +76,4 @@ app.include_router(entitylink.router, prefix=prefix)
 app.include_router(mentions.router, prefix=prefix)
 app.include_router(clusters.router, prefix=prefix)
 app.include_router(events.router, prefix=prefix)
+app.include_router(annotations.router, prefix=prefix)
