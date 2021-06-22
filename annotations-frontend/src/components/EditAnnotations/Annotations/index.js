@@ -2,16 +2,19 @@ import React, { useEffect, useRef, useState } from 'react';
 import { withStyles } from '@material-ui/core';
 
 import styles from './styles';
-import { buildAnnotationTree } from './functions';
+import { buildAnnotationTree, colorList } from './functions';
 
 const Annotations = (props) => {
     const { classes } = props;
     const { document } = props;
+    const { mentions } = props;
+    const { editMentions } = props;
+    const { editCorefs } = props;
 
     // Component States
     const [annotationTree, setAnnotationTree] = useState(null);
     const loadAnnotationTree = () => {
-        let tree = buildAnnotationTree(document);
+        let tree = buildAnnotationTree(document, mentions);
         console.log(tree);
         setAnnotationTree(tree);
     }
@@ -20,12 +23,10 @@ const Annotations = (props) => {
     const [draggedMention, setDraggedMention] = useState(null);
     const [refresh, setRefresh] = useState(0);
 
-    const colorList = ["#C0504D", "#1F497D", "#9BBB59", "#F79646", "#4BACC6", "#8064A2", "#948A54", "#C0504D", "#1F497D", "#9BBB59", "#F79646", "#4BACC6", "#8064A2", "#948A54", "#C0504D", "#1F497D", "#9BBB59", "#F79646", "#4BACC6", "#8064A2", "#948A54", "#C0504D", "#1F497D", "#9BBB59", "#F79646", "#4BACC6", "#8064A2", "#948A54", "#C0504D", "#1F497D", "#9BBB59", "#F79646", "#4BACC6", "#8064A2", "#948A54"];
-
     // Setup Component
     useEffect(() => {
         loadAnnotationTree();
-    }, [props.document]);
+    }, [props.document, props.mentions]);
 
     // Component functions
     const isTokenSelected = (token) => {
@@ -57,10 +58,15 @@ const Annotations = (props) => {
 
     // Handlers
     const handleTokenClick = (event, token, isDouble) => {
-
+        if (!editMentions) {
+            return;
+        }
     }
     const handleMentionClick = (event, mention) => {
         event.stopPropagation();
+        if (!editMentions) {
+            return;
+        }
         // Select the mention
         setSelectedMention(mention);
     };
@@ -122,7 +128,7 @@ const Annotations = (props) => {
                             <span
                                 key={i.id}
                                 className={classes.mention}
-                                draggable={true}
+                                draggable={editCorefs}
                                 onClick={(event) => handleMentionClick(event, i.obj)}
                                 onDragStart={(event) => handleMentionDragStart(event, i.obj)}
                                 onDragOver={(event) => handleMentionDragOver(event)}

@@ -9,7 +9,7 @@ const styles = theme => ({
         color: "#444",
         fontSize: "20px",
         fontFamily: "Lato, Trebuchet MS, Roboto, Helvetica, Arial, sans-serif",
-        lineHeight: "2.4em",
+        lineHeight: "2.6em",
         background: "#fff",
         borderLeft: "1px solid #ddd",
         borderRight: "1px solid #ddd",
@@ -33,6 +33,12 @@ const styles = theme => ({
     },
     tokenselected: {
         textDecoration: "underline",
+    },
+    mention: {
+        borderColor: "rgb(212, 212, 212)",
+        /*backgroundColor: "rgba(0, 0, 0, 0)",*/
+        border: "solid 2px #ddd",
+        padding: "0px",
     },
 });
 
