@@ -102,7 +102,7 @@ const CrossDoc = ( props ) => {
 
     console.log(`Param docs ${params}`)
 
-    console.log("================================== Entity Linking ======================================");
+    console.log("================================== Cross Doc ======================================");
 
     const handleClickCorrect = () => {
         console.info('You clicked the Yes Chip.');

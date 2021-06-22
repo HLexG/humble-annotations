@@ -32,6 +32,8 @@ import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Button from '@material-ui/core/Button';
 
+import SupportText from './eventFill';
+
 
 //import 'exNature.jpeg';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core';
@@ -103,10 +105,38 @@ const EventCard = ( props ) => {
 
     //console.log(`Param docs ${params}`)
 
+
+
+    //const [cluster_id, setCluster] = useState(6);
+    const [supportiveText , setSupportiveText] = useState([]);
+
     //console.log("================================== Entity Linking ======================================");
 
+    const loadDocSupport = () => {
+      console.log("start loadDocSupport")
+      DataService.GetCDECRSupport(4)
+          .then(function (response) {
+            console.log("response")
+            console.log(response.data)
+              setSupportiveText(response.data);
+              console.log("supportiveText")
+              console.log(supportiveText)
+
+             
+          });
+  }
+    
 
 
+  useEffect(() => {
+    // Set state from props
+    // setTokens(props.tokens);
+     // setAnnotations(props.annotations);
+
+    // Keydown event listener
+    loadDocSupport();
+
+  }, []);
     return (
         <ThemeProvider theme={theme}>
             <React.Fragment>
@@ -114,7 +144,7 @@ const EventCard = ( props ) => {
 
         <Grid container>
           <Grid item >
-            <Paper className={classes.paper} style={{minHeight: "800px"}}>
+            <Paper className={classes.paper} style={{minHeight: "800px", maxWidth: "25vw"}}>
             <header>Event 1</header>
             <Divider />
             <header>Related Entities</header>
@@ -125,7 +155,7 @@ const EventCard = ( props ) => {
                 <Divider />
           <Accordion>
         <AccordionSummary
-          expandIcon={<ExpandMoreIcon />}
+          expandIcon={<ExpandMoreIcon />} 
           aria-controls="panel1a-content"
           id="panel1a-header"
         >
@@ -136,7 +166,14 @@ const EventCard = ( props ) => {
           "These days, Mr. Sanders <b>said</b>, Republicans are out of touch with diverse metropolitan areas." <br/> <br/>
           "He <b>said</b>, Republicans appeared to lack “real solutions” to issues like crime, and lamented the party’s exclusionary message that drives off young people, Hispanics and gay voters in cities like his." <br/> <br/>
           "“I don’t think the right has kept up with the times,’’ Mr. Sanders, 70, <b>told</b> us in an interview. "
+
           </Typography>
+
+          {supportiveText.map(tok => {
+              
+              <span>{tok.token_text}</span>
+            
+          })}
         </AccordionDetails>
       </Accordion>
       <Accordion>
@@ -147,12 +184,7 @@ const EventCard = ( props ) => {
         >
           <Typography className={classes.heading}>Accordion 2</Typography>
         </AccordionSummary>
-        <AccordionDetails>
-          <Typography>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse malesuada lacus ex,
-            sit amet blandit leo lobortis eget.
-          </Typography>
-        </AccordionDetails>
+        <AccordionDetails>{supportiveText &&  <SupportText supportiveText={supportiveText}></SupportText>}</AccordionDetails>
       </Accordion>
           
           
