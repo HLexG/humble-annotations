@@ -125,6 +125,30 @@ async def delete_all(dataset_id: int) -> None:
     """, values=values)
 
 
+async def get_wd(id: str) -> Dict[str, Any]:
+    """
+    Retrieve one row based by its id. Return object is a dict.
+    Raises  if the record was not found.
+    """
+
+    query = """
+        select id,alt_id,dataset_id,entity_name,description,url 
+        from wikidata
+        where id = :id
+    """
+
+    values = {
+        "id": id
+    }
+
+    print("query:", query, "values:", values)
+    result = await database.fetch_one(query, values)
+
+    return prep_data(result)
+
+
+
+
 def prep_data(result) -> Dict[str, Any]:
     if result is None:
         raise ValueError("Tried to prepare null result")

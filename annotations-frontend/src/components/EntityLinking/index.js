@@ -33,6 +33,9 @@ import { createMuiTheme, ThemeProvider } from '@material-ui/core';
 import { fontFamily, fontSize, maxWidth } from '@material-ui/system';
 
 
+import SupportText from '../CrossDoc/eventFill';
+
+
 const theme = createMuiTheme({
   palette: {
     primary: {
@@ -82,6 +85,9 @@ const docs = testDocs;
 const axios = require('axios');
 
 
+
+
+
 const EntityLinking = ( props ) => {
     const classes = useStyles();
 
@@ -98,6 +104,15 @@ const EntityLinking = ( props ) => {
 
     console.log("================================== Entity Linking ======================================");
 
+
+    
+
+    //console.log("================================== Entity Linking ======================================");
+
+
+    
+
+
     const handleClickCorrect = () => {
         console.info('You clicked the Yes Chip.');
       };
@@ -106,6 +121,39 @@ const EntityLinking = ( props ) => {
         console.info('You clicked the No Chip.');
       };
 
+      const [id, setId] = useState('Q1470929');
+      const [summary, setSummary] = useState([]);
+      const [supportiveText , setSupportiveText] = useState([]);
+      const loadWikiSum = (id) => {
+        console.log("start loadDocument")
+        DataService.GetWDSummary(id)
+            .then(function (response) {
+                setSummary(response.data);
+                //console.log(`Token data: ${JSON.stringify(response['data']['tokens'])}`)
+                console.log(`sum. data: ${JSON.stringify(summary)}`)
+      
+            });
+      }
+
+      const loadDocSupport = () => {
+        console.log("start loadDocSupport")
+        DataService.GetCDECRSupport(4)
+            .then(function (response) {
+              console.log("response")
+              console.log(response.data)
+                setSupportiveText(response.data);
+                console.log("supportiveText")
+                console.log(supportiveText)
+  
+               
+            });
+    }
+      
+      useEffect(() => {
+        
+         loadWikiSum(id);
+         loadDocSupport();
+      }, []); 
     return (
         <ThemeProvider theme={theme}>
             <React.Fragment>
@@ -119,21 +167,20 @@ const EntityLinking = ( props ) => {
           </Grid>
           <Grid item xs={6}>
             <Paper className={classes.paper} style={{minHeight: "800px"}}>
-                Document with the lizard coref chain highlighted
+            {supportiveText &&  <SupportText supportiveText={supportiveText}></SupportText>}
             </Paper>
           </Grid>
           <Grid item xs>
           <Card className={classes.root} style={{maxWidth: "30vw"}}>
       <CardActionArea>
       <CardMedia>
-          <img src={'https://material-ui.com/static/images/cards/contemplative-reptile.jpg'}/>
+          <img src={'https://img.favpng.com/23/11/22/wikidata-scalable-vector-graphics-logo-wikimedia-foundation-wikimedia-project-png-favpng-YTaqyqL8zinPmRTYiLBQkG7fX.jpg'} style = {{maxWidth: "30vw"}}/>
       </CardMedia>
         <CardContent>
-          <div style={{fontSize: "50px", fontFamily: "Inter Variable"}}>{"Lizard"}</div>
+          <div style={{fontSize: "50px", fontFamily: "Inter Variable"}}>{summary.entity_name}</div>
             
           <div style={{fontSize: "20px", fontFamily: "Inter Variable"}}>
-            Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging
-            across all continents except Antarctica
+            {summary.description}
             </div>
         </CardContent>
       </CardActionArea>

@@ -88,16 +88,25 @@ const DocsOverview = ( props ) => {
         {
             field: 'id',
             headerName: 'Actions',
-            width: 150,
+            width: 250,
             renderCell: (params) => (
               <strong>
                 <ButtonGroup fullWidth={true} size="small" color="primary" aria-label="large outlined primary button group">
                     <Button component={Link} to={`/docs_entity/${params.value}`}>Entity</Button>
                     <Button component={Link} to={`/docs_event/${params.value}`}>Event</Button>
+                    <Button component={Link} to={`/gen_anno/${params.value}`}>AnnoTest</Button>
                 </ButtonGroup>
               </strong>
             ),
           },
+          { field: 'Entity Mentions - Iterations', type: 'number', width:120},
+          { field: 'Entity Mentions - Agreement', type: 'number', width:120},
+          { field: 'Entity (In-Document) Coreference - Iterations', type: 'number', width:120},
+          { field: 'Entity Coreference - Agreement', type: 'number', width:120},
+          { field: 'Event Mentions - Iterations', type: 'number', width:120},
+          { field: 'Event Mentions - Agreement', type: 'number', width:120},
+          { field: 'Event (In-Document) Coreference - Iterations', type: 'number', width:120},
+          { field: 'Event Coreference - Agreement', type: 'number', width:120},
       ];
       
 
