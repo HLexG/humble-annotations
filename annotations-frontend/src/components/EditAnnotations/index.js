@@ -44,10 +44,31 @@ const EditAnnotations = (props) => {
     const [search, setSearch] = useState('');
     const [task, setTask] = useState('entity_mention');
 
+    const [mentionAnnotation, setMentionAnnotation] = useState(null);
+    const [mentions, setMentions] = useState(null);
+    const [editMentions, setEditMentions] = useState(false);
+    const [editCorefs, setEditCorefs] = useState(false);
+    const loadMentions = () => {
+        if (mentionAnnotation) {
+            DataService.GetDocumentMentions(id, mentionAnnotation["id"])
+                .then(function (response) {
+                    setMentions(response.data);
+                })
+        }
+    }
+
     // Setup Component
     useEffect(() => {
         loadDocument();
     }, []);
+    useEffect(() => {
+        loadMentions();
+    }, [mentionAnnotation]);
+
+    // Handlers
+    const handleSetMentionAnnotation = (mention_annotation) => {
+        setMentionAnnotation(mention_annotation);
+    }
 
     return (
         <div className={classes.root}>
@@ -103,12 +124,12 @@ const EditAnnotations = (props) => {
                     <Grid container spacing={0}>
                         <Grid item sm={10}>
                             {document &&
-                                <Annotations document={document}></Annotations>
+                                <Annotations document={document} mentions={mentions} editMentions={editMentions} editCorefs={editCorefs}></Annotations>
                             }
                         </Grid>
                         <Grid item sm={2}>
                             {document &&
-                                <AnnotationPanel document={document}></AnnotationPanel>
+                                <AnnotationPanel document={document} handleSetMentionAnnotation={handleSetMentionAnnotation}></AnnotationPanel>
                             }
                         </Grid>
                     </Grid>

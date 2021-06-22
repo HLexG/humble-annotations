@@ -38,8 +38,11 @@ const DataService = {
     GetDocument: async function (id) {
         return await axios.get(BASE_API_URL + "/documents/" + id, { headers: authHeader() });
     },
-    GetDocumentAnnotations: async function (id, annotation_type) {
-        return await axios.get(BASE_API_URL + "/document/" + id + "/annotations/?annotation_type=" + annotation_type, { headers: authHeader() });
+    GetDocumentAnnotations: async function (document_id, annotation_type) {
+        return await axios.get(BASE_API_URL + "/annotations/?document_id=" + document_id + "&annotation_type=" + annotation_type, { headers: authHeader() });
+    },
+    GetDocumentMentions: async function (document_id, annotation_id) {
+        return await axios.get(BASE_API_URL + "/mentions/?document_id=" + document_id + "&annotation_id=" + annotation_id, { headers: authHeader() });
     },
     GetMentions: async function (id) {
         return await axios.get(BASE_API_URL + "/mentionsdoc/" + id, { headers: authHeader() });
