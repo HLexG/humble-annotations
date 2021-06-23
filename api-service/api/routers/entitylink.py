@@ -47,3 +47,14 @@ async def documents_index(dataset_id: int = Query(None, description="Dataset id 
 )
 async def documents_index(mentions: str = Query(None, description="Dataset id to filter by")):
     return await entitylink.open_text_qry(mentions=mentions)
+
+
+@router.post(
+    "/entitylinks_add/{cluster_id}/{pageid}",
+    summary="add entity links pairing to a cluster",
+    description="add entity links pairing to a cluster"
+)
+async def documents_index(cluster_id: str = Query(None, description="cluster_id"),
+                          pageid: str = Query(None, description="page_id == wikidata.alt_id")):
+    return await entitylink.link_insert(cluster_id=cluster_id,pageid=pageid )
+
