@@ -122,6 +122,7 @@ const EntityLinking = ( props ) => {
 
     const handleClickCorrect = () => {
         console.info('You clicked the Yes Chip.');
+        DataService.PostWDClusterPair(params.cluster_id, summary.pageid)
         // add to db
       };
     
@@ -145,9 +146,10 @@ const EntityLinking = ( props ) => {
 
 
     const [imgsrc, setImgSrc] = useState('https://img.favpng.com/23/11/22/wikidata-scalable-vector-graphics-logo-wikimedia-foundation-wikimedia-project-png-favpng-YTaqyqL8zinPmRTYiLBQkG7fX.jpg');
-      const loadWikiCandidates = () => {
+    const inputqry = " ".concat(nounPhrases['mentions'][0])
+    const loadWikiCandidates = () => {
         console.log('start wiki candidates')
-        DataService.GetWDCandidates(nounPhrases['mentions'][0])
+        DataService.GetWDCandidates(inputqry)
           .then(function (response) {
           console.log("wd response")
           console.log(response)
@@ -156,7 +158,7 @@ const EntityLinking = ( props ) => {
             console.log("wd summary")
             console.log(summary)
             if (summary.images !== undefined ) {
-              let imLink = summary.images[2]
+              let imLink = summary.images[0]
               setImgSrc(imLink)
             }
 
@@ -191,7 +193,7 @@ const EntityLinking = ( props ) => {
         <Grid container spacing={2}>
 
           <Grid item xs={6}>
-            <Paper className={classes.paper} style={{minHeight: "800px"}}>
+            <Paper className={classes.paper} style={{minHeight: "800px", maxWidth: "40vw"}}>
             {supportiveText &&  <SupportText supportiveText={supportiveText}></SupportText>}
             </Paper>
           </Grid>
@@ -199,7 +201,7 @@ const EntityLinking = ( props ) => {
           <Card className={classes.root} style={{maxWidth: "40vw"}}>
       <CardActionArea>
       <CardMedia>
-          <img src={imgsrc} style = {{maxWidth: "30vw"}}/>
+          <img src={imgsrc} style = {{maxWidth: "40vw"}}/>
       </CardMedia>
         <CardContent>
           <div style={{fontSize: "50px", fontFamily: "Inter Variable"}}>{summary.title}</div>
