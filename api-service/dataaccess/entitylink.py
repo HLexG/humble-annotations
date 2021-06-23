@@ -147,6 +147,93 @@ async def get_wd(id: str) -> Dict[str, Any]:
     return prep_data(result)
 
 
+async def tbnamed(dataset_id) -> Dict[str, Any]:
+    """
+    Input: Dataset Id
+    SQL Output: entity mentions grouped by coref cluster
+    Py Transform: filter out pronouns, choose named entity
+
+
+    """
+
+    # funcs common
+    ## result = await database.fetch_all(query, values)
+    ## [prep_data(row) for row in result]
+
+    ### Steps ###
+    # get docs by dataset id
+    query1 = """
+        select id 
+        from documents
+        where dataset_id = :dataset_id
+    """
+
+    values1 = {
+        "dataset_id": int(dataset_id)
+    }
+
+    result1 = await database.fetch_all(query1, values1)
+
+    doc_ids = [prep_data(row) for row in result1]
+    print(doc_ids)
+    doc_id_list = [str(i['id']) for i in doc_ids]
+
+    document_id_list =', '.join(doc_id_list)
+    print("yo")
+    print(document_id_list)
+    
+
+    # get mentions by coref cluster, include pos
+
+    query2 = """
+        select cluster_id, annotation_id, count(mention_id) 
+        from coreferences 
+        where annotation_id in (select id from annotations where document_id in (""" + document_id_list + """)) 
+        group by cluster_id, annotation_id 
+        having count(mention_id) >1 
+        order by count(mention_id) desc;
+    """
+    values2 = {
+        "document_id": document_id_list,
+    }
+
+    print(query2)
+
+    result2 = await database.fetch_all(query2)
+    out2 = [prep_data(row) for row in result2]
+    print(out2)
+    cluster_id_list = [str(i['cluster_id']) for i in out2]
+    print(cluster_id_list)
+    clust_id_list = ', '.join(cluster_id_list)
+
+
+    query3 = """
+        select mention_id, n1.document_id, n1.annotation_id, n1.mention_text, n2.token_id, n2.token_text, n2.token_pos_tag, n1.cluster_id
+        from (select id as mention_id, annotation_id, document_id, sentence_id, start_token_id, end_token_id, mention_text, (select cluster_id from coreferences where mentions.id=coreferences.mention_id) as cluster_id
+          from mentions
+          where id in (select mention_id from coreferences where cluster_id in (""" + clust_id_list+ """))
+        ) n1
+        inner join 
+        (select document_id, sentence_id, token_id, token_text, token_pos_tag
+          from tokens
+          where token_pos_tag in ('NNP','NNPS','NNS')         
+         ) n2
+        on (n2.sentence_id = n1.sentence_id and n2.document_id = n1.document_id and n2.token_id >= n1.start_token_id and n2.token_id <= n1.end_token_id)
+    """
+
+    result3 = await database.fetch_all(query3)
+    out3 = [prep_data(row) for row in result3]
+    print(out3)
+
+    ## pos
+    ## token_pos_tag from tokens 
+    ## NNP NNPS > NNS
+    return out3
+
+
+
+
+
 
 
 def prep_data(result) -> Dict[str, Any]:
