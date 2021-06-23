@@ -30,7 +30,7 @@ const SupportText = (props) => {
 
     const renderSupportTextItems = (items) => {
         return (
-            <>
+            <div style={{maxWidth: "200px"}}>
                 {items.map(i => {
 
                     if (i.type == "token") {
@@ -55,28 +55,32 @@ const SupportText = (props) => {
                         )
                     } else {
                         return (
-                            <span
+                            
+                            <div
                                 key={i.id}
                                 
                                 background-color={i.backgroundColor}
                             >
                                 <mark style={{ backgroundColor: colorList[i.obj.cluster_id] }} ><a>{i.token_text}</a></mark>
                                 {i.nodes && renderSupportTextItems(i.nodes)}
-                            </span>
+                            </div>
+                            
                         )
                     }
 
                 })}
-            </>
+            </div>
         )
     }
 
     return (
+        <div className={classes.content}>
         <span style={{padding: "1em"}}>
             {supportTextTree && supportTextTree.nodes && (
                 renderSupportTextItems(supportTextTree.nodes)
             )}
         </span>
+        </div>
     );
 };
 
