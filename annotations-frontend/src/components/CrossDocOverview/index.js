@@ -2,6 +2,8 @@ import React, {useEffect, useRef, useState} from 'react';
 import { withStyles } from '@material-ui/core';
 import styles from './styles';
 import CrossDocCard from './CrossDocCard';
+import { Link } from 'react-router-dom';
+
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
