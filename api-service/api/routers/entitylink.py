@@ -37,3 +37,13 @@ async def documents_index(id: str = Query(None, description="Dataset id to filte
 )
 async def documents_index(dataset_id: int = Query(None, description="Dataset id to filter by")):
     return await entitylink.tbnamed(dataset_id=dataset_id)
+
+
+
+@router.get(
+    "/entitylinks_open/{mentions}",
+    summary="Get list of entity links for a dataset",
+    description="Get list of entity links for a dataset"
+)
+async def documents_index(mentions: str = Query(None, description="Dataset id to filter by")):
+    return await entitylink.open_text_qry(mentions=mentions)
