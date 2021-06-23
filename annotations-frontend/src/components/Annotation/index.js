@@ -9,19 +9,60 @@ import {handleKeyDown, handleTokenClick,handleMentionClick,
 const Annotation = ( props ) => {
     const {classes} = props;
     const { history } = props;
-    let { tokens } = props;
-    let { annotations } = props;
+    //let { tokens } = props;
+    // let { annotations } = props;
 
     console.log("================================== Annotation ======================================");
+    let id = Number(props.match.params.id);
+    console.log("doc id")
 
+<<<<<<< Updated upstream
     // Component States
     // const [tokens , setTokens] = useState([]);
     // const [annotations, setAnnotations] = useState([]);
+=======
+    console.log(id);
+    console.log("type");
+    console.log(typeof id);
+
+
+    // /console.log(props);
+
+
+    // Component States
+    const [tokens , setTokens] = useState([]);
+    const [document , setDocument] = useState([]);
+    const [annotations, setAnnotations] = useState([]);
+>>>>>>> Stashed changes
     const [annotationTree, setAnnotationTree] = useState(null);
+
+    const loadDocument = (id) => {
+        console.log("start loadDocument")
+        DataService.GetDocument(id)
+            .then(function (response) {
+                setDocument(response.data);
+                //console.log(`Token data: ${JSON.stringify(response['data']['tokens'])}`)
+                console.log(`Gen. data: ${JSON.stringify(response['data'])}`)
+
+               setTokens(response['data']['tokens'])
+            });
+        DataService.GetMentions(id)
+            .then(function (response) {
+                
+                console.log(`Mention data: ${JSON.stringify(response['data'])}`)
+
+               setAnnotations(response['data'])
+            })
+    }
+
     const loadAnnotationTree = () => {
+        console.log("start load anno tree");
         if(tokens && annotations){
+            console.log("load anno tree - > if -> yes");
+            console.log(tokens);
             setAnnotationTree(buildAnnotationTree(tokens,annotations));
         }else{
+            console.log("load anno tree - > if -> no");
             setAnnotationTree(null);
         }
     }
@@ -33,7 +74,7 @@ const Annotation = ( props ) => {
     // State holder for reference in handlers
     let state = {
         "tokens": tokens,
-        // "setTokens": setTokens,
+        "setTokens": setTokens,
         "annotations": annotations,
         //"setAnnotations": setAnnotations,
         "selectedToken":selectedToken,
@@ -63,6 +104,10 @@ const Annotation = ( props ) => {
       }, []);
     useEffect(() => {
         // Build annotation tree
+<<<<<<< Updated upstream
+=======
+        //loadDocument()
+>>>>>>> Stashed changes
         loadAnnotationTree()
         /*const dynColor = colorList[this.props.annotations.cluster_id]*/
       }, [refresh, props.annotations]);
@@ -96,8 +141,15 @@ const Annotation = ( props ) => {
     }
 
 
+<<<<<<< Updated upstream
+=======
+
+
+
+>>>>>>> Stashed changes
 
     const renderAnnotationItems = (items) => {
+        console.log("render anno tree start")
         return (
             <>
                 { items.map(i => {
@@ -119,7 +171,11 @@ const Annotation = ( props ) => {
                                 style={style}
                                 background-color={i.backgroundColor}
                             >
+<<<<<<< Updated upstream
                                 {i.obj.text}
+=======
+                                {i.text}
+>>>>>>> Stashed changes
                             </a> 
                         )
                     }else{
@@ -135,7 +191,8 @@ const Annotation = ( props ) => {
                                 style = {isMentionSelected(i.obj)}
                                 background-color={i.backgroundColor}
                             >
-                                <mark style={{backgroundColor : colorList[i.obj.cluster_id]}} className={classes.mentionhead}><a className={classes.mentionheadtext}>{ i.obj.text }</a></mark>
+                                {/*<mark style={{backgroundColor : colorList[i.obj.cluster_id]}} className={classes.mentionhead}><a className={classes.mentionheadtext}>{ i.obj.text }</a></mark>*/}
+                                <mark className={classes.mentionhead}><a className={classes.mentionheadtext}>{ i.text }</a></mark>
                                 { i.nodes && renderAnnotationItems(i.nodes) }
                             </span>
                         )
@@ -148,6 +205,12 @@ const Annotation = ( props ) => {
 
     return (
         <div className={classes.content}>
+<<<<<<< Updated upstream
+=======
+            <Button onClick = {()=> loadDocument(id)}>Load Doc</Button>
+            <Button onClick = {()=> loadAnnotationTree()}>Load Tree</Button>
+            <Button onClick = {console.log("check btn")}>Check</Button>
+>>>>>>> Stashed changes
             {annotationTree && (
                 renderAnnotationItems(annotationTree.nodes)
             )}

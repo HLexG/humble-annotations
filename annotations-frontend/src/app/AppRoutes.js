@@ -13,6 +13,12 @@ import { useAuthContext} from "../services/AuthService";
 import DatasetsOverview from "../components/DatasetsOverview";
 import DocsOverview from "../components/DocsOverview";
 import CrossDocOverview from "../components/CrossDocOverview";
+<<<<<<< Updated upstream
+=======
+import EntityLinking from "../components/EntityLinking";
+import Annotation from "../components/Annotation";
+import CrossDoc from  "../components/CrossDoc";
+>>>>>>> Stashed changes
 // 
 
 const AppRouter = ( props ) => {
@@ -68,7 +74,15 @@ const AppRouter = ( props ) => {
                 <Route path="/datasets" exact component={DatasetsOverview} />
                 <Route path="/datasets/:dsID" exact component={DocsOverview} />
                 <Route path="/datasets/cross_doc/:dsID" exact component={CrossDocOverview} />
+<<<<<<< Updated upstream
                 <Route path="/docs/:docID" exact component={EditAnnotations} />
+=======
+                <Route path="/docs_entity/:id" exact component={EditAnnotations} />
+                <Route path="/docs_event/:id" exact component={EditAnnotations} />
+                <Route path="/gen_anno/:id" exact component={Annotation} />
+                <Route path="/grounding" exact component={EntityLinking} />
+                <Route path="/crossdoc" exact component={CrossDoc} />
+>>>>>>> Stashed changes
 
                 <Route component={Error404} />
             </Switch>

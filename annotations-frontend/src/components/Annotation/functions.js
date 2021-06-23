@@ -1,14 +1,17 @@
 export const buildAnnotationTree = (tokens, annotations) => {
     const colorList = ["#C0504D","#1F497D", "#9BBB59","#F79646","#4BACC6","#8064A2","#000000","#948A54"]
 
+    console.log("building anno tree")
+
 
     if(tokens && tokens.length > 0){
         // Create Cluster index look up
-        let clusters = {};
-        annotations["clusters"].forEach((cluster, c_idx) => {
-            clusters[cluster["id"]] = cluster;
-        });
-        console.log(clusters);
+        // temp joe test
+        // let clusters = {};
+        // annotations["clusters"].forEach((cluster, c_idx) => {
+        //    clusters[cluster["id"]] = cluster;
+        //});
+        // console.log(clusters);
 
         // Top level
         let tree = {
@@ -19,7 +22,7 @@ export const buildAnnotationTree = (tokens, annotations) => {
         // Tokens
         tokens.forEach((token,t_idx) => {
             // Check if the token has Mentions
-            let mention_starts = annotations["mentions"].filter(m => m.sentence_id === token.sentence_id && m.start_token_id === token.token_id);
+            let mention_starts = annotations.filter(m => m.sentence_id === token.sentence_id && m.start_token_id === token.token_id);
             mention_starts.sort((a, b) => a.end_token_id - b.end_token_id);
             //console.log("mention_starts:",mention_starts);
             mention_starts.forEach((m, m_idx) => {
@@ -27,7 +30,8 @@ export const buildAnnotationTree = (tokens, annotations) => {
                     "id": t_idx,
                     "type":"mention",
                     "backgroundColor": colorList[t_idx],
-                    "obj":{...m,"text":clusters[m["cluster_id"]]["name"]},
+                    //"obj":{...m,"text":clusters[m["cluster_id"]]["name"]},
+                    "text": token.token_text,
                     "nodes": []
                 }
                 currentNode[currentNode.length - 1]["nodes"].push(mention);
@@ -42,7 +46,7 @@ export const buildAnnotationTree = (tokens, annotations) => {
                 "nodes": []
             });
 
-            let mention_ends = annotations["mentions"].filter(m => m.sentence_id === token.sentence_id && m.end_token_id === token.token_id);
+            let mention_ends = annotations.filter(m => m.sentence_id === token.sentence_id && m.end_token_id === token.token_id);
             mention_ends.sort((a, b) => a.start_t_id - b.start_token_id);
             //console.log("mention_ends:",mention_ends);
             mention_ends.forEach((m, m_idx) => {
@@ -50,8 +54,13 @@ export const buildAnnotationTree = (tokens, annotations) => {
             });
         });
 
+        console.log("building anno tree - > if -> yes")
+
         return tree;
     }else{
+        console.log("building anno tree - > if -> no")
+        console.log("building anno tree - > tokens? Tokens:")
+        console.log(tokens)
         return null;
     }
 }
