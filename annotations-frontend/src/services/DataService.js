@@ -56,6 +56,9 @@ const DataService = {
     GetWDNamedEntities: async function (dataset_id) {
         return await axios.get(BASE_API_URL + "/entitylinks_nl/" + dataset_id, { headers: authHeader() });
     },
+    GetWDCandidates: async function (mentions) {
+        return await axios.get(BASE_API_URL + "/entitylinks_open/" + mentions, { headers: authHeader() });
+    },
 }
 
 export default DataService;
