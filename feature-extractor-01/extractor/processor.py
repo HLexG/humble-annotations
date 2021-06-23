@@ -66,6 +66,7 @@ async def process_live(doc, tokens, model):
 
 
 async def process(id, model):
+    print("spanbert")
     print(" Processing dataset : ", id)
 
     # Get dataset info
