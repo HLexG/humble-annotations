@@ -97,7 +97,7 @@ const CrossDocOverview = ( props ) => {
       </Grid>
       <Grid container>{row.mentions}
         </Grid>
-        <IconButton color="secondary" aria-label="ground" component={Link} to={`/grounding/${row.id}`}>
+        <IconButton color="secondary" aria-label="ground" component={Link} to={{pathname:`/grounding/${row.id}`, state:{'mentions':row.mentions}}}>
         <RoomIcon justify="right" />
         </IconButton>
     </Grid>
