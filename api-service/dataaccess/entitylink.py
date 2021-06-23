@@ -273,7 +273,31 @@ async def open_text_qry(mentions) -> Dict[str, Any]:
     #dicOut = dict(dicOut)
     return dicOut
 
+async def link_insert(cluster_id, pageid) -> Dict[str, Any]:
+    """
+    Input: mention or a list of them
+    SQL Output: entity name, entity summary description
+    Ideal: picture, multiple candidates
 
+    pageid = wikidata.alt_id
+
+    """
+    values = {
+        "annotation_id":int(100),
+        "cluster_id": int(cluster_id), 
+        "wikidata_id": int(pageid)
+    }
+    param_list = ", ".join(":" + key for key in values.keys())
+    query =f"""
+    insert into entity_links(annotation_id, cluster_id, wikidata_id)
+    values ({param_list})
+    """
+
+    
+
+    result = await database.fetch_one(query, values=values)
+
+    return result
 
 
 def prep_data(result) -> Dict[str, Any]:
