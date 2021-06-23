@@ -225,10 +225,16 @@ async def tbnamed(dataset_id) -> Dict[str, Any]:
     out3 = [prep_data(row) for row in result3]
     print(out3)
 
+    print("dedupe")
+    cluster_id = set([i['cluster_id'] for i in out3])
+    dedupe_dict = [{'id':i, 'mentions' : set([j['mention_text'] for j in out3 if j['cluster_id'] == i])} for i in cluster_id]
+    print(dedupe_dict)
+
+
     ## pos
     ## token_pos_tag from tokens 
     ## NNP NNPS > NNS
-    return out3
+    return dedupe_dict
 
 
 

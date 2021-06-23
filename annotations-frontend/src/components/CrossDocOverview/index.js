@@ -11,6 +11,8 @@ import ToggleButton from '@material-ui/lab/ToggleButton';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 import EventIcon from '@material-ui/icons/Event';
 import NaturePeopleIcon from '@material-ui/icons/NaturePeople';
+import { DataGrid } from '@material-ui/data-grid';
+import Divider from '@material-ui/core/Divider';
 
 const testDatasets = [
   {id: 1, title: 'CeleBERTy', descr: 'Welcome to learning React! Welcome to learning React! Welcome to learning React!'},
@@ -35,6 +37,7 @@ const CrossDocOverview = ( props ) => {
     // PAGE DETAILS
     const [pageTitle, setPageTitle] = useState("CeleBERTy dataset ");
     const [pageDesc, setPageDesc] = useState("Some general info about this dataset");
+    const [unclaimedEntities, setUnclaimedEntities] = useState([]);
 
     //TOGGLE ENTITIES/EVENTS
 
@@ -53,7 +56,14 @@ const CrossDocOverview = ( props ) => {
         console.log(response.data)
         setPageDesc(response.data['dataset_description'])
         setPageTitle(response.data['dataset_name']);
-      })
+      });
+        DataService.GetWDNamedEntities(params.dsID)
+            .then(function (response) {
+              console.log('getwdNEs')
+              console.log(response.data)
+              setUnclaimedEntities(response.data)
+
+            });
         }, []) 
     return (
         <div className={classes.root}>
@@ -68,23 +78,29 @@ const CrossDocOverview = ( props ) => {
       </ToggleButton>
       
     </ToggleButtonGroup>
-          <div className={classes.dsButtons}>
+        <div className={classes.dsButtons}>  
             <CollapsibleTable/>
-            {/* <Button variant="contained" color="secondary">
-              Upload annotated dataset
-            </Button> */}
-          </div>
-          {/* <Grid container spacing={3}>
-          {datasets.map(ds => {
-              return (
-                <Grid item xs={4} key={ds.id}>
-                  <CrossDocCard ds={ds}/>
-                </Grid>
-              );
-            })}
-          </Grid> */}
+            
+
+
+          <Grid container>
+  {unclaimedEntities.map(row => (
+    <Grid item xs={12} sm={6}>
+    <Grid container>
+      <Grid container justify="left">
+        <label>cluster_id:</label>
+        <label>{row.id}</label>
+      </Grid>
+      <Grid container>{row.mentions}
+        </Grid>
+    </Grid>
+    <Divider light />
+  </Grid>
+  ))}
+</Grid>
+
           
-        </div>
+        </div></div>
     );
 };
 

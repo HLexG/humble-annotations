@@ -53,6 +53,9 @@ const DataService = {
     GetWDSummary: async function (id) {
         return await axios.get(BASE_API_URL + "/entitylinks_wd/" + id, { headers: authHeader() });
     },
+    GetWDNamedEntities: async function (dataset_id) {
+        return await axios.get(BASE_API_URL + "/entitylinks_nl/" + dataset_id, { headers: authHeader() });
+    },
 }
 
 export default DataService;
