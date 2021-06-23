@@ -6,6 +6,10 @@ from nltk.tokenize import word_tokenize
 from api.auth import Auth, OptionalAuth # auth.user_id
 from dataaccess.session import database
 from dataaccess.errors import RecordNotFoundError
+import nltk
+#import wikipedia
+from mediawiki import MediaWiki
+nltk.download('punkt')
 
 
 async def browse(
@@ -237,7 +241,37 @@ async def tbnamed(dataset_id) -> Dict[str, Any]:
     return dedupe_dict
 
 
+async def open_text_qry(mentions) -> Dict[str, Any]:
+    """
+    Input: mention or a list of them
+    SQL Output: entity name, entity summary description
+    Ideal: picture, multiple candidates
 
+    """
+    print('open_text_qry started')
+    wiki = MediaWiki()
+    candidates = wiki.search(mentions)
+    candidates = candidates[:2]
+    dicOut = []
+    print('first candidates')
+    print(candidates)
+    for i in candidates:
+            p = wiki.page(i)
+            tempDict = {'title': p.title,
+            'summary': p.summary,
+            'categories': p.categories,
+            'images': p.images,
+            'links': p.links,
+            'langlinks': p.langlinks,
+            'pageid': p.pageid,
+            'parent_id': p.parent_id,
+            'url': p.url}
+            dicOut.append(tempDict)
+            print('completed '+str(i))
+
+    print(dicOut)
+    #dicOut = dict(dicOut)
+    return dicOut
 
 
 
@@ -250,3 +284,9 @@ def prep_data(result) -> Dict[str, Any]:
 
     return result
 
+
+
+
+
+
+    
