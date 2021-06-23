@@ -33,7 +33,7 @@ import { createMuiTheme, ThemeProvider } from '@material-ui/core';
 import { fontFamily, fontSize, maxWidth } from '@material-ui/system';
 
 
-import SupportText from '../CrossDoc/eventFill';
+import SupportText from './elFill';
 
 
 const theme = createMuiTheme({
@@ -97,10 +97,14 @@ const EntityLinking = ( props ) => {
     let { annotations } = props;
 
     console.log(props);
+    console.log(props)
 
     const { match: { params } } = props;
 
-    console.log(`Param docs ${params}`)
+    console.log(`Param docs ${params.cluster_id}`)
+
+    const nounPhrases = props.location.state;
+    console.log(nounPhrases)
 
     console.log("================================== Entity Linking ======================================");
 
@@ -111,10 +115,14 @@ const EntityLinking = ( props ) => {
 
 
     
-
+    const loadingSumPlaceholder = {
+      'title': "Loading....",
+      'summary': "Loading..."
+    }
 
     const handleClickCorrect = () => {
         console.info('You clicked the Yes Chip.');
+        // add to db
       };
     
     const handleClickIncorrect = () => {
@@ -124,20 +132,41 @@ const EntityLinking = ( props ) => {
       const [id, setId] = useState('Q1470929');
       const [summary, setSummary] = useState([]);
       const [supportiveText , setSupportiveText] = useState([]);
-      const loadWikiSum = (id) => {
-        console.log("start loadDocument")
-        DataService.GetWDSummary(id)
-            .then(function (response) {
-                setSummary(response.data);
-                //console.log(`Token data: ${JSON.stringify(response['data']['tokens'])}`)
-                console.log(`sum. data: ${JSON.stringify(summary)}`)
-      
-            });
+//      const loadWikiSum = (id) => {
+//        console.log("start loadDocument")
+//        DataService.GetWDSummary(id)
+//            .then(function (response) {
+//                setSummary(response.data);
+//                //console.log(`Token data: ${JSON.stringify(response['data']['tokens'])}`)
+//                console.log(`sum. data: ${JSON.stringify(summary)}`)
+//      
+//            });
+//      }
+
+
+    const [imgsrc, setImgSrc] = useState('https://img.favpng.com/23/11/22/wikidata-scalable-vector-graphics-logo-wikimedia-foundation-wikimedia-project-png-favpng-YTaqyqL8zinPmRTYiLBQkG7fX.jpg');
+      const loadWikiCandidates = () => {
+        console.log('start wiki candidates')
+        DataService.GetWDCandidates(nounPhrases['mentions'][0])
+          .then(function (response) {
+          console.log("wd response")
+          console.log(response)
+
+            setSummary(response.data[0]);
+            console.log("wd summary")
+            console.log(summary)
+            if (summary.images !== undefined ) {
+              let imLink = summary.images[2]
+              setImgSrc(imLink)
+            }
+
+           
+        });
       }
 
       const loadDocSupport = () => {
         console.log("start loadDocSupport")
-        DataService.GetCDECRSupport(4)
+        DataService.GetCDECRSupport(params.cluster_id)
             .then(function (response) {
               console.log("response")
               console.log(response.data)
@@ -151,7 +180,7 @@ const EntityLinking = ( props ) => {
       
       useEffect(() => {
         
-         loadWikiSum(id);
+        loadWikiCandidates();
          loadDocSupport();
       }, []); 
     return (
@@ -159,28 +188,24 @@ const EntityLinking = ( props ) => {
             <React.Fragment>
         <div className={classes.root}>
 
-        <Grid container spacing={3}>
-          <Grid item xs>
-            <Paper className={classes.paper} style={{minHeight: "800px"}}>
-                Additional Referents
-            </Paper>
-          </Grid>
+        <Grid container spacing={2}>
+
           <Grid item xs={6}>
             <Paper className={classes.paper} style={{minHeight: "800px"}}>
             {supportiveText &&  <SupportText supportiveText={supportiveText}></SupportText>}
             </Paper>
           </Grid>
           <Grid item xs>
-          <Card className={classes.root} style={{maxWidth: "30vw"}}>
+          <Card className={classes.root} style={{maxWidth: "40vw"}}>
       <CardActionArea>
       <CardMedia>
-          <img src={'https://img.favpng.com/23/11/22/wikidata-scalable-vector-graphics-logo-wikimedia-foundation-wikimedia-project-png-favpng-YTaqyqL8zinPmRTYiLBQkG7fX.jpg'} style = {{maxWidth: "30vw"}}/>
+          <img src={imgsrc} style = {{maxWidth: "30vw"}}/>
       </CardMedia>
         <CardContent>
-          <div style={{fontSize: "50px", fontFamily: "Inter Variable"}}>{summary.entity_name}</div>
+          <div style={{fontSize: "50px", fontFamily: "Inter Variable"}}>{summary.title}</div>
             
-          <div style={{fontSize: "20px", fontFamily: "Inter Variable"}}>
-            {summary.description}
+          <div style={{fontSize: "16px", fontFamily: "Inter Variable"}}>
+            {summary.summary}
             </div>
         </CardContent>
       </CardActionArea>
