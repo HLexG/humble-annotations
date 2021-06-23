@@ -59,6 +59,9 @@ const DataService = {
     GetWDCandidates: async function (mentions) {
         return await axios.get(BASE_API_URL + "/entitylinks_open/" + mentions, { headers: authHeader() });
     },
+    PostWDClusterPair: async function (cluster_id, pageid) {
+        return await axios.post(BASE_API_URL + "/entitylinks_add/"+ cluster_id + '/' + pageid, { headers: authHeader() });
+    },
 }
 
 export default DataService;
