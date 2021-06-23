@@ -13,6 +13,8 @@ import EventIcon from '@material-ui/icons/Event';
 import NaturePeopleIcon from '@material-ui/icons/NaturePeople';
 import { DataGrid } from '@material-ui/data-grid';
 import Divider from '@material-ui/core/Divider';
+import RoomIcon from '@material-ui/icons/Room';
+import IconButton from '@material-ui/core/IconButton';
 
 const testDatasets = [
   {id: 1, title: 'CeleBERTy', descr: 'Welcome to learning React! Welcome to learning React! Welcome to learning React!'},
@@ -86,15 +88,19 @@ const CrossDocOverview = ( props ) => {
           <Grid container>
   {unclaimedEntities.map(row => (
     <Grid item xs={12} sm={6}>
-    <Grid container>
+    <Grid container >
       <Grid container justify="left">
         <label>cluster_id:</label>
         <label>{row.id}</label>
       </Grid>
       <Grid container>{row.mentions}
         </Grid>
+        <IconButton color="secondary" aria-label="ground" onClick ={() => { console.log('clicked') }}>
+        <RoomIcon justify="right" />
+        </IconButton>
     </Grid>
-    <Divider light />
+    
+    <Divider  />
   </Grid>
   ))}
 </Grid>
