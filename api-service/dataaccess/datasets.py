@@ -6,7 +6,7 @@ from dataaccess.session import database
 from dataaccess.errors import RecordNotFoundError, NoAccessError
 from dataaccess.types import PermissionType
 from fastapi import APIRouter, Path, Query, Depends, File
-from api.featureExtraction.trigger import preprocesses_entities
+from api.feature_extraction.trigger import preprocesses_entities
 
 
 async def browse(
