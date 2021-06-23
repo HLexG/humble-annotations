@@ -1,4 +1,4 @@
-from api.featureExtraction import trigger
+from api.feature_extraction import trigger
 from fileaccess import datasets as fileaccess_datasets
 from dataaccess.types import PermissionType
 from api.errors import AccessDeniedError
