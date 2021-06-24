@@ -11,7 +11,7 @@ const styles = theme => ({
     paddingLeft: theme.spacing(3),
     paddingRight: theme.spacing(3),
     paddingBottom: theme.spacing(3),
-    paddingTop: theme.spacing(2),
+    paddingTop: theme.spacing(0),
     minHeight: "100vh"
   },
   grow: {
