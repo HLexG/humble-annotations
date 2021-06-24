@@ -7,15 +7,18 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Icon from '@material-ui/core/Icon';
 import IconButton from '@material-ui/core/IconButton';
 
-import DataService from '../../../services/DataService';
+import { useAuthContext } from "../../../services/AuthService";
 import styles from './styles';
 
 const AnnotationPanel = (props) => {
     const { classes } = props;
     const { document } = props;
     const { mentionAnnotations } = props;
+    const { mentionAnnotation } = props;
     const { handleSetMentionAnnotation } = props;
     const { handleCopyMentionAnnotation } = props;
+
+    const auth = useAuthContext();
 
     // Component States
 
@@ -24,6 +27,16 @@ const AnnotationPanel = (props) => {
     useEffect(() => {
 
     }, []);
+
+    // Function
+    const isMentionSelected = (men) => {
+        let style = {};
+        if (mentionAnnotation && (men.id == mentionAnnotation.id)) {
+            style = { backgroundColor: "#dcdcdc" };
+        }
+
+        return style
+    }
 
     // Handlers
     const handleViewMention = (men) => {
@@ -40,7 +53,11 @@ const AnnotationPanel = (props) => {
             </Typography>
             <List className={classes.annotationReferences}>
                 {mentionAnnotations && mentionAnnotations.length > 0 && mentionAnnotations.map((men, index) =>
-                    <ListItem key={index} className={classes.annotationReferenceItems}>
+                    <ListItem
+                        key={index}
+                        className={classes.annotationReferenceItems}
+                        style={isMentionSelected(men)}
+                    >
                         <Typography>
                             {men.username}
                         </Typography>
@@ -48,9 +65,16 @@ const AnnotationPanel = (props) => {
                         <IconButton edge="end" onClick={() => handleViewMention(men)}>
                             <Icon>visibility</Icon>
                         </IconButton>
-                        <IconButton edge="end" onClick={() => handleCopyMention(men)}>
-                            <Icon>content_copy</Icon>
-                        </IconButton>
+                        {men.username != auth.state.username &&
+                            <IconButton edge="end" onClick={() => handleCopyMention(men)}>
+                                <Icon>content_copy</Icon>
+                            </IconButton>
+                        }
+                        {men.username == auth.state.username &&
+                            <IconButton edge="end" >
+                                <Icon></Icon>
+                            </IconButton>
+                        }
                     </ListItem>
                 )}
             </List>

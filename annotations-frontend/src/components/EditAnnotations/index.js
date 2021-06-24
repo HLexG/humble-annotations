@@ -48,7 +48,7 @@ const EditAnnotations = (props) => {
 
     const [mentionAnnotations, setMentionAnnotations] = useState([]);
     const loadDMentionAnnotations = () => {
-        DataService.GetDocumentAnnotations(document.id, "entity_mention")
+        DataService.GetDocumentAnnotations(id, "entity_mention")
             .then(function (response) {
                 setMentionAnnotations(response.data);
             })
@@ -82,6 +82,14 @@ const EditAnnotations = (props) => {
     }
     const handleCopyMentionAnnotation = (mention_annotation) => {
 
+        // TODO: Check if user already has mentions and allow overwrite or not
+        DataService.CopyAnnotations(mention_annotation["id"], "entity_mention")
+            .then(function (response) {
+                console.log(response.data);
+
+                // Reload document annotations
+                loadDMentionAnnotations();
+            })
     }
 
     return (
@@ -138,7 +146,14 @@ const EditAnnotations = (props) => {
                     <Grid container spacing={0}>
                         <Grid item sm={10}>
                             {document &&
-                                <Annotations document={document} mentions={mentions} editMentions={editMentions} editCorefs={editCorefs}></Annotations>
+                                <Annotations
+                                    document={document}
+                                    mentions={mentions}
+                                    editMentions={editMentions}
+                                    editCorefs={editCorefs}
+                                >
+
+                                </Annotations>
                             }
                         </Grid>
                         <Grid item sm={2}>
@@ -146,6 +161,7 @@ const EditAnnotations = (props) => {
                                 <AnnotationPanel
                                     document={document}
                                     mentionAnnotations={mentionAnnotations}
+                                    mentionAnnotation={mentionAnnotation}
                                     handleSetMentionAnnotation={handleSetMentionAnnotation}
                                     handleCopyMentionAnnotation={handleCopyMentionAnnotation}
                                 >
