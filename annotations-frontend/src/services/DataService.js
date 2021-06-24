@@ -44,6 +44,9 @@ const DataService = {
     GetDocumentMentions: async function (document_id, annotation_id) {
         return await axios.get(BASE_API_URL + "/mentions/?document_id=" + document_id + "&annotation_id=" + annotation_id, { headers: authHeader() });
     },
+    CopyAnnotations: async function (annotation_id, annotation_type) {
+        return await axios.post(BASE_API_URL + "/annotations/" + annotation_id + "/copy?annotation_type=" + annotation_type, {}, { headers: authHeader() });
+    },
     GetMentions: async function (id) {
         return await axios.get(BASE_API_URL + "/mentionsdoc/" + id, { headers: authHeader() });
     },
@@ -60,7 +63,7 @@ const DataService = {
         return await axios.get(BASE_API_URL + "/entitylinks_open/" + mentions, { headers: authHeader() });
     },
     PostWDClusterPair: async function (cluster_id, pageid) {
-        return await axios.post(BASE_API_URL + "/entitylinks_add/"+ cluster_id + '/' + pageid, { headers: authHeader() });
+        return await axios.post(BASE_API_URL + "/entitylinks_add/" + cluster_id + '/' + pageid, { headers: authHeader() });
     },
 }
 
