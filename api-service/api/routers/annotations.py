@@ -1,10 +1,11 @@
 import os
-from fastapi import APIRouter, Path, Query
+from fastapi import APIRouter, Path, Query, Depends
 from starlette.responses import FileResponse
 
 from api.auth import Auth, OptionalAuth
 from dataaccess.types import AnnotationType
 from dataaccess import annotations
+from dataaccess.errors import RecordNotFoundError
 
 router = APIRouter()
 
@@ -33,15 +34,19 @@ async def annotations_index(
 async def annotations_copy(
         id: int = Path(..., description="Annotation id to copy from "),
         annotation_type: str = Query(...,
-                                     description="Annotation type filter"),
+                                     description="Annotation type"),
         auth: Auth = Depends()
 ):
-    # Check if annotation exists for user for the document
+    # Get the annotation details
+    annotation = await annotations.get(id=id)
 
-    # Create a new annotation if needed
+    try:
+        user_annotation = await annotations.get_user_annotation(document_id=annotation["document_id"], user_id=auth.user_id)
+    except RecordNotFoundError:
+        # Create a new annotation
+        user_annotation = await annotations.create(document_id=annotation["document_id"], user_id=auth.user_id)
 
-    # Copy over annotation based on annotation type
+    # Copy over annotation to the current user
+    _ = await annotations.copy(from_id=id, to_id=user_annotation["id"], annotation_type=annotation_type)
 
-    return {
-        "created": True
-    }
+    return user_annotation
