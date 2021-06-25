@@ -32,31 +32,19 @@ const SupportText = (props) => {
         return (
             <>
                 {items.map(i => {
+					
+					// new if statement enclosure
+					//checking mention_check first
+					if (i.mention_check=="yes"){
+                        return (
+                            <b> {i.token_text}</b>
+                        )
+                    }else{
+                        return (
+                           ` ${i.token_text}`
+                        )
+					}
 
-                    if (i.type == "token") {
-                        return (
-                            <a
-                                key={i.id}
-                                
-                                style={i.mention_check=="yes" ? {padding: ".5em", fontWeight: "900"} : {padding: ".5em"}}
-                                
-                                background-color={i.backgroundColor}
-                            >
-                                {i.token_text}
-                            </a>
-                        )
-                    } else {
-                        return (
-                            <span
-                                key={i.id}
-                                
-                                background-color={i.backgroundColor}
-                            >
-                                <mark style={{ backgroundColor: colorList[i.obj.cluster_id] }} ><a>{i.token_text}</a></mark>
-                                {i.nodes && renderSupportTextItems(i.nodes)}
-                            </span>
-                        )
-                    }
 
                 })}
             </>

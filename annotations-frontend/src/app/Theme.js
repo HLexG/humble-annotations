@@ -7,7 +7,7 @@ const Theme = createMuiTheme({
         type: 'light',
         primary: {
             // light: will be calculated from palette.primary.main,
-            main: '#095EAB',
+            main: '#3b3b3b',
             // dark: will be calculated from palette.primary.main,
             // contrastText: will be calculated to contrast with palette.primary.main
         },
@@ -17,6 +17,22 @@ const Theme = createMuiTheme({
             // dark: will be calculated from palette.secondary.main,
             contrastText: '#ffffff',
         },
+		error: {
+			light: "#cea5ad",
+			main: "#cea5ad",
+		},
+		danger: {
+			light: "#fed040",
+			main: "#fed040",
+		},
+		success: {
+			light: "#148c8a",
+			main: "#148c8a",
+		},
+		info: {
+			light: "#2e3359",
+			main: "#2e3359",
+		},
         // error: will use the default color
 
     },

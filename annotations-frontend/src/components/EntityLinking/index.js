@@ -29,46 +29,23 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import im from './img/nat.png';
 //import 'exNature.jpeg';
-import { createMuiTheme, ThemeProvider } from '@material-ui/core';
+
 import { fontFamily, fontSize, maxWidth } from '@material-ui/system';
+import { MuiThemeProvider,createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
+import Theme from '../../app/Theme';
 
 
 import SupportText from './elFill';
 
 
-const theme = createMuiTheme({
-  palette: {
-    primary: {
-      main: "#81c784"
-    },
-    secondary: {
-      main: "#c51162"
-    },
-    danger: {
-        main: "#f44336"
-    },
-    neutral: {
-        main: "#bcaaa4"
-    }, 
-    error: {
-        main: "#f9a825"
-    },
-    success: {
-        main: "#607d8b"
-    },
-    info: {
-        main: "#2196f3"
-    },
-  }
-});
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles(Theme => ({
     topTitleText: {
         fontSize: "2.25rem",
         fontFamily: "Inter Variable",
         //fontWeight: "500",
         letterSpacing: "0.0075em",
-        color: theme.palette.secondary.main
+        color: Theme.palette.secondary.main
     }
 }));
 
@@ -157,10 +134,10 @@ const EntityLinking = ( props ) => {
             setSummary(response.data[0]);
             console.log("wd summary")
             console.log(summary)
-            if (summary.images !== undefined ) {
-              let imLink = summary.images[0]
-              setImgSrc(imLink)
-            }
+            
+			
+			setImgSrc(response.data[0].images[0])
+            
 
            
         });
@@ -186,8 +163,7 @@ const EntityLinking = ( props ) => {
          loadDocSupport();
       }, []); 
     return (
-        <ThemeProvider theme={theme}>
-            <React.Fragment>
+
         <div className={classes.root}>
 
         <Grid container spacing={2}>
@@ -206,7 +182,7 @@ const EntityLinking = ( props ) => {
         <CardContent>
           <div style={{fontSize: "50px", fontFamily: "Inter Variable"}}>{summary.title}</div>
             
-          <div style={{fontSize: "16px", fontFamily: "Inter Variable"}}>
+          <div style={{fontSize: "12px", fontFamily: "Inter Variable"}}>
             {summary.summary}
             </div>
         </CardContent>
@@ -223,7 +199,7 @@ const EntityLinking = ( props ) => {
         icon={<BlockIcon/>}
         label="Different"
         clickable
-        color="secondary"
+        backgroundColor="red"
         onClick={handleClickIncorrect}
       />
       </CardActions>
@@ -232,8 +208,7 @@ const EntityLinking = ( props ) => {
         </Grid>
         
       </div>
-      </React.Fragment>
-      </ThemeProvider>
+
     );
 };
 

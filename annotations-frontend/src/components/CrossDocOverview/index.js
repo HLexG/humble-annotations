@@ -86,7 +86,7 @@ const CrossDocOverview = ( props ) => {
             <CollapsibleTable/>
             
 
-
+ // change to table
           <Grid container>
   {unclaimedEntities.map(row => (
     <Grid item xs={12} sm={6}>

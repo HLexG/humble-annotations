@@ -259,12 +259,8 @@ async def open_text_qry(mentions) -> Dict[str, Any]:
             p = wiki.page(i)
             tempDict = {'title': p.title,
             'summary': p.summary,
-            'categories': p.categories,
             'images': p.images,
-            'links': p.links,
-            'langlinks': p.langlinks,
             'pageid': p.pageid,
-            'parent_id': p.parent_id,
             'url': p.url}
             dicOut.append(tempDict)
             print('completed '+str(i))
