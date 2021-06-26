@@ -118,11 +118,11 @@ const SideMenu = (props) => {
                     </ListItemIcon>
                     <ListItemText primary="Datasets" />
                   </ListItem>
-                  <ListItem button component={Link} to="/" onClick={toggleDrawer(false)}>
+                  <ListItem button component={Link} to="/DocStats" onClick={toggleDrawer(false)}>
                     <ListItemIcon>
                       <DataUsageIcon />
                     </ListItemIcon>
-                    <ListItemText primary="Resources" />
+                    <ListItemText primary="Stats" />
                   </ListItem>
                   <ListItem button component={Link} to="/grounding" onClick={toggleDrawer(false)}>
                     <ListItemIcon>
