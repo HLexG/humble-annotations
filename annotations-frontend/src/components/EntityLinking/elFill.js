@@ -16,6 +16,8 @@ const SupportText = (props) => {
 
     const [refresh, setRefresh] = useState(0);
 
+    const punctuation = ['.', ',', '"', "'", '?','!', '%',"’",'”','“']
+
     const colorList = ["#C0504D", "#1F497D", "#9BBB59", "#F79646", "#4BACC6", "#8064A2", "#948A54", "#C0504D", "#1F497D", "#9BBB59", "#F79646", "#4BACC6", "#8064A2", "#948A54", "#C0504D", "#1F497D", "#9BBB59", "#F79646", "#4BACC6", "#8064A2", "#948A54", "#C0504D", "#1F497D", "#9BBB59", "#F79646", "#4BACC6", "#8064A2", "#948A54", "#C0504D", "#1F497D", "#9BBB59", "#F79646", "#4BACC6", "#8064A2", "#948A54"];
 
     // Setup Component
@@ -24,7 +26,7 @@ const SupportText = (props) => {
     }, [props.supportiveText]);
 
 
-
+    
 
 
 
@@ -37,16 +39,21 @@ const SupportText = (props) => {
 					//checking mention_check first
 					if (i.mention_check=="yes"){
                         return (
-                            <b> {i.token_text}</b>
+                            <b>{punctuation.includes(i.token_text) ? "": " "}{i.token_text}</b>
+                        )
+                    }else if (punctuation.includes(i.token_text)){
+                        return (
+                            `${i.token_text}`
                         )
                     }else{
                         return (
-                           ` ${i.token_text}`
+                            ` ${i.token_text}`
+                        )
+                            }
+                        }
+
                         )
 					}
-
-
-                })}
             </>
         )
     }
