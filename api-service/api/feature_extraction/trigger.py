@@ -26,10 +26,10 @@ feat_4 = extract_environment_variable("FEATURE_EXTRACTOR_04")
 #feat_two_url = os.environ["FEAT_EXT_TWO_URL"]
 
 def preprocesses_entities(id):
-    url = 'http://hlexg-feature-extractor-02:9111/v1/process_dataset/'+str(id)
+    url = 'http://hlexg-feature-extractor-02:9011/v1/process_dataset/'+str(id)
     url2 = 'http://hlexg-feature-extractor-04:9013/v1/process_dataset_event/'+str(id)
     url3 = 'http://hlexg-feature-extractor-01:9010/v1/process_dataset/'+str(id)
-    url4 = 'http://hlexg-feature-extractor-03:9112/v1/process_dataset/'+str(id)
+    url4 = 'http://hlexg-feature-extractor-03:9012/v1/process_dataset/'+str(id)
     urls = [url3, url,url2, url4]
 #    x = requests.get(url)
 #    return x.status_code
