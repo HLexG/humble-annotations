@@ -54,12 +54,12 @@ const DocStats = ( props ) => {
               <Typography color="textSecondary">{params.value.iters}</Typography>
             </div>
           ) },
-        {/*{field: 'idc', headerName: 'In Doc Clusters', width: 245, renderCell: (params) => (
+        {field: 'idc', headerName: 'In Doc Clusters', width: 245, renderCell: (params) => (
             <div style= {{width: '100%',height: '100%', backgroundColor:iterColor(params)}}>
               <Typography>{params.value.count}</Typography>
               <Typography color="textSecondary">{params.value.iters}</Typography>
             </div>
-        ) */},
+        ) },
       ];
       
       const rows = [
