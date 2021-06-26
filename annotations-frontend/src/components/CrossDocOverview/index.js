@@ -17,6 +17,11 @@ import { DataGrid } from '@material-ui/data-grid';
 import Divider from '@material-ui/core/Divider';
 import RoomIcon from '@material-ui/icons/Room';
 import IconButton from '@material-ui/core/IconButton';
+import Card from '@material-ui/core/Card';
+import CardActionArea from '@material-ui/core/CardActionArea';
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
+import { CardHeader } from '@material-ui/core';
 
 const testDatasets = [
   {id: 1, title: 'CeleBERTy', descr: 'Welcome to learning React! Welcome to learning React! Welcome to learning React!'},
@@ -42,6 +47,9 @@ const CrossDocOverview = ( props ) => {
     const [pageTitle, setPageTitle] = useState("CeleBERTy dataset ");
     const [pageDesc, setPageDesc] = useState("Some general info about this dataset");
     const [unclaimedEntities, setUnclaimedEntities] = useState([]);
+    const [topMentions, setTopMentions] =  useState([]);
+    const [mentionReframe, setMentionReframe]=  useState([]);
+    
 
     //TOGGLE ENTITIES/EVENTS
 
@@ -50,6 +58,8 @@ const CrossDocOverview = ( props ) => {
     const handleTableToggle = (event, newTables) => {
       setStateEntityTable(newTables);
     };
+
+    
 
     
 
@@ -66,6 +76,8 @@ const CrossDocOverview = ( props ) => {
               console.log('getwdNEs')
               console.log(response.data)
               setUnclaimedEntities(response.data)
+              setMentionReframe(unclaimedEntities.mentions)
+              setTopMentions(mentionReframe)
 
             });
         }, []) 
@@ -83,30 +95,30 @@ const CrossDocOverview = ( props ) => {
       
     </ToggleButtonGroup>
         <div className={classes.dsButtons}>  
-            <CollapsibleTable/>
-            
 
- // change to table
-          <Grid container>
-  {unclaimedEntities.map(row => (
-    <Grid item xs={12} sm={6}>
-    <Grid container >
-      <Grid container justify="left">
-        <label>cluster_id:</label>
-        <label>{row.id}</label>
-      </Grid>
-      <Grid container>{row.mentions}
+        <Grid container spacing={3}>
+    {
+      unclaimedEntities.map(row => (
+        <Grid item xs={3}>
+          <Card className={"MuiElevatedCard--02"}>
+            <CardHeader
+              className={"MuiCardHeader-root"}
+              title={row.id}
+              subheader = {row.mentions[0]}
+              classes={{
+                title: "MuiCardHeader-title",
+                subheader: "MuiCardHeader-subheader"
+              }}
+            />
+            <CardActions>
+                      <Button color="secondary" aria-label="ground" component={Link} to={{pathname:`/grounding/${row.id}`, state:{'mentions':row.mentions}}}>Ground
+                      </Button>
+                      </CardActions>
+          </Card>
         </Grid>
-        <IconButton color="secondary" aria-label="ground" component={Link} to={{pathname:`/grounding/${row.id}`, state:{'mentions':row.mentions}}}>
-        <RoomIcon justify="right" />
-        </IconButton>
+      ))
+    }
     </Grid>
-    
-    <Divider  />
-  </Grid>
-  ))}
-</Grid>
-
           
         </div></div>
     );
