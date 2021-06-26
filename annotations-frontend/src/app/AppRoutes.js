@@ -15,6 +15,7 @@ import DocsOverview from "../components/DocsOverview";
 import CrossDocOverview from "../components/CrossDocOverview";
 import EntityLinking from "../components/EntityLinking";
 import CrossDoc from  "../components/CrossDoc";
+import DocStats from "../components/DocStats"
 // 
 
 const AppRouter = ( props ) => {
@@ -83,6 +84,7 @@ const AppRouter = ( props ) => {
                 <Route path="/docs_event/:id" exact component={EditAnnotations} />
                 <Route path="/grounding/:cluster_id" exact component={EntityLinking} />
                 <Route path="/crossdoc" exact component={CrossDoc} />
+                <Route path="/DocStats" exact component={DocStats} />
 
                 <Route component={Error404} />
             </Switch>
