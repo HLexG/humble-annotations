@@ -32,6 +32,9 @@ import { green } from '@material-ui/core/colors';
 const useStyles = theme => ({
     root: {
       flexGrow: 1,
+      
+      margin: '180px 20px 0 0'
+
     },
     paper: {
       padding: 2,
@@ -41,6 +44,42 @@ const useStyles = theme => ({
     media: {
       height: 900,
     },
+    writing: {
+      padding: '5px 0 5px 0',
+    },
+    palette: {
+      type: 'light',
+      primary: {
+          // light: will be calculated from palette.primary.main,
+          main: '#3b3b3b',
+          // dark: will be calculated from palette.primary.main,
+          // contrastText: will be calculated to contrast with palette.primary.main
+      },
+      secondary: {
+          light: '#0066ff',
+          main: '#1c4385',
+          // dark: will be calculated from palette.secondary.main,
+          contrastText: '#ffffff',
+      },
+  error: {
+    light: "#cea5ad",
+    main: "#cea5ad",
+  },
+  danger: {
+    light: "#fed040",
+    main: "#fed040",
+  },
+  success: {
+    light: "#148c8a",
+    main: "#148c8a",
+  },
+  info: {
+    light: "#2e3359",
+    main: "#2e3359",
+  },
+      // error: will use the default color
+
+  }
   });
 
 
