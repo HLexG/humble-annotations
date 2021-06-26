@@ -220,7 +220,7 @@ async def tbnamed(dataset_id) -> Dict[str, Any]:
         inner join 
         (select document_id, sentence_id, token_id, token_text, token_pos_tag
           from tokens
-          where token_pos_tag in ('NNP','NNPS','NNS')         
+          where token_pos_tag in ('NNP','NNPS')         
          ) n2
         on (n2.sentence_id = n1.sentence_id and n2.document_id = n1.document_id and n2.token_id >= n1.start_token_id and n2.token_id <= n1.end_token_id)
     """
