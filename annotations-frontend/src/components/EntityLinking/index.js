@@ -95,7 +95,13 @@ const EntityLinking = ( props ) => {
 
     const handleClickCorrect = () => {
         console.info('You clicked the Yes Chip.');
-        DataService.PostWDClusterPair(params.cluster_id, summary.pageid)
+        DataService.PostWDClusterPair(params.cluster_id, summary.pageid, currentDoc)
+        console.info('cluster_id')
+        console.info(params.cluster_id)
+        console.info('pageid')
+        console.info(summary.pageid)
+        console.info('doc_id')
+        console.info(currentDoc)
         // add to db
       };
     
@@ -148,15 +154,18 @@ const EntityLinking = ( props ) => {
         });
       }
 
+      const[currentDoc, SetCurrentDoc] = useState(0);
+
       const loadDocSupport = () => {
         console.log("start loadDocSupport")
         DataService.GetCDECRSupport(params.cluster_id)
             .then(function (response) {
-              console.log("response")
-              console.log(response.data)
+              console.log("GetCDECRSupport response")
+              console.log(response.data[0][0]['document_id'])
+              SetCurrentDoc(response.data[0][0]['document_id'])
                 setSupportiveTextGroup(response.data);
                 console.log("supportiveText")
-                console.log(supportiveTextGroup)
+                console.log(supportiveTextGroup['nodes'])
   
                
             });

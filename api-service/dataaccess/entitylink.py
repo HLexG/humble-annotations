@@ -7,7 +7,7 @@ from api.auth import Auth, OptionalAuth # auth.user_id
 from dataaccess.session import database
 from dataaccess.errors import RecordNotFoundError
 import nltk
-#import wikipedia
+########### Attn EP
 from mediawiki import MediaWiki
 nltk.download('punkt')
 
@@ -240,7 +240,7 @@ async def tbnamed(dataset_id) -> Dict[str, Any]:
     ## NNP NNPS > NNS
     return dedupe_dict
 
-
+########### Attn EP
 async def open_text_qry(mentions) -> Dict[str, Any]:
     """
     Input: mention or a list of them
@@ -267,9 +267,10 @@ async def open_text_qry(mentions) -> Dict[str, Any]:
 
     print(dicOut)
     #dicOut = dict(dicOut)
+    
     return dicOut
 
-async def link_insert(cluster_id, pageid) -> Dict[str, Any]:
+async def link_insert(cluster_id, pageid, currentDoc) -> Dict[str, Any]:
     """
     Input: mention or a list of them
     SQL Output: entity name, entity summary description
@@ -278,20 +279,47 @@ async def link_insert(cluster_id, pageid) -> Dict[str, Any]:
     pageid = wikidata.alt_id
 
     """
-    values = {
-        "annotation_id":int(100),
+
+    query = """
+            insert into annotations(document_id, user_id, type, status)
+            values (:document_id, :user_id, :type, :status)
+            returning *
+        """
+
+    # Get annotation id
+    values = {"document_id": int(currentDoc),
+              "user_id": 4, # user_id 2 is SpanBERT
+              "type": "entity_linking",
+              "status":"commit"}
+
+    result = await database.fetch_one(query=query, values=values)
+    annotation_id = result['id']
+
+    values2 = {
+        "annotation_id":int(annotation_id),
         "cluster_id": int(cluster_id), 
         "wikidata_id": int(pageid)
     }
-    param_list = ", ".join(":" + key for key in values.keys())
-    query =f"""
+    param_list = ", ".join(":" + key for key in values2.keys())
+    query2 =f"""
+    insert into wikidata(annotation_id, cluster_id, wikidata_id)
+    values ({param_list})
+    """
+
+    values2 = {
+        "annotation_id":int(annotation_id),
+        "cluster_id": int(cluster_id), 
+        "wikidata_id": int(pageid)
+    }
+    param_list = ", ".join(":" + key for key in values2.keys())
+    query2 =f"""
     insert into entity_links(annotation_id, cluster_id, wikidata_id)
     values ({param_list})
     """
 
     
 
-    result = await database.fetch_one(query, values=values)
+    result = await database.fetch_one(query2, values=values2)
 
     return result
 
