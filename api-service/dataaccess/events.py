@@ -5,6 +5,8 @@ from nltk.tokenize import sent_tokenize
 from nltk.tokenize import word_tokenize
 #from nltk import pos_tag
 from api.auth import Auth, OptionalAuth # auth.user_id
+import collections
+
 
 from dataaccess.session import database
 from dataaccess.errors import RecordNotFoundError
@@ -72,23 +74,25 @@ async def get_event_help(
     # mention_id = event_mentions['mention_id']
     
     ## use mention_id (id = :mention_id) to get all sentences
-    print(event_mentions[0]['mention_id'])
+    ment_id_list = [i['mention_id'] for i in event_mentions]
+    ment_id_list = tuple(ment_id_list)
     
-    query2 = """
+    query2 = f"""
         select annotation_id, id, document_id, sentence_id, start_token_id, end_token_id,  mention_text
         from mentions
-        where id = :mention_id
+        where id in {ment_id_list}
     """
 
-    values2 = {
-        "mention_id": event_mentions[0]['mention_id']
-    }
+    #values2 = {
+    #    "mention_id": 
+    #}
     print("query2",query2)
-    result2 = await database.fetch_all(query2, values2)
+    result2 = await database.fetch_all(query2)
 
     event_sents = [prep_data(row) for row in result2]
 
-    print(event_sents)
+    print("event_sents")
+    [print(i) for i in event_sents]
 
     
     
@@ -114,6 +118,8 @@ async def get_event_help(
     """
     print("query3",query3)
 
+
+# for loop ? event_sents[i] for i in event_sents
     values3 = {
         "document_id": event_sents[0]['document_id'],
         "sentence_id": event_sents[0]['sentence_id']
@@ -133,8 +139,18 @@ async def get_event_help(
                      j['mention_check']='yes'
 
 
+    
+    for i in res3Prep:
+        i['docsent_id'] = str(i['document_id'])+"_"+str(i['sentence_id'])
+    
+    result = collections.defaultdict(list)
 
-    return res3Prep
+    for d in res3Prep:
+        result[d['docsent_id']].append(d)
+
+    result_list = list(result.values())
+
+    return result_list
 
 ## use mention_text to bold in sentence for user for CDCR anno
 
