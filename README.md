@@ -44,9 +44,11 @@ To test the service go to `http://0.0.0.0:9010/`
 -  `cd database-server`
 - Start docker shell `sh ./docker-shell.sh`
 
-To ensure your local database is up to date, run `dbmate up`
+- To ensure your local database is up to date, run `dbmate up`
 
-DB Migrations tool link: https://github.com/amacneil/dbmate
+    - DB Migrations tool link: https://github.com/amacneil/dbmate
+
+- Run `psql postgres://hlexg:annotate@hlexgdb-server:5433/hlexgdb`
 
 ## Annotations Frontend
 -  `cd annotations-frontend`

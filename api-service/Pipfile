@@ -11,6 +11,7 @@ pandas = "*"
 uvicorn = "*"
 fastapi = "*"
 aiofiles = "*"
+pymediawiki = "*"
 databases = {extras = ["postgresql"], version = "*"}
 nltk = "*"
 spacy = "*"
