@@ -65,6 +65,9 @@ const DataService = {
     PostWDClusterPair: async function (cluster_id, pageid) {
         return await axios.post(BASE_API_URL + "/entitylinks_add/" + cluster_id + '/' + pageid, { headers: authHeader() });
     },
+    MentionStats: async function () {
+        return await axios.get(BASE_API_URL + "/stats_mentions", { headers: authHeader() });
+    },
 }
 
 export default DataService;
