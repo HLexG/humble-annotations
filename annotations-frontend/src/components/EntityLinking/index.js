@@ -14,10 +14,11 @@ import Avatar from '@material-ui/core/Avatar';
 import DoneIcon from '@material-ui/icons/Done';
 import BlockIcon from '@material-ui/icons/Block';
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
+import {MuiThemeProvider} from '@material-ui/core/styles';
+import MyTheme from './MyTheme';
 
 
 
-import SimplePopover from   './parts/popover';
 
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
@@ -26,13 +27,7 @@ import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
-import im from './img/nat.png';
-//import 'exNature.jpeg';
 
-import { fontFamily, fontSize, maxWidth } from '@material-ui/system';
-import { MuiThemeProvider,createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
-import Theme from '../../app/Theme';
 
 
 import SupportText from './elFill';
@@ -79,6 +74,7 @@ const EntityLinking = ( props ) => {
     const { match: { params } } = props;
 
     console.log(`Param docs ${params.cluster_id}`)
+    console.log(`Params ${params}`)
 
     const nounPhrases = props.location.state;
     console.log(nounPhrases)
@@ -106,10 +102,14 @@ const EntityLinking = ( props ) => {
     const handleClickIncorrect = () => {
         console.info('You clicked the No Chip.');
       };
+    
+    
 
       const [id, setId] = useState('Q1470929');
       const [summary, setSummary] = useState([]);
-      const [supportiveText , setSupportiveText] = useState([]);
+      const [countVal, setCountVal] = useState(0);
+      //const [supportiveText , setSupportiveText] = useState([]);
+      const [supportiveTextGroup , setSupportiveTextGroup] = useState([]);
 //      const loadWikiSum = (id) => {
 //        console.log("start loadDocument")
 //        DataService.GetWDSummary(id)
@@ -120,10 +120,15 @@ const EntityLinking = ( props ) => {
 //      
 //            });
 //      }
+    const handleCountClick = () => {
+      setCountVal(countVal+1);
 
+      console.info(countVal);
+      loadWikiCandidates();
+    };
 
     const [imgsrc, setImgSrc] = useState('https://img.favpng.com/23/11/22/wikidata-scalable-vector-graphics-logo-wikimedia-foundation-wikimedia-project-png-favpng-YTaqyqL8zinPmRTYiLBQkG7fX.jpg');
-    const inputqry = " ".concat(nounPhrases['mentions'][0])
+    const inputqry = " ".concat(nounPhrases['mentions'][countVal])
     const loadWikiCandidates = () => {
         console.log('start wiki candidates')
         DataService.GetWDCandidates(inputqry)
@@ -136,7 +141,7 @@ const EntityLinking = ( props ) => {
             console.log(summary)
             
 			
-			setImgSrc(response.data[0].images[0])
+			setImgSrc(response.data[countVal].images[0])
             
 
            
@@ -149,9 +154,9 @@ const EntityLinking = ( props ) => {
             .then(function (response) {
               console.log("response")
               console.log(response.data)
-                setSupportiveText(response.data);
+                setSupportiveTextGroup(response.data);
                 console.log("supportiveText")
-                console.log(supportiveText)
+                console.log(supportiveTextGroup)
   
                
             });
@@ -163,52 +168,49 @@ const EntityLinking = ( props ) => {
          loadDocSupport();
       }, []); 
     return (
+      <MuiThemeProvider theme={MyTheme}>
 
-        <div className={classes.root}>
+        <div className={classes.root} style = {{paddingTop: '8vh', paddingLeft:'2.4vw'}}>
 
-        <Grid container spacing={2}>
+        <Grid container spacing={2} style = {{position: 'absolute'}}>
 
-          <Grid item xs={6}>
-            <Paper className={classes.paper} style={{minHeight: "800px", maxWidth: "40vw"}}>
+          <Grid item xs={6} style = {{top: '50%'}}>
+          <div style={{fontSize: "50px", fontFamily: "Inter Variable", paddingBottom: '40px'}}>Cluster<b> Mentions</b></div>
+
+          {
+      supportiveTextGroup.map(supportiveText => (
+          <div style = {{fontSize: "16px", fontFamily: "Inter Variable",paddingBottom: "30px", maxWidth: "40vw"}}>
+            
             {supportiveText &&  <SupportText supportiveText={supportiveText}></SupportText>}
-            </Paper>
+            </div>))}
           </Grid>
-          <Grid item xs>
-          <Card className={classes.root} style={{maxWidth: "40vw"}}>
+          <Grid item xs  style={{maxWidth: "40vw", justify: 'right', left: '90%'}}>
+          <Card className={classes.root}>
       <CardActionArea>
-      <CardMedia>
-          <img src={imgsrc} style = {{maxWidth: "40vw"}}/>
+      <CardMedia style = {{textAlign: 'center'}}>
+          <img src={imgsrc} style = {{maxHeight: '40vh'}}/>
       </CardMedia>
         <CardContent>
-          <div style={{fontSize: "50px", fontFamily: "Inter Variable"}}>{summary.title}</div>
+          <div style={{fontSize: "50px", fontFamily: "Inter Variable",paddingBottom: '40px'}}>{summary.title}</div>
             
-          <div style={{fontSize: "12px", fontFamily: "Inter Variable"}}>
+          <div style={{fontSize: "14px", fontFamily: "Inter Variable", textOverflow: 'ellipsis', height: '150px', overflow: 'scroll', lineHeight: 1.5}} className={classes.writing}>
             {summary.summary}
             </div>
         </CardContent>
       </CardActionArea>
       <CardActions>
-      <Chip
-        icon={<AddCircleOutlineIcon/>}
-        label="Same"
-        
-        color="primary"
-        onClick={handleClickCorrect}
-        />
-        <Chip
-        icon={<BlockIcon/>}
-        label="Different"
-        clickable
-        backgroundColor="red"
-        onClick={handleClickIncorrect}
-      />
+      
+      <Button variant="contained" style={MyTheme.palette.confirm} onClick={handleClickCorrect}>Same</Button>
+      <Button variant="contained" style={MyTheme.palette.unknown}>Unsure</Button>
+      <Button variant="contained" style={MyTheme.palette.deny} onClick={handleClickIncorrect}>Different</Button>
+      <Button variant="contained" style={MyTheme.palette.deny} onClick={handleCountClick}>Next</Button>
       </CardActions>
     </Card>
           </Grid>
         </Grid>
         
       </div>
-
+      </MuiThemeProvider>
     );
 };
 
