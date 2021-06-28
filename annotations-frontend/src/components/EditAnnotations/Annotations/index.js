@@ -61,6 +61,7 @@ const Annotations = (props) => {
         if (!editMentions) {
             return;
         }
+
     }
     const handleMentionClick = (event, mention) => {
         event.stopPropagation();

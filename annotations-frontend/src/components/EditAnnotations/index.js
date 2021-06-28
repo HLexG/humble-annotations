@@ -74,6 +74,11 @@ const EditAnnotations = (props) => {
     }, []);
     useEffect(() => {
         loadMentions();
+
+        if (task == "entity_mention" && mentionAnnotation && mentionAnnotation["username"] == auth.state.username) {
+            setEditMentions(true);
+        }
+
     }, [mentionAnnotation]);
 
     // Handlers
