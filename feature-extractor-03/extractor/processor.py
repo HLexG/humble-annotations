@@ -3,6 +3,7 @@ import pandas as pd
 from typing import Any, Dict, List
 
 from extractor.session import database
+from extractor.models.wiki import scrape_wikipedia_entities, get_wikimapper
 
 
 async def process_live():
@@ -29,8 +30,23 @@ async def process(id):
     result = await database.fetch_all(query)
 
     named_entities = list(set([entity['mention_text'] for entity in [prep_data(row) for row in result]]))
-    print(named_entities)
 
+    """
+    wikidump, alias_dict = scrape_wikipedia_entities(named_entities, thread_count=50)
+
+    mapper = get_wikimapper()
+
+    # Create pandas from all dictionaries
+    df = pd.DataFrame.from_dict(wikidump).T.dropna().drop(['imgid'], axis=1)
+    df = df.reset_index(drop=True)
+    df = df.drop_duplicates()
+    df = df.rename(columns={'title': 'name', 'summary': 'description', 'pageid': 'wiki_id'})
+    # Use WikiMapper to map urls to qids
+    df['qid'] = df.url.apply(lambda x: mapper.url_to_id(x))
+    df = df[['qid', 'wiki_id', 'name', 'description', 'url']]
+
+    df = df.dropna().reset_index(drop=True)
+    """
     df = pd.read_csv('entities.csv')
 
     entity_links =[]
