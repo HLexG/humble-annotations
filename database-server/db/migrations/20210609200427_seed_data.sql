@@ -1,7 +1,9 @@
 -- migrate:up
 INSERT INTO users(id,username,full_name,account_type) VALUES (1,'spacy','SpaCy','model');
 INSERT INTO users(id,username,full_name,account_type) VALUES (2,'spanbert','SpanBERT','model');
-SELECT setval('users_id_seq', 3, true);
+INSERT INTO users(id,username,full_name,account_type) VALUES (3,'wikidata','WikiData','model');
+INSERT INTO users(id,username,full_name,account_type) VALUES (4,'allennlp','AllenNLP','model');
+SELECT setval('users_id_seq', 4, true);
 
 INSERT INTO entity_categories(id,category_code,category_name) VALUES (1,'PERSON','Person');
 INSERT INTO entity_categories(id,category_code,category_name) VALUES (2,'NORP','Nationalities or religious or political groups');

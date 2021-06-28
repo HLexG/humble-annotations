@@ -7,13 +7,13 @@ verify_ssl = true
 
 [packages]
 requests = "*"
-nltk = "*"
 pandas = "*"
 uvicorn = "*"
 fastapi = "*"
 aiofiles = "*"
-wikipedia = "*"
-wikimapper = "*"
+allennlp = "2.1"
+allennlp-models = "2.1"
+spacy-alignments = "*"
 databases = {extras = ["postgresql"], version = "*"}
 
 [requires]

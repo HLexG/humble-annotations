@@ -32,7 +32,7 @@ RUN set -ex; \
     chown app:app /app
 
 # Expose port
-EXPOSE 9012
+EXPOSE 9014
 
 # Switch to the new user
 USER app
@@ -41,14 +41,7 @@ WORKDIR /app
 # Install python packages
 ADD --chown=app:app Pipfile Pipfile.lock /app/
 
-ADD --chown=app:app entities.csv /app/
-
-#ADD --chown=app:app index_enwiki-latest.db /app/
-
 RUN pipenv sync
-
-# NLTK
-RUN pipenv run python -m nltk.downloader punkt
 
 # Add the rest of the source code. This is done last so we don't invalidate all
 # layers when we change a line of code.

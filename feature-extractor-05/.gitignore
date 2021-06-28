@@ -133,4 +133,3 @@ dmypy.json
 env.local
 .idea
 spanbert_model.pth
-index_enwiki-latest.db
