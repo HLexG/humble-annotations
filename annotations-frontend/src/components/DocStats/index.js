@@ -257,5 +257,4 @@ const DocStats = ( props ) => {
         </div>
     );
 };
-
-Gamestopexport default withStyles( styles )( DocStats );
+export default withStyles( styles )( DocStats );
