@@ -38,6 +38,7 @@ const SideMenu = (props) => {
     console.log(props);
     console.log("================================== Header ======================================");
 
+    
     // Get Auth Context
     const auth = useAuthContext();
     // console.log(currentDatasets)

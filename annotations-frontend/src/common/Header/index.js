@@ -20,7 +20,15 @@ const Header = (props) => {
     const { classes, toggleDrawer} = props;
     console.log(props);
     console.log("================================== Header ======================================");
+            // Key Board Open
+    document.addEventListener('keydown', function(event){
+                console.log(`Key: ${event.key} with keycode ${event.keyCode} has been pressed`);
+                if (event.keyCode == 91) {
+			console.log("success");
+			toggleDrawer(true);
+			 }
 
+             });
     // Get Auth Context
     const auth = useAuthContext();
     console.log(auth)
@@ -34,7 +42,7 @@ const Header = (props) => {
     const closeSettingsMenu = (event) => {
         setSettingsMenuAnchorEl(null);
     };
-
+    
     return (
         <div className={classes.root}>
             <AppBar position="static">

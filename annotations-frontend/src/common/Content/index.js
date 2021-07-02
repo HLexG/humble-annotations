@@ -30,11 +30,12 @@ const Content = (props) => {
   const { classes, children, drawerOpen } = props;
 
   console.log("================================== Content ======================================");
-
+  
+  
   console.log(classes)
   const drawerStatusClass = drawerOpen ? classes.menuClosed : classes.menuOpen
   const contentClasses = `${classes.root} ${drawerStatusClass}`
-
+  
   return (
     <div className={contentClasses}>
       {children}
