@@ -63,6 +63,8 @@ SET default_table_access_method = heap;
 -- Name: annotations; Type: TABLE; Schema: public; Owner: -
 --
 
+/* Can I add a dataset_id column here? */
+
 CREATE TABLE public.annotations (
     id bigint NOT NULL,
     document_id bigint NOT NULL,
