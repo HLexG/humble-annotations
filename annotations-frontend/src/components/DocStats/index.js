@@ -104,7 +104,8 @@ const DocStats = ( props ) => {
     const [mentionStats, SetMentionStats] = useState([]);
     const [entityRows, SetEntityRows] = useState([]);
     const [eventRows, SetEventRows] = useState([]);
-    const [xDocRows, SetXDocRows] = useState([]);
+    const [xDocEvRows, SetXDocEvRows] = useState([]);
+    const [xDocEnRows, SetXDocEnRows] = useState([]);
 
     const loadMentionStats = () => {
         DataService.MentionStats()
@@ -115,7 +116,8 @@ const DocStats = ( props ) => {
                 SetEntityRows(response.data['entity'])
                 console.log(entityRows)
                 SetEventRows(response.data['event'])
-                SetXDocRows(response.data['xdoc'])
+                SetXDocEvRows(response.data['xdoc'])
+		SetXDocEnRows(response.data['xdoc'])
 
         })
     };

@@ -66,8 +66,7 @@ async def browse() -> List[Dict[str, Any]]:
     nd['entity'] = [{'id':i['document_id'],'mentions':{'iters': i['mention_iters'], 'count': i['mention_count']},'idc':{'iters': i['clusters_iters'], 'count': i['clusters_count']}} for i in en]
     nd['event'] = [{'id':i['document_id'],'mentions':{'iters': i['mention_iters'], 'count': i['mention_count']},'idc':{'iters': i['clusters_iters'], 'count': i['clusters_count']}} for i in ev]
 
-    nd['xdoc'] = indic2
-    
+    nd['xdoc'] = [indic2[i] for i in range(len(indic2)) if i['type'] == 'entity_linking']
     return nd
 
 
