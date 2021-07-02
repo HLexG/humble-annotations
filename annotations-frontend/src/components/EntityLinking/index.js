@@ -95,13 +95,15 @@ const EntityLinking = ( props ) => {
 
     const handleClickCorrect = () => {
         console.info('You clicked the Yes Chip.');
-        DataService.PostWDClusterPair(params.cluster_id, summary.pageid, currentDoc)
+        DataService.PostWDClusterPair(params.cluster_id, summary.pageid, currentDoc, url)
         console.info('cluster_id')
         console.info(params.cluster_id)
         console.info('pageid')
         console.info(summary.pageid)
         console.info('doc_id')
         console.info(currentDoc)
+        console.info('url')
+        console.info(url)
         // add to db
       };
     
@@ -134,6 +136,7 @@ const EntityLinking = ( props ) => {
     };
 
     const [imgsrc, setImgSrc] = useState('https://img.favpng.com/23/11/22/wikidata-scalable-vector-graphics-logo-wikimedia-foundation-wikimedia-project-png-favpng-YTaqyqL8zinPmRTYiLBQkG7fX.jpg');
+    const [url, setUrl] = useState('https://img.favpng.com/23/11/22/wikidata-scalable-vector-graphics-logo-wikimedia-foundation-wikimedia-project-png-favpng-YTaqyqL8zinPmRTYiLBQkG7fX.jpg');
     const inputqry = " ".concat(nounPhrases['mentions'][countVal])
     const loadWikiCandidates = () => {
         console.log('start wiki candidates')
@@ -145,6 +148,7 @@ const EntityLinking = ( props ) => {
             setSummary(response.data[0]);
             console.log("wd summary")
             console.log(summary)
+            setUrl(summary.url);
             
 			
 			setImgSrc(response.data[countVal].images[0])
