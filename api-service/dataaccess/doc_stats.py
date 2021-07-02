@@ -51,8 +51,22 @@ async def browse() -> List[Dict[str, Any]]:
     en = [indic[i] for i in range(len(indic)) if indic[i]['type'] =='entity_mention']
     ev = [indic[i] for i in range(len(indic)) if indic[i]['type'] =='event_mention']
 
+    doc_id_list = [i['document_id'] for i in en]
+
+    doc_id_tuple = tuple(doc_id_list)
+
+    q2 = f"""SELECT type, COUNT(*) FROM annotations WHERE document_id IN {doc_id_tuple} GROUP BY type;"""
+
+    
+    result2 = await database.fetch_all(q2)
+    indic2 = [prep_data(row) for row in result2]
+    print(indic2)
+
+
     nd['entity'] = [{'id':i['document_id'],'mentions':{'iters': i['mention_iters'], 'count': i['mention_count']},'idc':{'iters': i['clusters_iters'], 'count': i['clusters_count']}} for i in en]
     nd['event'] = [{'id':i['document_id'],'mentions':{'iters': i['mention_iters'], 'count': i['mention_count']},'idc':{'iters': i['clusters_iters'], 'count': i['clusters_count']}} for i in ev]
+
+    nd['xdoc'] = indic2
     
     return nd
 

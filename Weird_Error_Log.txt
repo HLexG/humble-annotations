@@ -2,3 +2,10 @@ Feat Ext 1
 Issue: frozen load on (some) dataset uploads
 MSG: /usr/local/lib/python3.8/multiprocessing/resource_tracker.py:216: UserWarning: resource_tracker: There appear to be 1 leaked semaphore objects to clean up at shutdown
   warnings.warn('resource_tracker: There appear to be %d '
+
+Feat Ext 3
+Issue: DB Key error on Dset upload
+MSG: DETAIL:  Key (id, alt_id)=(Q1470929, 708769) already exists.
+
+
+
