@@ -104,6 +104,7 @@ const DocStats = ( props ) => {
     const [mentionStats, SetMentionStats] = useState([]);
     const [entityRows, SetEntityRows] = useState([]);
     const [eventRows, SetEventRows] = useState([]);
+    const [xDocRows, SetXDocRows] = useState([]);
 
     const loadMentionStats = () => {
         DataService.MentionStats()
@@ -114,7 +115,7 @@ const DocStats = ( props ) => {
                 SetEntityRows(response.data['entity'])
                 console.log(entityRows)
                 SetEventRows(response.data['event'])
-
+                SetXDocRows(response.data['xdoc'])
 
         })
     };
@@ -257,4 +258,4 @@ const DocStats = ( props ) => {
     );
 };
 
-export default withStyles( styles )( DocStats );
+Gamestopexport default withStyles( styles )( DocStats );
