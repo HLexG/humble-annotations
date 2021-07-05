@@ -4,6 +4,7 @@ import pandas as pd
 from fastapi import APIRouter, Path, Query
 from starlette.responses import FileResponse
 from urllib.parse import urlparse
+from api.data_models import CreateMentions
 
 from dataaccess import mentions
 
@@ -24,21 +25,16 @@ async def mentions_index(
 
 
 @router.post("/mentions")
-async def mentions_new(input: dict):
-    # dataset_id: int,
-    # document_id: int,
-    # sentence_id: int,
-    # start_token_id: int,
-    # end_token_id: int,
-    #cluster_id: int
-    #id: int = None
-    return await mentions.create(dataset_id=input['dataset_id'],
-                                 document_id=input['document_id'],
-                                 sentence_id=input['sentence_id'],
-                                 start_token_id=input['start_token_id'],
-                                 end_token_id=input['end_token_id'],
-                                 cluster_id=input['cluster_id'],
-                                 pos=input['pos'])
+async def mentions_new(
+    new_mentions: CreateMentions,
+    document_id: int = Query(..., description="Document id to filter by"),
+    annotation_id: int = Query(..., description="Annotation id to filter by")
+):
+    # Clear existing mentions
+    _ = await mentions.delete_all_for_annotation(document_id=document_id, annotation_id=annotation_id)
+
+    # Create new mentions
+    await mentions.create_multi_mentions(document_id=document_id, annotation_id=annotation_id, mentions=new_mentions.mentions)
 
 
 @router.get(

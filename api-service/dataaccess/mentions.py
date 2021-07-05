@@ -71,13 +71,12 @@ async def retp(*, qu) -> Dict[str, Any]:
 
 
 async def create(*,
-                 dataset_id: int,
+                 annotation_id: int,
                  document_id: int,
                  sentence_id: int,
                  start_token_id: int,
                  end_token_id: int,
-                 cluster_id: int = None,
-                 pos: str,
+                 mention_text: str,
                  id: int = None) -> Dict[str, Any]:
     """
     Create a new row. Returns the created record as a dict.
@@ -85,22 +84,17 @@ async def create(*,
 
     # Set the values
     values = {
-        "dataset_id": dataset_id,
+        "annotation_id": annotation_id,
         "document_id": document_id,
         "sentence_id": sentence_id,
         "start_token_id": start_token_id,
         "end_token_id": end_token_id,
-        "cluster_id": cluster_id,
-        "pos": pos,
-        # "created_by": auth.user_id
+        "mention_text": mention_text
     }
 
     # if the id was passed
     if id is not None:
         values["id"] = id
-
-    if cluster_id is not None:
-        values["id"] = cluster_id
 
     # Generate the field and values list
     field_list = ", ".join(values.keys())
@@ -181,6 +175,28 @@ async def delete_all_for_document(dataset_id: int, document_id: int) -> None:
         DELETE FROM mentions
             WHERE dataset_id = :dataset_id and document_id = :document_id;
     """, values=values)
+
+
+async def delete_all_for_annotation(document_id: int, annotation_id: int) -> None:
+    """
+    Deletes existing records
+    """
+
+    await database.execute(query="""
+        DELETE FROM mentions
+            WHERE document_id = {document_id} and annotation_id = {annotation_id};
+    """.format(document_id=document_id, annotation_id=annotation_id))
+
+
+async def create_multi_mentions(document_id: int, annotation_id: int, mentions: List[Dict[str, Any]]):
+    for mention in mentions:
+        await create(annotation_id=annotation_id,
+                     document_id=document_id,
+                     sentence_id=mention["sentence_id"],
+                     start_token_id=mention["start_token_id"],
+                     end_token_id=mention["end_token_id"],
+                     mention_text=mention["mention_text"],
+                     id=mention["id"])
 
 
 def prep_data(result) -> Dict[str, Any]:
