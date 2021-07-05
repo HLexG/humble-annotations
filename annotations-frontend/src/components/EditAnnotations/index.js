@@ -96,6 +96,15 @@ const EditAnnotations = (props) => {
                 loadDMentionAnnotations();
             })
     }
+    const handleSave = () => {
+        // TODO check if the user has access to save
+
+        // Save mentions 
+        DataService.CreateDocumentMentions(id, mentionAnnotation["id"], mentions)
+            .then(function (response) {
+                console.log("Mentions saved...");
+            })
+    }
 
     return (
         <div className={classes.root}>
@@ -144,7 +153,7 @@ const EditAnnotations = (props) => {
                             </Select>
                         </FormControl>
                         <span>&nbsp;&nbsp;</span>
-                        <IconButton aria-label="save" color="primary">
+                        <IconButton aria-label="save" color="primary" onClick={handleSave}>
                             <Icon>save</Icon>
                         </IconButton>
                     </Toolbar>
@@ -156,6 +165,7 @@ const EditAnnotations = (props) => {
                                     mentions={mentions}
                                     editMentions={editMentions}
                                     editCorefs={editCorefs}
+                                    setMentions={setMentions}
                                 >
 
                                 </Annotations>

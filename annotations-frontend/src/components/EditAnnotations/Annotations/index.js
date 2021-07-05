@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { withStyles } from '@material-ui/core';
+import _ from "lodash";
 
 import styles from './styles';
 import { buildAnnotationTree, colorList } from './functions';
@@ -10,6 +11,7 @@ const Annotations = (props) => {
     const { mentions } = props;
     const { editMentions } = props;
     const { editCorefs } = props;
+    const { setMentions } = props;
 
     // Component States
     const [annotationTree, setAnnotationTree] = useState(null);
@@ -24,6 +26,15 @@ const Annotations = (props) => {
     const [refresh, setRefresh] = useState(0);
 
     // Setup Component
+    useEffect(() => {
+        // Keydown event listener
+        window.addEventListener('keydown', (event) => handleKeyDown(event));
+
+        // Cleanup Component
+        return () => {
+            window.removeEventListener('keydown', handleKeyDown);
+        };
+    }, []);
     useEffect(() => {
         loadAnnotationTree();
     }, [props.document, props.mentions]);
@@ -49,11 +60,16 @@ const Annotations = (props) => {
 
         if (selectedMention && (selectedMention.id === mention.id) && (selectedMention.sentence_id === mention.sentence_id)) {
             style = selectedStyle;
-            console.log(mention.id);
-            console.log(mention.sentence_id);
-
         }
         return style;
+    }
+    const findNextId = (list) => {
+        return Math.max(...list.map(o => o.id), 0) + 1;
+    }
+    const deleteMention = (mention) => {
+        let new_mentions = [...mentions];
+        _.remove(new_mentions, function (n) { return n.id === mention.id; });
+        setMentions(new_mentions);
     }
 
     // Handlers
@@ -62,12 +78,46 @@ const Annotations = (props) => {
             return;
         }
 
+        window.getSelection().removeAllRanges();
+        // event.stopPropagation();
+        console.log("handleTokenClick: double=", isDouble, token);
+        setSelectedMention(null);
+
+        const addMention = () => {
+            let sourceToken = selectedToken;
+
+            if (sourceToken["sentence_id"] === token["sentence_id"]) {
+                let mention = {
+                    sentence_id: token["sentence_id"],
+                    start_token_id: sourceToken["token_id"],
+                    end_token_id: token["token_id"],
+                    mention_text: token["mention_text"]
+                }
+
+                let new_mentions = [...mentions];
+                new_mentions.push(mention);
+                setMentions(new_mentions);
+            }
+        }
+
+        if (selectedToken === null) {
+            // Select the first word in span
+            setSelectedToken(token);
+        } else {
+            // Add mention
+            addMention();
+            // Reset selection
+            setSelectedToken(null);
+        }
+
     }
     const handleMentionClick = (event, mention) => {
         event.stopPropagation();
         if (!editMentions) {
             return;
         }
+        console.log("handleMentionClick:", mention);
+
         // Select the mention
         setSelectedMention(mention);
     };
@@ -77,9 +127,15 @@ const Annotations = (props) => {
         if (event.keyCode === 27) {
             // Esc
             setSelectedToken(null);
+            setSelectedMention(null);
         } else if (event.keyCode === 8) {
             // Delete
             //annotations.splice(1, 1,);
+            console.log(selectedMention);
+            if (selectedMention) {
+                console.log("Deleting...", selectedMention)
+                deleteMention(selectedMention);
+            }
         }
     };
     const handleMentionDragStart = (event, mention) => {
