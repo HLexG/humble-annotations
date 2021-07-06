@@ -95,7 +95,7 @@ const EntityLinking = ( props ) => {
 
     const handleClickCorrect = () => {
         console.info('You clicked the Yes Chip.');
-        DataService.PostWDClusterPair(params.cluster_id, summary.pageid, currentDoc, url)
+        DataService.PostWDClusterPair(params.cluster_id, summary.pageid, currentDoc, summary.title)
         console.info('cluster_id')
         console.info(params.cluster_id)
         console.info('pageid')

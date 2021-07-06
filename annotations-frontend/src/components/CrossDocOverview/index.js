@@ -49,6 +49,7 @@ const CrossDocOverview = ( props ) => {
     const [unclaimedEntities, setUnclaimedEntities] = useState([]);
     const [topMentions, setTopMentions] =  useState([]);
     const [mentionReframe, setMentionReframe]=  useState([]);
+    const [evRows, setEvRows] =  useState([]);
     
 
     //TOGGLE ENTITIES/EVENTS
@@ -58,6 +59,26 @@ const CrossDocOverview = ( props ) => {
     const handleTableToggle = (event, newTables) => {
       setStateEntityTable(newTables);
     };
+
+    const evColumns= [
+        { field: 'document_name', headerName:'Document', type: 'string', width:190 },
+        { field: 'updated_at', headerName:'Last Updated', type: 'date', width:200},
+        { field: 'done', type: 'boolean', width:110 },
+        { field: 'iters', headerName:'Iterations', type: 'number', width:200},
+        { field: 'events_in_cluster', headerName:'Mentions in Cluster', type: 'number', width:250},
+        {
+            field: 'id',
+            headerName: 'Actions',
+            width: 250,
+            renderCell: (params) => (
+              <strong>
+                <ButtonGroup fullWidth={true} size="small" color="primary" aria-label="large outlined primary button group">
+                    <Button component={Link} to={`/docs_entity/${params.value}`}>Entity</Button>
+                </ButtonGroup>
+              </strong>
+            ),
+          },
+          ]
 
     
 
@@ -94,7 +115,23 @@ const CrossDocOverview = ( props ) => {
       </ToggleButton>
       
     </ToggleButtonGroup>
-        <div className={classes.dsButtons}>  
+        <div className={classes.dsButtons}> 
+        <Grid container>
+        
+        <div style={{width: '100%' }}>
+            <DataGrid
+              autoHeight={true}
+              pageSize={10}
+              rowsPerPageOptions={[5, 10, 20, 100]}
+              // rowOptions={{ selectable: true }} 
+              // options={{ onRowSelection: rowClick }}
+              columns={evColumns}
+              rows={evRows}
+            />
+          </div>
+
+
+        </Grid> 
 
         <Grid container spacing={3}>
     {

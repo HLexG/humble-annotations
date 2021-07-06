@@ -270,7 +270,7 @@ async def open_text_qry(mentions) -> Dict[str, Any]:
     
     return dicOut
 
-async def link_insert(cluster_id, pageid, currentDoc) -> Dict[str, Any]:
+async def link_insert(cluster_id, pageid, currentDoc, summary_title) -> Dict[str, Any]:
     """
     Input: mention or a list of them
     SQL Output: entity name, entity summary description
@@ -292,34 +292,42 @@ async def link_insert(cluster_id, pageid, currentDoc) -> Dict[str, Any]:
               "type": "entity_linking",
               "status":"commit"}
 
+    print('insert into anno table')
     result = await database.fetch_one(query=query, values=values)
     annotation_id = result['id']
 
     values2 = {
-        "annotation_id":int(annotation_id),
-        "cluster_id": int(cluster_id), 
-        "wikidata_id": int(pageid)
+        "id": str(pageid), 
+        "alt_id": str(pageid), 
+        "dataset_id": int(2), 
+        "entity_name": summary_title, 
+        "description": summary_title
     }
     param_list = ", ".join(":" + key for key in values2.keys())
     query2 =f"""
-    insert into wikidata(annotation_id, cluster_id, wikidata_id)
+    insert into wikidata(id, alt_id, dataset_id, entity_name, description)
     values ({param_list})
+    returning *
     """
+    print('insert into wd table')
+    print(query2)
+    result = await database.fetch_one(query2, values=values2)
+    db_id = result['db_id']
 
-    values2 = {
+    values3 = {
         "annotation_id":int(annotation_id),
         "cluster_id": int(cluster_id), 
-        "wikidata_id": int(pageid)
+        "wikidata_id": int(db_id)
     }
-    param_list = ", ".join(":" + key for key in values2.keys())
-    query2 =f"""
+    param_list = ", ".join(":" + key for key in values3.keys())
+    query3 =f"""
     insert into entity_links(annotation_id, cluster_id, wikidata_id)
     values ({param_list})
     """
 
     
-
-    result = await database.fetch_one(query2, values=values2)
+    print('insert into EL table')
+    result = await database.fetch_one(query3, values=values3)
 
     return result
 
