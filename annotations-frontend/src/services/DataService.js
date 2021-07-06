@@ -44,6 +44,9 @@ const DataService = {
     GetDocumentMentions: async function (document_id, annotation_id) {
         return await axios.get(BASE_API_URL + "/mentions/?document_id=" + document_id + "&annotation_id=" + annotation_id, { headers: authHeader() });
     },
+    GetDocumentCorefs: async function (document_id, annotation_id) {
+        return await axios.get(BASE_API_URL + "/corefs/?document_id=" + document_id + "&annotation_id=" + annotation_id, { headers: authHeader() });
+    },
     CopyAnnotations: async function (annotation_id, annotation_type) {
         return await axios.post(BASE_API_URL + "/annotations/" + annotation_id + "/copy?annotation_type=" + annotation_type, {}, { headers: authHeader() });
     },
