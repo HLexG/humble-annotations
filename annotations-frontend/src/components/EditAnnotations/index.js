@@ -46,23 +46,39 @@ const EditAnnotations = (props) => {
     const [search, setSearch] = useState('');
     const [task, setTask] = useState('entity_mention');
 
-    const [mentionAnnotations, setMentionAnnotations] = useState([]);
-    const loadDMentionAnnotations = () => {
+    const [annotations, setAnnotations] = useState([]);
+    const loadAnnotations = () => {
         DataService.GetDocumentAnnotations(id, "entity_mention")
             .then(function (response) {
-                setMentionAnnotations(response.data);
+                setAnnotations(response.data);
             })
     }
-
-    const [mentionAnnotation, setMentionAnnotation] = useState(null);
+    const [selectedAnnotation, setSelectedAnnotation] = useState(null);
     const [mentions, setMentions] = useState(null);
     const [editMentions, setEditMentions] = useState(false);
-    const [editCorefs, setEditCorefs] = useState(false);
     const loadMentions = () => {
-        if (mentionAnnotation) {
-            DataService.GetDocumentMentions(id, mentionAnnotation["id"])
+        if (selectedAnnotation) {
+            DataService.GetDocumentMentions(id, selectedAnnotation["id"])
                 .then(function (response) {
                     setMentions(response.data);
+                })
+        }
+    }
+    const [corefAnnotations, setCorefAnnotations] = useState([]);
+    const loadCorefAnnotations = () => {
+        DataService.GetDocumentAnnotations(id, "entity_coreference")
+            .then(function (response) {
+                setCorefAnnotations(response.data);
+            })
+    }
+    const [corefAnnotation, setCorefAnnotation] = useState(null);
+    const [corefs, setCorefs] = useState(null);
+    const [editCorefs, setEditCorefs] = useState(false);
+    const loadCorefs = () => {
+        if (corefAnnotation) {
+            DataService.GetDocumentCorefs(id, corefAnnotation["id"])
+                .then(function (response) {
+                    setCorefs(response.data);
                 })
         }
     }
@@ -70,20 +86,23 @@ const EditAnnotations = (props) => {
     // Setup Component
     useEffect(() => {
         loadDocument();
-        loadDMentionAnnotations();
+        loadAnnotations();
     }, []);
+    useEffect(() => {
+
+    }, [task]);
     useEffect(() => {
         loadMentions();
 
-        if (task == "entity_mention" && mentionAnnotation && mentionAnnotation["username"] == auth.state.username) {
+        if (task == "entity_mention" && selectedAnnotation && selectedAnnotation["username"] == auth.state.username) {
             setEditMentions(true);
         }
 
-    }, [mentionAnnotation]);
+    }, [selectedAnnotation]);
 
     // Handlers
-    const handleSetMentionAnnotation = (mention_annotation) => {
-        setMentionAnnotation(mention_annotation);
+    const handleSetAnnotation = (annotation) => {
+        setSelectedAnnotation(annotation);
     }
     const handleCopyMentionAnnotation = (mention_annotation) => {
 
@@ -93,14 +112,14 @@ const EditAnnotations = (props) => {
                 console.log(response.data);
 
                 // Reload document annotations
-                loadDMentionAnnotations();
+                loadAnnotations();
             })
     }
     const handleSave = () => {
         // TODO check if the user has access to save
 
         // Save mentions 
-        DataService.CreateDocumentMentions(id, mentionAnnotation["id"], mentions)
+        DataService.CreateDocumentMentions(id, selectedAnnotation["id"], mentions)
             .then(function (response) {
                 console.log("Mentions saved...");
             })
@@ -162,6 +181,7 @@ const EditAnnotations = (props) => {
                             {document &&
                                 <Annotations
                                     document={document}
+                                    task={task}
                                     mentions={mentions}
                                     editMentions={editMentions}
                                     editCorefs={editCorefs}
@@ -175,9 +195,10 @@ const EditAnnotations = (props) => {
                             {document &&
                                 <AnnotationPanel
                                     document={document}
-                                    mentionAnnotations={mentionAnnotations}
-                                    mentionAnnotation={mentionAnnotation}
-                                    handleSetMentionAnnotation={handleSetMentionAnnotation}
+                                    task={task}
+                                    annotations={annotations}
+                                    selectedAnnotation={selectedAnnotation}
+                                    handleSetAnnotation={handleSetAnnotation}
                                     handleCopyMentionAnnotation={handleCopyMentionAnnotation}
                                 >
 

@@ -13,9 +13,10 @@ import styles from './styles';
 const AnnotationPanel = (props) => {
     const { classes } = props;
     const { document } = props;
-    const { mentionAnnotations } = props;
-    const { mentionAnnotation } = props;
-    const { handleSetMentionAnnotation } = props;
+    const { task } = props;
+    const { annotations } = props;
+    const { selectedAnnotation } = props;
+    const { handleSetAnnotation } = props;
     const { handleCopyMentionAnnotation } = props;
 
     const auth = useAuthContext();
@@ -29,9 +30,9 @@ const AnnotationPanel = (props) => {
     }, []);
 
     // Function
-    const isMentionSelected = (men) => {
+    const isAnnotationSelected = (annotation, annotation_type) => {
         let style = {};
-        if (mentionAnnotation && (men.id == mentionAnnotation.id)) {
+        if (annotation_type == task && selectedAnnotation && (annotation.id == selectedAnnotation.id)) {
             style = { backgroundColor: "#dcdcdc" };
         }
 
@@ -39,11 +40,17 @@ const AnnotationPanel = (props) => {
     }
 
     // Handlers
-    const handleViewMention = (men) => {
-        handleSetMentionAnnotation(men);
+    const handleViewAnnotation = (annotation) => {
+        handleSetAnnotation(annotation);
     }
-    const handleCopyMention = (men) => {
-        handleCopyMentionAnnotation(men);
+    const handleCopyMention = (annotation) => {
+        handleCopyMentionAnnotation(annotation);
+    }
+    const handleViewCoref = (annotation) => {
+        //handleSetMentionAnnotation(annotation);
+    }
+    const handleCopyCoref = (annotation) => {
+        //handleCopyMentionAnnotation(annotation);
     }
 
     return (
@@ -52,25 +59,25 @@ const AnnotationPanel = (props) => {
                 Mentions
             </Typography>
             <List className={classes.annotationReferences}>
-                {mentionAnnotations && mentionAnnotations.length > 0 && mentionAnnotations.map((men, index) =>
+                {annotations && annotations.length > 0 && annotations.map((annotation, index) =>
                     <ListItem
                         key={index}
                         className={classes.annotationReferenceItems}
-                        style={isMentionSelected(men)}
+                        style={isAnnotationSelected(annotation, "entity_mention")}
                     >
                         <Typography>
-                            {men.username}
+                            {annotation.username}
                         </Typography>
                         <div className={classes.grow}></div>
-                        <IconButton edge="end" onClick={() => handleViewMention(men)}>
+                        <IconButton edge="end" onClick={() => handleViewAnnotation(annotation)}>
                             <Icon>visibility</Icon>
                         </IconButton>
-                        {men.username != auth.state.username &&
-                            <IconButton edge="end" onClick={() => handleCopyMention(men)}>
+                        {annotation.username != auth.state.username && task == "entity_mention" &&
+                            <IconButton edge="end" onClick={() => handleCopyMention(annotation)}>
                                 <Icon>content_copy</Icon>
                             </IconButton>
                         }
-                        {men.username == auth.state.username &&
+                        {annotation.username == auth.state.username && task == "entity_mention" &&
                             <IconButton edge="end" >
                                 <Icon></Icon>
                             </IconButton>
@@ -78,6 +85,43 @@ const AnnotationPanel = (props) => {
                     </ListItem>
                 )}
             </List>
+            {task == "entity_coreference" &&
+                <div>
+                    <Typography className={classes.toolstitle}>
+                        Coreferences
+                    </Typography>
+                    <List className={classes.annotationReferences}>
+                        {annotations && annotations.length > 0 && annotations.map((annotation, index) =>
+                            <div key={index}>
+                                {annotation.entity_coreference > 0 &&
+                                    <ListItem
+                                        className={classes.annotationReferenceItems}
+                                        style={isAnnotationSelected(annotation, "entity_coreference")}
+                                    >
+                                        <Typography>
+                                            {annotation.username}
+                                        </Typography>
+                                        <div className={classes.grow}></div>
+                                        <IconButton edge="end" onClick={() => handleViewAnnotation(annotation)}>
+                                            <Icon>visibility</Icon>
+                                        </IconButton>
+                                        {annotation.username != auth.state.username &&
+                                            <IconButton edge="end" onClick={() => handleCopyCoref(annotation)}>
+                                                <Icon>content_copy</Icon>
+                                            </IconButton>
+                                        }
+                                        {annotation.username == auth.state.username &&
+                                            <IconButton edge="end" >
+                                                <Icon></Icon>
+                                            </IconButton>
+                                        }
+                                    </ListItem>
+                                }
+                            </div>
+                        )}
+                    </List>
+                </div>
+            }
         </div>
     );
 };

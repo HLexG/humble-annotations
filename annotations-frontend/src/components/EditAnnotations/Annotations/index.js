@@ -8,6 +8,7 @@ import { buildAnnotationTree, colorList } from './functions';
 const Annotations = (props) => {
     const { classes } = props;
     const { document } = props;
+    const { task } = props;
     const { mentions } = props;
     const { editMentions } = props;
     const { editCorefs } = props;

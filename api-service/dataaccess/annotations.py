@@ -15,11 +15,15 @@ async def browse_user_annotations(
     """
 
     query = """
-        select a.id,a.document_id,a.user_id,a.type,a.status, u.username,u.full_name
+        select a.id,a.document_id,a.user_id,a.type,a.status, u.username,u.full_name,
+        count(m.id) as entity_mention,count(c.id) as entity_coreference
         from annotations a
         inner join users u on (a.user_id = u.id)
+        left join mentions m on (a.id = m.annotation_id)
+        left join clusters c on (a.id = c.annotation_id)
         where 1=1
         and a.document_id =:document_id
+        group by a.id,a.document_id,a.user_id,a.type,a.status, u.username,u.full_name
     """
 
     values = {
