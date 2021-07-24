@@ -34,9 +34,9 @@
         path: "/mnt/disk-1/data"
         state: "directory"
         mode: 0777
-    - name: Create model store directory
+    - name: Create data store directory
       file:
-        path: "/mnt/disk-1/model-store"
+        path: "/mnt/disk-1/dataset-store"
         state: "directory"
         mode: 0777
 
@@ -76,10 +76,81 @@
           - 9000:9000
         env:
           DATABASE_URL: "postgres://hlexg:annotate@postgres/hlexgdb"
+          DATASTORE_BUCKET: "/datastore"
         networks:
           - name: "{{docker_network_name}}"
         volumes:
-          - /mnt/disk-1/model-store:/modelstore
+          - /mnt/disk-1/dataset-store:/datastore
+    
+    - name: Create feature-extractor-01 container
+      docker_container:
+        name: "feature-extractor-01"
+        image: "gcr.io/{{ gcp_project }}/feature-extractor-01:{{ tag.stdout}}"
+        state: started
+        recreate: yes
+        published_ports:
+          - 9010:9000
+        env:
+          DATABASE_URL: "postgres://hlexg:annotate@postgres/hlexgdb"
+          DATASTORE_BUCKET: "/datastore"
+        networks:
+          - name: "{{docker_network_name}}"
+    
+    - name: Create feature-extractor-02 container
+      docker_container:
+        name: "feature-extractor-02"
+        image: "gcr.io/{{ gcp_project }}/feature-extractor-02:{{ tag.stdout}}"
+        state: started
+        recreate: yes
+        published_ports:
+          - 9011:9000
+        env:
+          DATABASE_URL: "postgres://hlexg:annotate@postgres/hlexgdb"
+          DATASTORE_BUCKET: "/datastore"
+        networks:
+          - name: "{{docker_network_name}}"
+    
+    - name: Create feature-extractor-03 container
+      docker_container:
+        name: "feature-extractor-03"
+        image: "gcr.io/{{ gcp_project }}/feature-extractor-03:{{ tag.stdout}}"
+        state: started
+        recreate: yes
+        published_ports:
+          - 9012:9000
+        env:
+          DATABASE_URL: "postgres://hlexg:annotate@postgres/hlexgdb"
+          DATASTORE_BUCKET: "/datastore"
+        networks:
+          - name: "{{docker_network_name}}"
+    
+    - name: Create feature-extractor-04 container
+      docker_container:
+        name: "feature-extractor-04"
+        image: "gcr.io/{{ gcp_project }}/feature-extractor-04:{{ tag.stdout}}"
+        state: started
+        recreate: yes
+        published_ports:
+          - 9013:9000
+        env:
+          DATABASE_URL: "postgres://hlexg:annotate@postgres/hlexgdb"
+          DATASTORE_BUCKET: "/datastore"
+        networks:
+          - name: "{{docker_network_name}}"
+    
+    - name: Create feature-extractor-05 container
+      docker_container:
+        name: "feature-extractor-05"
+        image: "gcr.io/{{ gcp_project }}/feature-extractor-05:{{ tag.stdout}}"
+        state: started
+        recreate: yes
+        published_ports:
+          - 9014:9000
+        env:
+          DATABASE_URL: "postgres://hlexg:annotate@postgres/hlexgdb"
+          DATASTORE_BUCKET: "/datastore"
+        networks:
+          - name: "{{docker_network_name}}"
   
     - name: Check if containers are running
       shell: docker ps

@@ -17,7 +17,7 @@
         source: build
     - name: Push frontend image to GCR
       community.general.docker_image:
-        name: gcr.io/{{ gcp_project }}/annotations-frontend
+        name: gcr.io/{{ gcp_project }}/annotations-frontend:{{ tag.stdout}}
         repository: gcr.io/{{ gcp_project }}/annotations-frontend:{{ tag.stdout}}
         push: yes
         source: local
@@ -29,8 +29,68 @@
         source: build
     - name: Push api-service image to GCR
       community.general.docker_image:
-        name: gcr.io/{{ gcp_project }}/api-service
+        name: gcr.io/{{ gcp_project }}/api-service:{{ tag.stdout}}
         repository: gcr.io/{{ gcp_project }}/api-service:{{ tag.stdout}}
+        push: yes
+        source: local
+    - name: Build feature-extractor-01 container image
+      community.general.docker_image:
+        build:
+          path: /feature-extractor-01
+        name: gcr.io/{{ gcp_project }}/feature-extractor-01:{{ tag.stdout}}
+        source: build
+    - name: Push feature-extractor-01 image to GCR
+      community.general.docker_image:
+        name: gcr.io/{{ gcp_project }}/feature-extractor-01:{{ tag.stdout}}
+        repository: gcr.io/{{ gcp_project }}/feature-extractor-01:{{ tag.stdout}}
+        push: yes
+        source: local
+    - name: Build feature-extractor-02 container image
+      community.general.docker_image:
+        build:
+          path: /feature-extractor-02
+        name: gcr.io/{{ gcp_project }}/feature-extractor-02:{{ tag.stdout}}
+        source: build
+    - name: Push feature-extractor-02 image to GCR
+      community.general.docker_image:
+        name: gcr.io/{{ gcp_project }}/feature-extractor-02:{{ tag.stdout}}
+        repository: gcr.io/{{ gcp_project }}/feature-extractor-02:{{ tag.stdout}}
+        push: yes
+        source: local
+    - name: Build feature-extractor-03 container image
+      community.general.docker_image:
+        build:
+          path: /feature-extractor-03
+        name: gcr.io/{{ gcp_project }}/feature-extractor-03:{{ tag.stdout}}
+        source: build
+    - name: Push feature-extractor-03 image to GCR
+      community.general.docker_image:
+        name: gcr.io/{{ gcp_project }}/feature-extractor-03:{{ tag.stdout}}
+        repository: gcr.io/{{ gcp_project }}/feature-extractor-03:{{ tag.stdout}}
+        push: yes
+        source: local
+    - name: Build feature-extractor-04 container image
+      community.general.docker_image:
+        build:
+          path: /feature-extractor-04
+        name: gcr.io/{{ gcp_project }}/feature-extractor-04:{{ tag.stdout}}
+        source: build
+    - name: Push feature-extractor-04 image to GCR
+      community.general.docker_image:
+        name: gcr.io/{{ gcp_project }}/feature-extractor-04:{{ tag.stdout}}
+        repository: gcr.io/{{ gcp_project }}/feature-extractor-04:{{ tag.stdout}}
+        push: yes
+        source: local
+    - name: Build feature-extractor-05 container image
+      community.general.docker_image:
+        build:
+          path: /feature-extractor-05
+        name: gcr.io/{{ gcp_project }}/feature-extractor-05:{{ tag.stdout}}
+        source: build
+    - name: Push feature-extractor-05 image to GCR
+      community.general.docker_image:
+        name: gcr.io/{{ gcp_project }}/feature-extractor-05:{{ tag.stdout}}
+        repository: gcr.io/{{ gcp_project }}/feature-extractor-05:{{ tag.stdout}}
         push: yes
         source: local
     - name: "Save docker tag"
