@@ -77,6 +77,11 @@
         env:
           DATABASE_URL: "postgres://hlexg:annotate@postgres/hlexgdb"
           DATASTORE_BUCKET: "/datastore"
+          FEATURE_EXTRACTOR_01: "http://feature-extractor-01:9010"
+          FEATURE_EXTRACTOR_02: "http://feature-extractor-02:9011"
+          FEATURE_EXTRACTOR_03: "http://feature-extractor-03:9012"
+          FEATURE_EXTRACTOR_04: "http://feature-extractor-04:9013"
+          FEATURE_EXTRACTOR_05: "http://feature-extractor-05:9014"
         networks:
           - name: "{{docker_network_name}}"
         volumes:
