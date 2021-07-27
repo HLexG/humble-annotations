@@ -7,7 +7,7 @@ uvicorn_server() {
 }
 
 uvicorn_server_production() {
-    pipenv run uvicorn api.service:app --host 0.0.0.0 --port 9013 --lifespan on
+    pipenv run uvicorn extractor.service:app --host 0.0.0.0 --port 9013 --lifespan on
 }
 
 export -f uvicorn_server
