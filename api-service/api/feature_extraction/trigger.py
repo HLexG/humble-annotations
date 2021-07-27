@@ -17,20 +17,24 @@ feat_1 = extract_environment_variable("FEATURE_EXTRACTOR_01")
 feat_2 = extract_environment_variable("FEATURE_EXTRACTOR_02")
 feat_3 = extract_environment_variable("FEATURE_EXTRACTOR_03")
 feat_4 = extract_environment_variable("FEATURE_EXTRACTOR_04")
-
-
-
-
+feat_5 = extract_environment_variable("FEATURE_EXTRACTOR_05")
 
 
 #feat_two_url = os.environ["FEAT_EXT_TWO_URL"]
 
 def preprocesses_entities(id):
-    url = 'http://hlexg-feature-extractor-02:9011/v1/process_dataset/'+str(id)
-    url2 = 'http://hlexg-feature-extractor-04:9013/v1/process_dataset_event/'+str(id)
-    url3 = 'http://hlexg-feature-extractor-01:9010/v1/process_dataset/'+str(id)
-    url4 = 'http://hlexg-feature-extractor-03:9012/v1/process_dataset/'+str(id)
-    urls = [url3, url,url2, url4]
+    # url = 'http://hlexg-feature-extractor-02:9011/v1/process_dataset/'+str(id)
+    # url2 = 'http://hlexg-feature-extractor-04:9013/v1/process_dataset_event/'+str(id)
+    # url3 = 'http://hlexg-feature-extractor-01:9010/v1/process_dataset/'+str(id)
+    # url4 = 'http://hlexg-feature-extractor-03:9012/v1/process_dataset/'+str(id)
+    #urls = [url3, url,url2, url4]
+
+    url1 = feat_1+'/v1/process_dataset/'+str(id)
+    url2 = feat_2+'/v1/process_dataset/'+str(id)
+    url3 = feat_3+'/v1/process_dataset/'+str(id)
+    url4 = feat_4+'/v1/process_dataset_event/'+str(id)
+    urls = [url1, url2, url3, url4]
+
 #    x = requests.get(url)
 #    return x.status_code
 #    """
@@ -39,7 +43,7 @@ def preprocesses_entities(id):
 #    """
 #    url = '172.18.0.6'+'/v1/process_dataset/'+str(id)
 #
-    
+
     session = requests.Session()
     retry = Retry(connect=3, backoff_factor=0.5)
     adapter = HTTPAdapter(max_retries=retry)
@@ -50,10 +54,10 @@ def preprocesses_entities(id):
         print(i)
         page = ''
         ct = 0
-        while page == '' and ct <10:
+        while page == '' and ct < 10:
             try:
                 page = session.get(i)
-                ct+=1
+                ct += 1
                 break
             except:
                 print("Connection refused by the server..")
@@ -61,6 +65,6 @@ def preprocesses_entities(id):
                 print("ZZzzzz...")
                 time.sleep(5)
                 print("Was a nice sleep, now let me continue...")
-                ct+=1
+                ct += 1
                 continue
     return page
