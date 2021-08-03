@@ -22,6 +22,14 @@ feat_5 = extract_environment_variable("FEATURE_EXTRACTOR_05")
 
 #feat_two_url = os.environ["FEAT_EXT_TWO_URL"]
 
+def preprocess(id, feat_extractor):
+    feat = extract_environment_variable(feat_extractor)
+    url = feat+'/v1/process_dataset/'+str(id)
+
+    response = requests.get(url)
+    print(response)
+
+
 def preprocesses_entities(id):
     # url = 'http://hlexg-feature-extractor-02:9011/v1/process_dataset/'+str(id)
     # url2 = 'http://hlexg-feature-extractor-04:9013/v1/process_dataset_event/'+str(id)
@@ -35,36 +43,28 @@ def preprocesses_entities(id):
     url4 = feat_4+'/v1/process_dataset_event/'+str(id)
     urls = [url1, url2, url3, url4]
 
-#    x = requests.get(url)
-#    return x.status_code
-#    """
-#    summary="Entity pre-annotations upon the upload of a dataset",
-#    description="Entity pre-annotations upon the upload of a dataset"
-#    """
-#    url = '172.18.0.6'+'/v1/process_dataset/'+str(id)
-#
-
-    session = requests.Session()
-    retry = Retry(connect=3, backoff_factor=0.5)
-    adapter = HTTPAdapter(max_retries=retry)
-#    session.mount('http://', adapter)
-#    session.mount('https://', adapter)
-#
     for i in urls:
         print(i)
-        page = ''
-        ct = 0
-        while page == '' and ct < 10:
-            try:
-                page = session.get(i)
-                ct += 1
-                break
-            except:
-                print("Connection refused by the server..")
-                print("Let me sleep for 5 seconds")
-                print("ZZzzzz...")
-                time.sleep(5)
-                print("Was a nice sleep, now let me continue...")
-                ct += 1
-                continue
-    return page
+
+    # session = requests.Session()
+    # retry = Retry(connect=3, backoff_factor=0.5)
+    # adapter = HTTPAdapter(max_retries=retry)
+
+    # for i in urls:
+    #     print(i)
+    #     page = ''
+    #     ct = 0
+    #     while page == '' and ct < 10:
+    #         try:
+    #             page = session.get(i)
+    #             ct += 1
+    #             break
+    #         except:
+    #             print("Connection refused by the server..")
+    #             print("Let me sleep for 5 seconds")
+    #             print("ZZzzzz...")
+    #             time.sleep(5)
+    #             print("Was a nice sleep, now let me continue...")
+    #             ct += 1
+    #             continue
+    # return page
