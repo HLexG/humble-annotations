@@ -164,6 +164,22 @@ async def datasets_upload_with_id(
     trigger.preprocesses_entities(id)
 
 
+@router.get(
+    "/call_feature_extractor/{id}",
+    tags=["Datasets"],
+    summary="Call feature extractor",
+    description="Call feature extractor"
+)
+async def call_feature_extractor(
+    id: int = Path(..., description="The dataset id"),
+    feat_extractor: str = Query(
+        None, description="Feature extractor env variable"),
+):
+    trigger.preprocess(id, feat_extractor)
+
+    return {"done"}
+
+
 @router.delete(
     "/datasets/{id}",
     tags=["Datasets"],
