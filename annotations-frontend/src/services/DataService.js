@@ -39,19 +39,19 @@ const DataService = {
         return await axios.get(BASE_API_URL + "/documents/" + id, { headers: authHeader() });
     },
     GetDocumentAnnotations: async function (document_id, annotation_type) {
-        return await axios.get(BASE_API_URL + "/annotations/?document_id=" + document_id + "&annotation_type=" + annotation_type, { headers: authHeader() });
+        return await axios.get(BASE_API_URL + "/annotations?document_id=" + document_id + "&annotation_type=" + annotation_type, { headers: authHeader() });
     },
     GetDocumentMentions: async function (document_id, annotation_id) {
-        return await axios.get(BASE_API_URL + "/mentions/?document_id=" + document_id + "&annotation_id=" + annotation_id, { headers: authHeader() });
+        return await axios.get(BASE_API_URL + "/mentions?document_id=" + document_id + "&annotation_id=" + annotation_id, { headers: authHeader() });
     },
     GetDocumentCorefs: async function (document_id, annotation_id) {
-        return await axios.get(BASE_API_URL + "/corefs/?document_id=" + document_id + "&annotation_id=" + annotation_id, { headers: authHeader() });
+        return await axios.get(BASE_API_URL + "/corefs?document_id=" + document_id + "&annotation_id=" + annotation_id, { headers: authHeader() });
     },
     CopyAnnotations: async function (annotation_id, annotation_type) {
         return await axios.post(BASE_API_URL + "/annotations/" + annotation_id + "/copy?annotation_type=" + annotation_type, {}, { headers: authHeader() });
     },
     CreateDocumentMentions: async function (document_id, annotation_id, mentions) {
-        return await axios.post(BASE_API_URL + "/mentions/?document_id=" + document_id + "&annotation_id=" + annotation_id, { mentions: mentions }, { headers: authHeader() });
+        return await axios.post(BASE_API_URL + "/mentions?document_id=" + document_id + "&annotation_id=" + annotation_id, { mentions: mentions }, { headers: authHeader() });
     },
     GetMentions: async function (id) {
         return await axios.get(BASE_API_URL + "/mentionsdoc/" + id, { headers: authHeader() });
