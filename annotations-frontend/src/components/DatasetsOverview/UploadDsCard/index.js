@@ -8,6 +8,15 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import { withStyles } from '@material-ui/core';
 
+
+import Box from '@material-ui/core/Box';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import { green } from '@material-ui/core/colors';
+import Fab from '@material-ui/core/Fab';
+import CheckIcon from '@material-ui/icons/Check';
+import SaveIcon from '@material-ui/icons/Save';
+
+
 import styles from './styles';
 
 import FileUploader from '../../../common/FileUploader';
@@ -20,13 +29,46 @@ import FileUploader from '../../../common/FileUploader';
 const UploadDsCard = ( props ) => {
     const {classes, handleClickOpenDialog, handleCloseDialog,
       dialogOpen, formTitle, setFormTitle, formDescr,
-      setFormDescr, setSelectedFormFile, submitNewDataset} = props;
+      setFormDescr, setSelectedFormFile, submitNewDataset, dataUploaded} = props;
 
 
     console.log("================================== UploadDsCard ======================================");
 
     // Component States
-    
+
+    const [loading, setLoading] = React.useState(false);
+    const [success, setSuccess] = React.useState(false);
+
+    const timer = React.useRef();
+
+    const buttonSx = {
+        ...(success && {
+            bgcolor: green[500],
+            '&:hover': {
+                bgcolor: green[700],
+            },
+        }),
+    };
+
+    React.useEffect(() => {
+        return () => {
+            clearTimeout(timer.current);
+        };
+    }, []);
+
+    const handleButtonClick = () => {
+        if (!loading) {
+            setSuccess(false);
+            setLoading(true);
+            timer.current = window.setTimeout(() => {
+                setSuccess(true);
+                setLoading(false);
+            }, 2000);
+        }
+    };
+
+
+
     return (
       <div>
         <Dialog open={dialogOpen} onClose={handleCloseDialog} aria-labelledby="form-dialog-title">
@@ -67,12 +109,11 @@ const UploadDsCard = ( props ) => {
             />
           </DialogContent>
           <DialogActions>
-            <Button onClick={handleCloseDialog} color="primary">
-              Cancel
+            <Button onClick={handleCloseDialog} color="primary">Cancel
             </Button>
             <Button onClick={submitNewDataset} color="primary">
               Submit
-            </Button>
+            </Button>s
           </DialogActions>
         </Dialog>
       </div>

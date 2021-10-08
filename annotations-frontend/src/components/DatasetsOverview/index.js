@@ -8,6 +8,14 @@ import Button from '@material-ui/core/Button';
 import UploadDsCard from './UploadDsCard';
 import DataService from "../../services/DataService";
 
+
+import Box from '@material-ui/core/Box';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import { green } from '@material-ui/core/colors';
+import Fab from '@material-ui/core/Fab';
+import CheckIcon from '@material-ui/icons/Check';
+import SaveIcon from '@material-ui/icons/Save';
+
 const delay = ms => new Promise(res => setTimeout(res, ms));
 
 
@@ -21,8 +29,22 @@ const DatasetsOverview = ( props ) => {
   const [selectedFormFile, setSelectedFormFile] = useState(null);
   const [datasets, setDataset] = useState([]);
   const [dsetId, setDsetId] = useState(0);
+  const [dataUploaded, setDataUploaded] = React.useState(false);
+  const [dataLoading, setDataLoading] = React.useState(false);
 
-  // does the job of componentDidMount, componentDidUpdate, componentWillUpdate combined
+
+    const buttonUd = {
+        ...(dataUploaded && {
+            bgcolor: green[500],
+            '&:hover': {
+                bgcolor: green[700],
+            },
+        }),
+    };
+
+
+
+    // does the job of componentDidMount, componentDidUpdate, componentWillUpdate combined
   useEffect(() => {
     loadDatasets()
   }, []) // Needed [], else we get an infinite loop to the state changing in loadDatasets()
@@ -47,6 +69,7 @@ const DatasetsOverview = ( props ) => {
     console.log(formTitle);
     console.log(formDescr);
     console.log(selectedFormFile);
+    setDataLoading(true);
     
     // Construct the object for our initial db instance creation
     const datasetInfo = {
@@ -70,6 +93,8 @@ const DatasetsOverview = ( props ) => {
               console.log(response.data);
 
               // Inform the user
+              setDataUploaded(true);
+              setDataLoading(false);
               alert(`Dataset '${formTitle}' uploaded succesfully!`)
 
               // Reload screen to display new ds as well
@@ -121,12 +146,57 @@ const DatasetsOverview = ( props ) => {
           <Button variant="contained" color="primary" className={classes.uploadButton} onClick={handleClickOpenDialog}>
             Upload clean dataset
           </Button>
-          <Button variant="contained" color="primary" className={classes.uploadButton} onClick={loadDatasets}>
-            refresh
-          </Button>
           <Button variant="contained" color="primary" className={classes.uploadButton} onClick={loadEvents}>
             event test
           </Button>
+
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                <Box sx={{ m: 1, position: 'relative' }}>
+                    <Fab
+                        aria-label="save"
+                        color="primary"
+                        sx={buttonUd}
+                        onClick={submitNewDataset}
+                    >
+                        {dataUploaded ? <CheckIcon /> : <SaveIcon />}
+                    </Fab>
+                    {dataLoading && (
+                        <CircularProgress
+                            size={68}
+                            sx={{
+                                color: green[500],
+                                position: 'absolute',
+                                top: -6,
+                                left: -6,
+                                zIndex: 1,
+                            }}
+                        />
+                    )}
+                </Box>
+                <Box sx={{ m: 1, position: 'relative' }}>
+                    <Button
+                        variant="contained"
+                        sx={buttonUd}
+                        disabled={dataLoading}
+                    >
+                        {formTitle}
+                    </Button>
+                    {dataLoading && (
+                        <CircularProgress
+                            size={24}
+                            sx={{
+                                color: green[500],
+                                position: 'absolute',
+                                top: '50%',
+                                left: '50%',
+                                marginTop: '-12px',
+                                marginLeft: '-12px',
+                            }}
+                        />
+                    )}
+                </Box>
+            </Box>
+
           <UploadDsCard 
             handleClickOpenDialog={handleClickOpenDialog} 
             handleCloseDialog={handleCloseDialog} 
@@ -137,6 +207,8 @@ const DatasetsOverview = ( props ) => {
             setFormDescr={setFormDescr}
             setSelectedFormFile={setSelectedFormFile}
             submitNewDataset={submitNewDataset}
+            dataUploaded = {dataUploaded}
+            setDataUploaded = {setDataUploaded}
           />
           {/* <Button variant="contained" color="secondary">
             Upload annotated dataset

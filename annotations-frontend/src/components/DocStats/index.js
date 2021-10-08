@@ -21,7 +21,8 @@ const DocStats = ( props ) => {
     const {classes} = props;
     const { history } = props;
 
-    console.log("================================== Home ======================================");
+    console.log("================================== DocStats ======================================");
+    console.log(props)
 
     // Component States
     const [dataset , setDataset] = useState("");
@@ -71,8 +72,16 @@ const DocStats = ( props ) => {
       const columns2 = [
         
         {field: 'tcl', headerName: 'Total', width: 150, },
-        {field: 'lcl', headerName: 'Linked', width: 200, },
-        {field: 'ecl', headerName: 'Evaluated', width: 200, },
+        {field: 'lcl', headerName: 'Clusters Linked', width: 200, },
+        {field: 'ecl', headerName: 'Clusters Evaluated', width: 200, },
+      ];
+
+
+      const columns3 = [
+        
+        {field: 'tcl', headerName: 'Total Clusters', width: 150, },
+        {field: 'lcl', headerName: 'Clusters Linked', width: 200, },
+        {field: 'ecl', headerName: 'Clusters Evaluated', width: 200, },
       ];
       
       const rows2 = [
@@ -83,6 +92,9 @@ const DocStats = ( props ) => {
         setDataset(event.target.value)
         console.log("current dataset:")
         console.log(dataset)
+        console.log('dataset id')
+        console.log(dataset.id)
+        loadMentionStats();
     };
     const loadDocuments = () => {
          DataService.GetDatasets()
@@ -108,9 +120,10 @@ const DocStats = ( props ) => {
     const [xDocEnRows, SetXDocEnRows] = useState([]);
 
     const loadMentionStats = () => {
+        console.log('---Mention Stats---')
         DataService.MentionStats()
             .then(function (response) {
-                console.log('---Mention Stats---')
+                console.log('---Mention Stats response---')
                 console.log(response.data)
                 SetMentionStats(response.data)
                 SetEntityRows(response.data['entity'])
@@ -118,6 +131,7 @@ const DocStats = ( props ) => {
                 SetEventRows(response.data['event'])
                 SetXDocEvRows(response.data['xdoc'])
 		SetXDocEnRows(response.data['xdoc'])
+        console.log(mentionStats)
 
         })
     };
@@ -138,11 +152,9 @@ const DocStats = ( props ) => {
                         <Card className={classes.exp}>
                             <CardContent>
                                 <Typography gutterBottom variant="h5" component="h2">
-                                    Explanation
+                                    Choose Dataset
                                 </Typography>
-                                <Typography variant="body2" color="textSecondary" component="p">
-                                    Some metrics here....
-                                </Typography>
+
                             </CardContent>
                             <CardContent>
                             <FormControl className={classes.formControl}>
@@ -157,6 +169,14 @@ const DocStats = ( props ) => {
                                   ))}
                                 </Select>
                               </FormControl>
+                              
+                            </CardContent>
+                            <CardContent>
+                            <Typography variant="body2" color="textSecondary" component="p">
+                                Green: >3 Annotation Iterations <br/>
+                                Yellow: 1-3 Annotation  Iterations <br/>
+                                Red 0 Annotation Iterations
+                                </Typography>
                             </CardContent>
                         </Card>
                     </Grid>
@@ -183,7 +203,7 @@ const DocStats = ( props ) => {
                                         </Typography>
                                                 <DataGrid
                                                     autoHeight
-                                                    rows={entityRows}
+                                                    rows={rows}
                                                     columns={columns}
                                                     pageSize={5}
                                                     disableSelectionOnClick
@@ -222,7 +242,7 @@ const DocStats = ( props ) => {
                                         </Typography>
                                                 <DataGrid
                                                     autoHeight
-                                                    rows={eventRows}
+                                                    rows={rows}
                                                     columns={columns}
                                                     pageSize={5}
                                                     disableSelectionOnClick

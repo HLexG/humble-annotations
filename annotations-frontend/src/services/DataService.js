@@ -29,6 +29,11 @@ const DataService = {
 
         return outputs;
     },
+    DeleteDataset: async function (id) {
+        return await axios.delete(BASE_API_URL + "/datasets_delete/" + id, { headers: authHeader() });
+    },
+
+
     GetDataset: async function (id) {
         return await axios.get(BASE_API_URL + "/datasets/" + id, { headers: authHeader() });
     },
