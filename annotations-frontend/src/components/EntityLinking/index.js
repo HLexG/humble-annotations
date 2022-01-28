@@ -20,6 +20,14 @@ import MyTheme from './MyTheme';
 
 
 
+
+
+//import DoNotDisturbAltSharpIcon from '@material-ui/icons/DoNotDisturbAltSharp';
+import ArrowForwardSharpIcon from '@material-ui/icons/ArrowForwardSharp';
+import CheckSharpIcon from '@material-ui/icons/CheckSharp';
+import ClearSharpIcon from '@material-ui/icons/ClearSharp';
+
+
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
@@ -115,6 +123,7 @@ const EntityLinking = ( props ) => {
 
       const [id, setId] = useState('Q1470929');
       const [summary, setSummary] = useState([]);
+      const [backup, setBackup] = useState([]);
       const [countVal, setCountVal] = useState(0);
       //const [supportiveText , setSupportiveText] = useState([]);
       const [supportiveTextGroup , setSupportiveTextGroup] = useState([]);
@@ -135,8 +144,15 @@ const EntityLinking = ( props ) => {
       loadWikiCandidates();
     };
 
+    const handleSwapClick = () => {
+      setSummary(backup);
+      setImgSrc(backup.images[0]);
+    };
+
+
     const [imgsrc, setImgSrc] = useState('https://img.favpng.com/23/11/22/wikidata-scalable-vector-graphics-logo-wikimedia-foundation-wikimedia-project-png-favpng-YTaqyqL8zinPmRTYiLBQkG7fX.jpg');
     const [url, setUrl] = useState('https://img.favpng.com/23/11/22/wikidata-scalable-vector-graphics-logo-wikimedia-foundation-wikimedia-project-png-favpng-YTaqyqL8zinPmRTYiLBQkG7fX.jpg');
+    const [backupUrl, setBackupUrl] = useState('https://img.favpng.com/23/11/22/wikidata-scalable-vector-graphics-logo-wikimedia-foundation-wikimedia-project-png-favpng-YTaqyqL8zinPmRTYiLBQkG7fX.jpg');
     const inputqry = " ".concat(nounPhrases['mentions'][countVal])
     const loadWikiCandidates = () => {
         console.log('start wiki candidates')
@@ -149,6 +165,10 @@ const EntityLinking = ( props ) => {
             console.log("wd summary")
             console.log(summary)
             setUrl(summary.url);
+            setBackup(response.data[1]);
+            console.log("wd summary")
+            console.log()
+            setBackupUrl(backup.url);
             
 			
 			setImgSrc(response.data[countVal].images[0])
@@ -213,10 +233,10 @@ const EntityLinking = ( props ) => {
       </CardActionArea>
       <CardActions>
       
-      <Button variant="contained" style={MyTheme.palette.confirm} onClick={handleClickCorrect}>Same</Button>
-      <Button variant="contained" style={MyTheme.palette.unknown}>Unsure</Button>
-      <Button variant="contained" style={MyTheme.palette.deny} onClick={handleClickIncorrect}>Different</Button>
-      <Button variant="contained" style={MyTheme.palette.deny} onClick={handleCountClick}>Next</Button>
+      <Button variant="contained" style={MyTheme.palette.confirm} onClick={handleClickCorrect}>Same <CheckSharpIcon/></Button>
+      
+      <Button variant="contained" style={MyTheme.palette.deny} onClick={handleClickIncorrect}>Different <ClearSharpIcon/></Button>
+      <Button variant="contained" style={MyTheme.palette.unknown} onClick={handleSwapClick}>Next Option<ArrowForwardSharpIcon/></Button>
       </CardActions>
     </Card>
           </Grid>
