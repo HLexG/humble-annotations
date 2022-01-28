@@ -50,6 +50,7 @@ const CrossDocOverview = ( props ) => {
     const [topMentions, setTopMentions] =  useState([]);
     const [mentionReframe, setMentionReframe]=  useState([]);
     const [evRows, setEvRows] =  useState([]);
+    const [trows, setTrows] =   useState([]);
     
 
     //TOGGLE ENTITIES/EVENTS
@@ -60,25 +61,27 @@ const CrossDocOverview = ( props ) => {
       setStateEntityTable(newTables);
     };
 
-    const evColumns= [
-        { field: 'document_name', headerName:'Document', type: 'string', width:190 },
-        { field: 'updated_at', headerName:'Last Updated', type: 'date', width:200},
-        { field: 'done', type: 'boolean', width:110 },
-        { field: 'iters', headerName:'Iterations', type: 'number', width:200},
-        { field: 'events_in_cluster', headerName:'Mentions in Cluster', type: 'number', width:250},
-        {
-            field: 'id',
-            headerName: 'Actions',
-            width: 250,
-            renderCell: (params) => (
-              <strong>
-                <ButtonGroup fullWidth={true} size="small" color="primary" aria-label="large outlined primary button group">
-                    <Button component={Link} to={`/docs_entity/${params.value}`}>Entity</Button>
-                </ButtonGroup>
-              </strong>
-            ),
-          },
-          ]
+
+
+    const tcol = [
+      { field: 'mention_name', headerName:"Mention", type: "string", width:190 },
+      { field: 'mention_count', type: 'number', headerName: "# Mentions", width:190 },
+      {
+        field: 'id',
+        headerName: 'Actions',
+        width: 250,
+        renderCell: (params) => (
+          <strong>
+            <ButtonGroup fullWidth={true} size="small" color="primary" aria-label="large outlined primary button group">
+                <Button component={Link} to={`/grounding/${params.value}`}>Ground</Button>
+            </ButtonGroup>
+          </strong>
+        ),
+      },
+
+    ]
+
+
 
     
 
@@ -99,6 +102,18 @@ const CrossDocOverview = ( props ) => {
               setUnclaimedEntities(response.data)
               setMentionReframe(unclaimedEntities.mentions)
               setTopMentions(mentionReframe)
+              setTrows(unclaimedEntities.map(
+                (row) => {
+                            return {
+                              id: row.id,
+                              mention_name: row.mentions[0],
+                              mention_count: row.mentions.length,
+                                }
+                              }
+                                  )
+            
+                        )
+              
 
             });
         }, []) 
@@ -110,7 +125,7 @@ const CrossDocOverview = ( props ) => {
       <ToggleButton value="entities" aria-label="Entities">
         <NaturePeopleIcon /> Entities
       </ToggleButton>
-      <ToggleButton value="xdocevents" aria-label="Events" disabled>
+      <ToggleButton value="xdocevents" aria-label="Events">
         <EventIcon /> Events
       </ToggleButton>
       
@@ -125,13 +140,14 @@ const CrossDocOverview = ( props ) => {
               rowsPerPageOptions={[5, 10, 20, 100]}
               // rowOptions={{ selectable: true }} 
               // options={{ onRowSelection: rowClick }}
-              columns={evColumns}
-              rows={evRows}
+              columns={tcol}
+              rows={trows}
             />
           </div>
 
 
         </Grid> 
+
 
         <Grid container spacing={3}>
     {
