@@ -143,18 +143,14 @@ const DatasetsOverview = ( props ) => {
         <h1 className={classes.headerTextStyle}>Datasets</h1>
         <p className={classes.headerTextStyle}>Here you can find datasets that you can help to annotate. You can also upload your own dataset so you and your team can start annotating</p>
         <div className={classes.dsButtons}>
-          <Button variant="contained" color="primary" className={classes.uploadButton} onClick={handleClickOpenDialog}>
+          <Button variant="contained" color="success" className={classes.uploadButton} onClick={handleClickOpenDialog}>
             Upload clean dataset
           </Button>
-          <Button variant="contained" color="primary" className={classes.uploadButton} onClick={loadEvents}>
-            event test
-          </Button>
-
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
                 <Box sx={{ m: 1, position: 'relative' }}>
                     <Fab
                         aria-label="save"
-                        color="primary"
+                        color="info"
                         sx={buttonUd}
                         onClick={submitNewDataset}
                     >
@@ -164,33 +160,11 @@ const DatasetsOverview = ( props ) => {
                         <CircularProgress
                             size={68}
                             sx={{
-                                color: green[500],
+                                color: 'secondary',
                                 position: 'absolute',
                                 top: -6,
                                 left: -6,
                                 zIndex: 1,
-                            }}
-                        />
-                    )}
-                </Box>
-                <Box sx={{ m: 1, position: 'relative' }}>
-                    <Button
-                        variant="contained"
-                        sx={buttonUd}
-                        disabled={dataLoading}
-                    >
-                        {formTitle}
-                    </Button>
-                    {dataLoading && (
-                        <CircularProgress
-                            size={24}
-                            sx={{
-                                color: green[500],
-                                position: 'absolute',
-                                top: '50%',
-                                left: '50%',
-                                marginTop: '-12px',
-                                marginLeft: '-12px',
                             }}
                         />
                     )}
