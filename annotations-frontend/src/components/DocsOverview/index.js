@@ -25,6 +25,7 @@ const DocsOverview = ( props ) => {
     const [docs, setDocs] = useState([]);
     const [pageTitle, setPageTitle] = useState("CeleBERTy dataset ");
     const [pageDesc, setPageDesc] = useState("Some general info about this dataset");
+    
 
 
     console.log(props);
@@ -84,7 +85,7 @@ const DocsOverview = ( props ) => {
         { field: 'document_name', type: 'string', width:190 },
         { field: 'updated_at', type: 'date', width:150},
         { field: 'done', type: 'boolean', width:110 },
-        { field: 'words', type: 'number', width:120},
+        { field: 'word_count', headerName: '# Words',type: 'number', width:200},
         {
             field: 'id',
             headerName: 'Actions',
@@ -94,7 +95,6 @@ const DocsOverview = ( props ) => {
                 <ButtonGroup fullWidth={true} size="small" color="primary" aria-label="large outlined primary button group">
                     <Button component={Link} to={`/docs_entity/${params.value}`}>Entity</Button>
                     <Button component={Link} to={`/docs_event/${params.value}`}>Event</Button>
-                    <Button component={Link} to={`/gen_anno/${params.value}`}>AnnoTest</Button>
                 </ButtonGroup>
               </strong>
             ),
