@@ -9,5 +9,3 @@ Code adapted from paper [Learning to Ignore: Long Document Coreference with Boun
     booktitle = "EMNLP",
     year = "2020",
 }
-```
-
