@@ -251,7 +251,7 @@ async def open_text_qry(mentions) -> Dict[str, Any]:
     print('open_text_qry started')
     wiki = MediaWiki()
     candidates = wiki.search(mentions)
-    candidates = candidates[:2]
+    candidates = candidates[:3]
     dicOut = []
     print('first candidates')
     print(candidates)
