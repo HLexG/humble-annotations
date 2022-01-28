@@ -18,7 +18,7 @@ async def browse(
     """
 
     query = """
-        select id,dataset_id,document_name,filepath 
+        select id,dataset_id,document_name,filepath, word_count
         from documents
         where dataset_id = :dataset_id
     """

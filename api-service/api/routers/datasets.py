@@ -161,7 +161,7 @@ async def datasets_upload_with_id(
 
     # Preprocessing Trigger for FE2
 
-    trigger.preprocesses_entities(id)
+    #trigger.preprocesses_entities(id)
 
 
 @router.get(
@@ -181,7 +181,7 @@ async def call_feature_extractor(
 
 
 @router.delete(
-    "/datasets/{id}",
+    "/datasets_delete/{id}",
     tags=["Datasets"],
     summary="Delete a dataset",
     description="Delete a dataset"
