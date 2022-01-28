@@ -1,0 +1,12 @@
+###### Requirements without Version Specifiers ######`
+uvicorn
+requests
+fastapi
+databases
+transformers
+aiofiles
+asyncpg
+spacy-alignments
+
+###### Requirements with Version Specifiers ######`
+torch == 1.6.0             # Version Matching. Must be version 0.6.1

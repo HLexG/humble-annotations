@@ -15,6 +15,7 @@ allennlp = "2.1"
 allennlp-models = "2.1"
 spacy-alignments = "*"
 databases = {extras = ["postgresql"], version = "*"}
+torch = "*"
 
 [requires]
 python_version = "3.8"

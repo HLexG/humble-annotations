@@ -1,0 +1,29 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+
+[packages]
+uvicorn = "*"
+requests = "*"
+fastapi = "*"
+databases = "*"
+transformers = "*"
+aiofiles = "*"
+asyncpg = "*"
+spacy-alignments = "*"
+
+
+[[source]]
+name = "pytorch"
+url = "https://download.pytorch.org/whl/torch_stable.html"
+verify_ssl = false
+
+[packages]
+torch = {index = "pytorch",version = "==1.6.0"}
+
+[dev-packages]
+
+[requires]
+python_version = "3.8"

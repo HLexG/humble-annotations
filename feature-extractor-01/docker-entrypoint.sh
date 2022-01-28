@@ -13,6 +13,8 @@ uvicorn_server_production() {
 export -f uvicorn_server
 export -f uvicorn_server_production
 
+pip install -r requirements.txt
+
 echo -en "\033[92m
 The following commands are available:
     uvicorn_server

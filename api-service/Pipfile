@@ -19,6 +19,8 @@ en-core-web-sm = {file = "https://github.com/explosion/spacy-models/releases/dow
 python-multipart = "*"
 python-jose = "*"
 passlib = {extras = ["bcrypt"], version = "*"}
+sockets = "*"
+starlette = "*"
 
 [requires]
 python_version = "3.8"
