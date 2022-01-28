@@ -8,13 +8,26 @@ import DataService from "../../services/DataService";
 import Rating from '@material-ui/lab/Rating';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
 //import { DoughnutOptions } from '../helpers/DoughnutOptions.js';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import {DataGrid} from "@material-ui/data-grid";
 import ButtonGroup from "@material-ui/core/ButtonGroup";
 import {Link} from "react-router-dom";
 
-import CircularProgressWithLabel from './charting/circProgressLabelled'
+import CircularProgressWithLabel from './charting/circProgressLabelled';
+
+
+import TaskLevelProgress from './taskTables/taskLevel';
+import DocLevelProgress from './taskTables/docLevel';
+
+import TabPanel from './taskTables/tabPanel';
+
+
+
+//import CustomizedSteppers  from './charting/progressBar';
+
 //import db from './fb';
 
 //import {handlePullMentions }from "./handlers";
@@ -40,6 +53,14 @@ const fbPull = async () =>{
       console.log(`Found document at ${documentSnapshot.ref.path}`);
     });
   });};*/
+
+
+function a11yProps(index) {
+  return {
+    id: `simple-tab-${index}`,
+    'aria-controls': `simple-tabpanel-${index}`,
+  };
+}  
 
 const Progress = ( props ) => {
     const {classes} = props;
@@ -140,17 +161,17 @@ const Progress = ( props ) => {
 
     const colsDocLevel = [
         { width: 150, field: 'id', type: 'number',  headerName: 'id test', description: 'tooltip desc', hide: true},
-        { width: 150, field: 'dn', type: 'string',  headerName: 'Document Name', description: 'tooltip desc'},
+        { width: 250, field: 'dn', type: 'string',  headerName: 'Document Name', description: 'tooltip desc'},
 
 
         { width: 250,field: "vm", headerName: 'Event Mentions', description: 'Go directly to this task',
             renderCell: (cellValues) => {
                 return (
                     <div>
-                    {cellValues.value}
+                    {cellValues.value}{" Iterations "}
                     <Button
                         variant="contained"
-                        color="blue"
+                        color="secondary"
                         onClick={(event) => {
                             console.log(event, cellValues);
                         }}
@@ -165,10 +186,10 @@ const Progress = ( props ) => {
         renderCell: (cellValues) => {
             return (
                 <div>
-                {cellValues.value}
+                {cellValues.value}{" Iterations "}
                 <Button
                     variant="contained"
-                    color="blue"
+                    color="secondary"
                     onClick={(event) => {
                         console.log(event, cellValues);
                     }}
@@ -183,10 +204,10 @@ const Progress = ( props ) => {
         renderCell: (cellValues) => {
             return (
                 <div>
-                {cellValues.value}
+                {cellValues.value}{" Iterations "}
                 <Button
                     variant="contained"
-                    color="blue"
+                    color="secondary"
                     onClick={(event) => {
                         console.log(event, cellValues);
                     }}
@@ -201,10 +222,10 @@ const Progress = ( props ) => {
         renderCell: (cellValues) => {
             return (
                 <div>
-                {cellValues.value}
+                {cellValues.value}{" Iterations "}
                 <Button
                     variant="contained"
-                    color="blue"
+                    color="secondary"
                     onClick={(event) => {
                         console.log(event, cellValues);
                     }}
@@ -237,7 +258,7 @@ const Progress = ( props ) => {
                 return (
                     <Button
                         variant="contained"
-                        color="blue"
+                        color="secondary"
                         onClick={(event) => {
                             console.log(event, cellValues);
                         }}
@@ -247,14 +268,13 @@ const Progress = ( props ) => {
                 );
             }
         },
-        { width: 150, field: 'a',  type: 'boolean', headerName: 'Iterations', description: 'tooltip desc'},
+        { width: 150, field: 'a',  type: 'number', headerName: 'Iterations', description: 'tooltip desc'},
         { width: 250, field: 'd',  type: 'number',  headerName: '# of Dependencies', description: 'tooltip desc'},
-        { field: 'e', headerName: 'IAA', description: 'tooltip desc',
-            renderCell: (cellValues) => {
-                return (
-                    <Rating name="size-small" defaultValue={2} size="small" />
-                );
-            }
+        { field: 'e', headerName: 'IAA', description: 'tooltip desc',type: 'number',valueFormatter: (params) => {
+            const valueFormatted = Number(params.value * 100).toLocaleString();
+            return `${valueFormatted} %`;
+          },
+          valueParser: (value) => Number(value) / 100,
         },
         
     ];
@@ -262,68 +282,118 @@ const Progress = ( props ) => {
 
     const rows = [
         {
-            'id':100,
-            'dn':'docname',
-            'ua':Date(1995, 11, 17),
-            'a':true,
-            'b':'Entity Coref',
+            'id':1,
+            'dn':'Document A',
+            'ua':new Date(2021, 11, 17),
+            'a':0,
+            'b':'Entity Mentions',
+            'c':1,
+            'd':3,
+            'e':0
+
+        },
+        {
+            'id':2,
+            'dn':'Document A',
+            'ua':new Date(2021, 9, 17),
+            'a':1,
+            'b':'Event Mentions',
             'c':2,
             'd':3,
-            'e':4
+            'e':1
+
+        }, 
+        {
+            'id':3,
+            'dn':'Document B',
+            'ua':new Date(2021, 9, 17),
+            'a':0,
+            'b':'Event Coreference',
+            'c':3,
+            'd':3,
+            'e':.0
+
+        }, 
+        {
+            'id':4,
+            'dn':'Document B',
+            'ua':new Date(2021, 9, 17),
+            'a':2,
+            'b':'Entity Coreference',
+            'c':4,
+            'd':3,
+            'e':.75
+
+        }, 
+        {
+            'id':5,
+            'dn':'Document C',
+            'ua':new Date(2021, 9, 17),
+            'a':3,
+            'b':'Event Coreference',
+            'c':5,
+            'd':3,
+            'e':.8
 
         }
     ]
 
+    const [value, setValue] = React.useState(0);
+    
+    const handleChange = (event, newValue) => {
+      setValue(newValue);
+    };
 
+    const HeadTextTypography = withStyles({
+        root: {
+          color: "#A51C30"
+        }
+      })(Typography);
 
-    // Component States
-    // <h1 className={classes.headerTextStyle}>{pageTitle} </h1>
-    //             <p className={classes.headerTextStyle}>{pageDesc}</p>
+      const DescTextTypography = withStyles({
+        root: {
+          color: "#95b5df"
+        }
+      })(Typography);
+
     return (
         <div className="Dash">
-            <h1 >{pageTitle} </h1>
-            <p >{pageDesc}</p>
 
-          <ul>
-        {}
-      </ul>
-            <br />
-            <div style={{width: '100%' }}>
-                <DataGrid
-                    checkboxSelection={true}
-                    autoHeight={true}
-                    pageSize={10}
-                    rowsPerPageOptions={[5, 10, 20, 100]}
-                    // rowOptions={{ selectable: true }}
-                    // options={{ onRowSelection: rowClick }}
-                    columns={columns}
-                    rows={rows}
-                />
-            </div>
-            <Button variant="contained">Add Tasks to Queue</Button>
+        <HeadTextTypography gutterBottom variant="h4" component="h2" color="common.white">
+            {pageTitle}
+            </HeadTextTypography>
+        
+        <DescTextTypography gutterBottom variant="p" component="h2" color="common.white">
+            {pageDesc}
+            </DescTextTypography>
+            
+
+          <ul/>
 
 
-            <div style={{width: '100%' }}>
-                <DataGrid
-                    //checkboxSelection={true}
-                    autoHeight={true}
-                    // pageSize={10}
-                    // rowsPerPageOptions={[5, 10, 20, 100]}
-                    // rowOptions={{ selectable: true }}
-                    // options={{ onRowSelection: rowClick }}
-                    columns={colsDocLevel}
-                    rows={rowsDocLevel}
-                />
-            </div>
 
-            <CircularProgressWithLabel value={75} />
-            <CircularProgressWithLabel value={25} />
-            <CircularProgressWithLabel value={33} />
-            <CircularProgressWithLabel value={95} />
+          <Box sx={{ width: '100%' }}>
+        <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+          <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
+            <Tab label="Document Level View" {...a11yProps(0)} />
+            <Tab label="Task Level View" {...a11yProps(1)} />
+            <Tab label="Summary" {...a11yProps(2)} />
+          </Tabs>
+        </Box>
+        <TabPanel value={value} index={0}>
+          <DocLevelProgress/>
+        </TabPanel>
+        <TabPanel value={value} index={1}>
+          <TaskLevelProgress/>
+        </TabPanel>
+        <TabPanel value={value} index={2}>
+          Item Three
+        </TabPanel>
+      </Box>
+            
+            <div style={{height: '150px' }}> </div>
 
-          
-
-
+            
             
         </div>
     );
