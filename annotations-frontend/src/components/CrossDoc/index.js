@@ -31,13 +31,13 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 
 //import 'exNature.jpeg';
-import { createMuiTheme, ThemeProvider } from '@material-ui/core';
+import { createTheme, ThemeProvider } from '@material-ui/core';
 import { fontFamily, fontSize, maxWidth } from '@material-ui/system';
 
 import EventCard from './eventCard';
 
 
-const theme = createMuiTheme({
+const theme = createTheme({
     status: {
         danger: '#e53e3e',
       },
