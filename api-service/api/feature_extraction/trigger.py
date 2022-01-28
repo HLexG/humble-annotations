@@ -13,6 +13,9 @@ import time
 from utils import extract_environment_variable
 
 feat_two_url = extract_environment_variable("FEAT_EXT_TWO_URL")
+feat_three_url = extract_environment_variable("FEAT_EXT_THREE_URL")
+feat_four_url = extract_environment_variable("FEAT_EXT_FOUR_URL")
+
 feat_1 = extract_environment_variable("FEATURE_EXTRACTOR_01")
 feat_2 = extract_environment_variable("FEATURE_EXTRACTOR_02")
 feat_3 = extract_environment_variable("FEATURE_EXTRACTOR_03")
@@ -41,30 +44,37 @@ def preprocesses_entities(id):
     url2 = feat_2+'/v1/process_dataset/'+str(id)
     url3 = feat_3+'/v1/process_dataset/'+str(id)
     url4 = feat_4+'/v1/process_dataset_event/'+str(id)
-    urls = [url1, url2, url3, url4]
+
+    lurl2 = feat_two_url+'/v1/process_dataset/'+str(id)
+    lurl3 = 'http://0.0.0.0:9112/v1/process_dataset/'+str(id)
+    lurl4 = 'http://0.0.0.0:9013/v1/process_dataset_event/'+str(id)
+
+
+    urls = [ lurl2, lurl3, lurl4]
 
     for i in urls:
         print(i)
 
-    # session = requests.Session()
-    # retry = Retry(connect=3, backoff_factor=0.5)
-    # adapter = HTTPAdapter(max_retries=retry)
+    session = requests.Session()
+    retry = Retry(connect=3, backoff_factor=0.5)
+    adapter = HTTPAdapter(max_retries=retry)
 
-    # for i in urls:
-    #     print(i)
-    #     page = ''
-    #     ct = 0
-    #     while page == '' and ct < 10:
-    #         try:
-    #             page = session.get(i)
-    #             ct += 1
-    #             break
-    #         except:
-    #             print("Connection refused by the server..")
-    #             print("Let me sleep for 5 seconds")
-    #             print("ZZzzzz...")
-    #             time.sleep(5)
-    #             print("Was a nice sleep, now let me continue...")
-    #             ct += 1
-    #             continue
-    # return page
+    for i in urls:
+        page = session.get(i)
+ #        print(i)
+ #        page = ''
+ #        ct = 0
+ #        while page == '' and ct < 10:
+ #            try:
+ #                page = session.get(i)
+ #                ct += 1
+ #                break
+ #            except:
+ #                print("Connection refused by the server..")
+ #                print("Let me sleep for 5 seconds")
+ #                print("ZZzzzz...")
+ #                time.sleep(5)
+ #                print("Was a nice sleep, now let me continue...")
+ #                ct += 1
+ #                continue
+    return page
