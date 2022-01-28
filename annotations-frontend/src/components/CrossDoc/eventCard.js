@@ -36,11 +36,11 @@ import SupportText from './eventFill';
 
 
 //import 'exNature.jpeg';
-import { createMuiTheme, ThemeProvider } from '@material-ui/core';
+import { createTheme, ThemeProvider } from '@material-ui/core';
 import { fontFamily, fontSize, maxWidth } from '@material-ui/system';
 
 
-const theme = createMuiTheme({
+const theme = createTheme({
   palette: {
     primary: {
       main: "#81c784"
