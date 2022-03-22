@@ -226,7 +226,8 @@ CREATE TABLE public.documents (
     created_at bigint DEFAULT (date_part('epoch'::text, clock_timestamp()) * (1000)::double precision) NOT NULL,
     created_by bigint,
     updated_at bigint,
-    updated_by bigint
+    updated_by bigint,
+    word_count bigint
 );
 
 
@@ -1048,4 +1049,7 @@ ALTER TABLE ONLY public.wikidata
 
 INSERT INTO public.schema_migrations (version) VALUES
     ('20210525145829'),
-    ('20210609200427');
+    ('20210609200427'),
+    ('20220322075201'),
+    ('20220322075246'),
+    ('20220322075736');
