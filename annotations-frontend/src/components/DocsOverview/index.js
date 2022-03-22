@@ -63,6 +63,7 @@ const DocsOverview = ( props ) => {
       DataService.GetDocuments(params.dsID)
       .then(function (response) {
           setDocs(response.data)
+          console.log("docs")
           console.log(response.data)
           //const datasets = setState(response.data[0])
           // Load the documents

@@ -2,6 +2,7 @@ export const colorList = ["#C0504D", "#1F497D", "#9BBB59", "#F79646", "#4BACC6",
 
 export const buildAnnotationTree = (document, mentions) => {
     console.log("Building Annotation Tree...");
+    console.log(mentions);
     // Top level
     let tree = {
         "type": "document",
@@ -39,7 +40,7 @@ export const buildAnnotationTree = (document, mentions) => {
         if (mentions) {
             let mention_ends = mentions.filter(m => m.sentence_id === token.sentence_id && m.end_token_id === token.token_id);
             mention_ends.sort((a, b) => a.start_t_id - b.start_token_id);
-            // //console.log("mention_ends:",mention_ends);
+            //console.log("mention_ends:",mention_ends);
             mention_ends.forEach((m, m_idx) => {
                 currentNode.pop();
             });
