@@ -79,6 +79,9 @@ const DataService = {
     MentionStats: async function () {
         return await axios.get(BASE_API_URL + "/stats_mentions", { headers: authHeader() });
     },
+    CreateAnnotations: async function (document_id) {
+        return await axios.post(BASE_API_URL + "/annotations?document_id=" + document_id, { headers: authHeader() });
+    }
 }
 
 export default DataService;

@@ -50,3 +50,25 @@ async def annotations_copy(
     _ = await annotations.copy(from_id=id, to_id=user_annotation["id"], annotation_type=annotation_type)
 
     return user_annotation
+
+@router.post(
+    "/annotations",
+    tags=["Annotations"],
+    summary="New annotations",
+    description="New annotations",
+    response_description="Status message"
+)
+async def annotations_create(
+        document_id: int,
+        #user_id: int,
+        #annotation_type: str = Query(...,
+        #                             description="Annotation type"),
+        #status:str,                                     
+        auth: Auth = Depends()
+):
+    new_annotation = await annotations.create(document_id=document_id, user_id=auth.user_id)
+
+    # Copy over annotation to the current user
+    # _ = await annotations.copy(from_id=id, to_id=user_annotation["id"], annotation_type=annotation_type)
+
+    return new_annotation

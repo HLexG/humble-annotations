@@ -122,6 +122,10 @@ const EditAnnotations = (props) => {
 
         // Save mentions 
         //         DataService.CreateDocumentMentions(id, selectedAnnotation["id"], mentions)
+        DataService.CreateAnnotations(id)
+            .then(function (response) {
+                console.log(response.data);
+            })
 
         DataService.CreateDocumentMentions(id, mentions)
             .then(function (response) {

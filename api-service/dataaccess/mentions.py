@@ -200,6 +200,21 @@ async def delete_all_for_annotation(document_id: int, annotation_id: int) -> Non
 #                      mention_text=mention["mention_text"],
 #                      id=mention["id"])
 async def create_multi_mentions(document_id: int, mentions: List[Dict[str, Any]]):
+    # create annotation
+    #query = """
+    #        insert into annotations(document_id, user_id, type, status)
+    #        values (:document_id, :user_id, :type, :status)
+    #        returning *
+    #    """
+#
+    #    # Get annotation id
+    #    values = {"document_id": doc["id"],
+    #              "user_id": 1, # user_id 1 is Spacy
+    #              "type": "entity_mention",
+    #              "status":"commit"}
+#
+    #    result = await database.fetch_one(query=query, values=values)
+    #    annotation_id = result['id']
     print("anno id get")
     anno_id = await database.fetch_one(f"""
         SELECT MAX(id) FROM annotations;

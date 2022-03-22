@@ -6,7 +6,7 @@ from starlette.responses import FileResponse
 from urllib.parse import urlparse
 from api.data_models import CreateMentions
 
-from dataaccess import mentions
+from dataaccess import mentions, annotations, users
 
 router = APIRouter()
 
@@ -37,6 +37,10 @@ async def mentions_new(
 
     # Create new mentions
     #     await mentions.create_multi_mentions(document_id=document_id, annotation_id=annotation_id, mentions=new_mentions.mentions)
+
+    #await annotations.create(document_id=document_id, user_id=new_mentions.user_id)
+
+    
 
     await mentions.create_multi_mentions(document_id=document_id, mentions=new_mentions.mentions)
 
