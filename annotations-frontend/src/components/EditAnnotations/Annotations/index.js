@@ -74,10 +74,18 @@ const Annotations = (props) => {
     }
 
     // Handlers
-    const handleTokenClick = (event, token, isDouble) => {
-        if (!editMentions) {
-            return;
+    function isIterable(input) {  
+        if (input === null || input === undefined) {
+          return false
         }
+      
+        return typeof input[Symbol.iterator] === 'function'
+      }
+
+    const handleTokenClick = (event, token, isDouble) => {
+        //if (!editMentions) {
+        //    return;
+        //}
 
         window.getSelection().removeAllRanges();
         // event.stopPropagation();
@@ -94,8 +102,12 @@ const Annotations = (props) => {
                     end_token_id: token["token_id"],
                     mention_text: token["mention_text"]
                 }
-
-                let new_mentions = [...mentions];
+                
+                if (isIterable(mentions)) {
+                    var new_mentions = [...mentions];
+                } else {
+                    var new_mentions = [];
+                }
                 new_mentions.push(mention);
                 setMentions(new_mentions);
             }
@@ -114,9 +126,10 @@ const Annotations = (props) => {
     }
     const handleMentionClick = (event, mention) => {
         event.stopPropagation();
-        if (!editMentions) {
-            return;
-        }
+        
+        //if (!editMentions) {
+        //    return;
+        //}
         console.log("handleMentionClick:", mention);
 
         // Select the mention
@@ -146,6 +159,7 @@ const Annotations = (props) => {
         setDraggedMention(mention);
     };
     const handleMentionDragOver = (event) => {
+        console.log("handleMentionDragOver...");
         event.stopPropagation();
         event.preventDefault();
     };

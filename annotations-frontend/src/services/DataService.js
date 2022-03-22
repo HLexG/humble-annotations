@@ -55,8 +55,8 @@ const DataService = {
     CopyAnnotations: async function (annotation_id, annotation_type) {
         return await axios.post(BASE_API_URL + "/annotations/" + annotation_id + "/copy?annotation_type=" + annotation_type, {}, { headers: authHeader() });
     },
-    CreateDocumentMentions: async function (document_id, annotation_id, mentions) {
-        return await axios.post(BASE_API_URL + "/mentions?document_id=" + document_id + "&annotation_id=" + annotation_id, { mentions: mentions }, { headers: authHeader() });
+    CreateDocumentMentions: async function (document_id, mentions) {
+        return await axios.post(BASE_API_URL + "/mentions?document_id=" + document_id, { mentions: mentions }, { headers: authHeader() });
     },
     GetMentions: async function (id) {
         return await axios.get(BASE_API_URL + "/mentionsdoc/" + id, { headers: authHeader() });

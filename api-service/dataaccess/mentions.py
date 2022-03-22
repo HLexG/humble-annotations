@@ -188,10 +188,28 @@ async def delete_all_for_annotation(document_id: int, annotation_id: int) -> Non
     """.format(document_id=document_id, annotation_id=annotation_id))
 
 
-async def create_multi_mentions(document_id: int, annotation_id: int, mentions: List[Dict[str, Any]]):
+
+# original 
+# async def create_multi_mentions(document_id: int, annotation_id: int, mentions: List[Dict[str, Any]]):
+#     for mention in mentions:
+#         await create(annotation_id=annotation_id,
+#                      document_id=document_id,
+#                      sentence_id=mention["sentence_id"],
+#                      start_token_id=mention["start_token_id"],
+#                      end_token_id=mention["end_token_id"],
+#                      mention_text=mention["mention_text"],
+#                      id=mention["id"])
+async def create_multi_mentions(document_id: int, mentions: List[Dict[str, Any]]):
+    print("anno id get")
+    anno_id = await database.fetch_one(f"""
+        SELECT MAX(id) FROM annotations;
+    """)
+    anno_id = prep_data(anno_id)['max']
+    print("anno_id", anno_id)
+    
     for mention in mentions:
-        await create(annotation_id=annotation_id,
-                     document_id=document_id,
+        await create(annotation_id=anno_id+1,
+                    document_id=document_id,
                      sentence_id=mention["sentence_id"],
                      start_token_id=mention["start_token_id"],
                      end_token_id=mention["end_token_id"],

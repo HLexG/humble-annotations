@@ -116,10 +116,14 @@ const EditAnnotations = (props) => {
             })
     }
     const handleSave = () => {
+        console.log("Save");
+        console.log(mentions);
         // TODO check if the user has access to save
 
         // Save mentions 
-        DataService.CreateDocumentMentions(id, selectedAnnotation["id"], mentions)
+        //         DataService.CreateDocumentMentions(id, selectedAnnotation["id"], mentions)
+
+        DataService.CreateDocumentMentions(id, mentions)
             .then(function (response) {
                 console.log("Mentions saved...");
             })
